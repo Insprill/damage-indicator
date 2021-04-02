@@ -1,6 +1,6 @@
 name: DamageIndicator
 main: com.zenya.damageindicator.DamageIndicator
-version: 0.0.1
+version: 0.0.2
 author: Zenya4
 description: A lightweight and configurable player damage indicator
 api-version: 1.13

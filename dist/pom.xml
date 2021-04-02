@@ -29,21 +29,21 @@
         <!-- 1_8_R1 protocol implementation -->
         <dependency>
             <groupId>com.zenya.damageindicator</groupId>
-            <artifactId>1_9_R1</artifactId>
+            <artifactId>1_8_R1</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <!-- 1_8_R2 protocol implementation -->
         <dependency>
             <groupId>com.zenya.damageindicator</groupId>
-            <artifactId>1_9_R2</artifactId>
+            <artifactId>1_8_R2</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <!-- 1_8_R3 protocol implementation -->
         <dependency>
             <groupId>com.zenya.damageindicator</groupId>
-            <artifactId>1_9_R2</artifactId>
+            <artifactId>1_8_R3</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

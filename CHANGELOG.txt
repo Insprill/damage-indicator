@@ -1,2 +1,7 @@
 PRERELEASE 0.0.1:
 - Official pre-release
+
+PRERELEASE 0.0.2:
+- Fixed an issue with 1.8 compatibility
+- Fixed a bug where indicators would show even if damage/heal event was cancelled by another plugin
+- Fixed a bug where indicators would show for entities like armor stands or boats
