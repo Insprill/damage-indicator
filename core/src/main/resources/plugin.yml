@@ -1,0 +1,14 @@
+name: DamageIndicator
+main: com.zenya.damageindicator.DamageIndicator
+version: 0.0.1
+author: Zenya4
+description: A lightweight and configurable player damage indicator
+api-version: 1.13
+
+commands:
+  damageindicator:
+    description: Main command for DamageIndicator
+    aliases:
+      - di
+    permission: damageindicator.command.help
+    usage: /<command>

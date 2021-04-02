@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>parent</artifactId>
+    <groupId>com.zenya.damageindicator</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>dist</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <build>
+    <resources>
+      <resource>
+        <targetPath>.</targetPath>
+        <filtering>true</filtering>
+        <directory>${basedir}/../core/src/main/resources/</directory>
+        <includes>
+          <include>plugin.yml</include>
+        </includes>
+      </resource>
+    </resources>
+    <directory>../target</directory>
+    <finalName>DamageIndicator</finalName>
+    <plugins>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.1.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <includes>
+                  <include>com.zenya.damageindicator:*</include>
+                </includes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.github.wvengen</groupId>
+        <artifactId>proguard-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>proguard</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <options>
+            <option>-keepdirectories</option>
+            <option>-keep class com.zenya.damageindicator.DamageIndicator { *; }</option>
+            <option>-keepclassmembers class * implements org.bukkit.event.Listener {
+                            @org.bukkit.event.EventHandler *;
+                            }</option>
+            <option>-keepclassmembers class * extends org.bukkit.event.Event {
+                            org.bukkit.event.HandlerList getHandlers();
+                            org.bukkit.event.HandlerList getHandlerList();
+                            }</option>
+            <option>-keep class * implements com.zenya.damageindicator.nms.ProtocolNMS</option>
+            <option>-keepattributes !LocalVariableTable,!LocalVariableTypeTable,Exceptions,InnerClasses,Signature,Deprecated,LineNumberTable,*Annotation*,EnclosingMethod</option>
+            <option>-dontwarn</option>
+          </options>
+          <libs>
+            <lib>${java.home}/lib/rt.jar</lib>
+            <lib>/Users/zenya/.m2/repository/com/google/guava/guava/21.0/guava-21.0.jar</lib>
+            <lib>/Users/zenya/.m2/repository/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar</lib>
+            <lib>/Users/zenya/.m2/repository/org/spigotmc/spigot-api/1.16.4-R0.1-SNAPSHOT/spigot-api-1.16.4-R0.1-20201203.083325-28.jar</lib>
+          </libs>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

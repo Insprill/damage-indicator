@@ -1,0 +1,207 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>dist</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>com.zenya.damageindicator</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+        <!-- Plugin core -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- fallback protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>fallback</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_8_R1 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_9_R1</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_8_R2 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_9_R2</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_8_R3 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_9_R2</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_9_R1 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_9_R1</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_9_R2 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_9_R2</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_10_R1 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_10_R1</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_11_R1 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_11_R1</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_12_R1 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_12_R1</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_13_R1 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_13_R1</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_13_R2 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_13_R2</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_14_R1 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_14_R1</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_15_R1 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_15_R1</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_16_R1 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_16_R1</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_16_R2 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_16_R2</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 1_16_R3 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_16_R3</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <directory>../target</directory>
+        <finalName>DamageIndicator</finalName>
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>${basedir}/../core/src/main/resources/</directory>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <!-- Combine all dependencies into 1 jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>com.zenya.damageindicator:*</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- ProGuard obfuscation -->
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>proguard</goal></goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <options>
+                        <option>-keepdirectories</option>
+                        <option>-keep class com.zenya.damageindicator.DamageIndicator { *; }</option>
+                        <option>-keepclassmembers class * implements org.bukkit.event.Listener {
+                            @org.bukkit.event.EventHandler *;
+                            }</option>
+                        <option>-keepclassmembers class * extends org.bukkit.event.Event {
+                            org.bukkit.event.HandlerList getHandlers();
+                            org.bukkit.event.HandlerList getHandlerList();
+                            }</option>
+                        <option>-keep class * implements com.zenya.damageindicator.nms.ProtocolNMS</option>
+                        <option>-keepattributes !LocalVariableTable,!LocalVariableTypeTable,Exceptions,InnerClasses,Signature,Deprecated,LineNumberTable,*Annotation*,EnclosingMethod</option>
+                        <option>-dontwarn</option>
+                    </options>
+                    <libs>
+                        <lib>${java.home}/lib/rt.jar</lib>
+                        <lib>/Users/zenya/.m2/repository/com/google/guava/guava/21.0/guava-21.0.jar</lib>
+                        <lib>/Users/zenya/.m2/repository/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar</lib>
+                        <lib>/Users/zenya/.m2/repository/org/spigotmc/spigot-api/1.16.4-R0.1-SNAPSHOT/spigot-api-1.16.4-R0.1-20201203.083325-28.jar</lib>
+                    </libs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

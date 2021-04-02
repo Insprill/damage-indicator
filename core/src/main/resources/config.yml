@@ -1,0 +1,29 @@
+## Barebones config since its a prerelease
+## If you're a beta tester, you should be smart enough to figure out what these values mean lol
+config-version: 1
+
+# Don't change this shit unless you know what ur doing
+indicator-decimals: "%.2f"
+
+hologram-offset: 0.25
+hologram-speed: 0.15
+hologram-duration: 20 # <-- In ticks
+
+# Closest (rounded down) value will be used
+# 1 heart = 2 damage values
+# For "-<val>"
+damage-format:
+  0: "%fefee%%value%" # <-- This means &f-&e0&f.&e6&f9 if the damage dealt is 0.69 for example
+  2: "%fcfee%%value%"
+  6: "%f4fcc%%value%"
+  10: "%fddf44%%value%"
+  15: "%f55fdd%%value%"
+  100: "%rainbow%%value%" # <-- Fancy placeholder %rainbow% for stuff like /kill
+
+# For "+<val>"
+heal-format:
+  0: "%f2f22%+%value%"
+  2: "%faf22%+%value%"
+  8: "%fbfaa%+%value%"
+  10: "%f99fbb%+%value%"
+
