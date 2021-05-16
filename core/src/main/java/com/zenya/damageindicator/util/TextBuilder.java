@@ -3,7 +3,6 @@ package com.zenya.damageindicator.util;
 import com.zenya.damageindicator.file.ConfigManager;
 import org.bukkit.ChatColor;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -81,7 +80,14 @@ public class TextBuilder {
     public String build() {
         //%damage% placeholder
         if(value != null) {
-            text = text.replaceAll("%value%", String.format(ConfigManager.INSTANCE.getString("indicator-decimals"), value));
+            String val;
+            try {
+                val = String.format("%." + ConfigManager.INSTANCE.getInt("indicator-decimals") + "f", value);
+            } catch(Exception exc) {
+                //Users doing something dumb in config
+                val = String.format("%.2f", value);
+            }
+            text = text.replaceAll("%value%", val);
         }
 
         //%rainbow% & %<color>% placeholder
@@ -111,6 +117,11 @@ public class TextBuilder {
                 if(colorIndex < 0) colorIndex = colors.size() - 1;
             }
         }
+
+        //Insert formatting
+        if(ConfigManager.INSTANCE.getBool("bold-indicators")) setFormat('l');
+        if(ConfigManager.INSTANCE.getBool("italic-indicators")) setFormat('o');
+        if(ConfigManager.INSTANCE.getBool("underline-indicators")) setFormat('m');
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 
@@ -118,5 +129,18 @@ public class TextBuilder {
         StringBuffer buffer = new StringBuffer(text);
         buffer.insert(textIndex, "&" + colors.get(colorIndex).getChar());
         text = buffer.toString();
+    }
+
+    private void setFormat(char format) {
+        String formatted = "";
+        for(int i=0 ; i<text.length(); i++) {
+            if(text.toCharArray()[i] == '&') {
+                i++;
+                formatted += "&" + text.toCharArray()[i];
+                continue;
+            }
+            formatted += "&" + format + text.toCharArray()[i];
+        }
+        text = formatted;
     }
 }

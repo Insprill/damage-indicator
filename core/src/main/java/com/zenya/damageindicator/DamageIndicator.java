@@ -12,6 +12,13 @@ public class DamageIndicator extends JavaPlugin {
 
     public void onEnable() {
         INSTANCE = this;
+
+        if(CompatibilityHandler.getProtocol() < 8) {
+            onDisable();
+            getServer().getPluginManager().disablePlugin(INSTANCE);
+            return;
+        }
+
         try {
             PROTOCOL_NMS = CompatibilityHandler.getProtocolNMS().newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {

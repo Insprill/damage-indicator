@@ -1,8 +1,8 @@
 name: DamageIndicator
 main: com.zenya.damageindicator.DamageIndicator
-version: 0.0.2
+version: 0.0.3
 author: Zenya4
-description: A lightweight and configurable player damage indicator
+description: A high performance packet-based damage indicator
 api-version: 1.13
 
 commands:

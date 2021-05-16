@@ -30,7 +30,9 @@ public class HologramSpawnEvent extends Event implements Cancellable {
 
             String hologram = (new TextBuilder()).withText(format).withValue(amount).build();
             for(Player player : Bukkit.getOnlinePlayers()) {
-                DamageIndicator.PROTOCOL_NMS.getHologram(player, ent, hologram).spawn(offset, speed, duration);
+                if(player.getWorld().equals(ent.getWorld())) {
+                    DamageIndicator.PROTOCOL_NMS.getHologram(player, ent, hologram).spawn(offset, speed, duration);
+                }
             }
         }
     }

@@ -1,29 +1,44 @@
-## Barebones config since its a prerelease
-## If you're a beta tester, you should be smart enough to figure out what these values mean lol
+# Config wiki and help can be found at https://gitlab.com/Zenya4/damage-indicator/-/wikis/Configuration
+# For internal reference only, do not change the config version
 config-version: 1
 
-# Don't change this shit unless you know what ur doing
-indicator-decimals: "%.2f"
+# How many decimal places to truncate indicator values
+# A value of 2 means that all damage indicators will show as x.xx
+indicator-decimals: 2
 
+# How many blocks should indicators spawn above the player
+# It is best to keep this value nonzero to prevent indicators from blocking the player view
 hologram-offset: 0.25
+# How fast should indicators float upwards
 hologram-speed: 0.15
-hologram-duration: 20 # <-- In ticks
+# How long (in ticks) should indicators stay for
+hologram-duration: 20
 
-# Closest (rounded down) value will be used
-# 1 heart = 2 damage values
-# For "-<val>"
+# Whether or not all damage indicators should be bold
+bold-indicators: true
+
+# Whether or not all damage indicators should be italicised
+italic-indicators: false
+
+# Whether or not all damage indicators should be underlined
+underline-indicators: false
+
+# Format used when players take damage
+# Each damage value represents half a heart (20 points = 10 hearts)
+# The closest rounded down value will be used
 damage-format:
-  0: "%fefee%%value%" # <-- This means &f-&e0&f.&e6&f9 if the damage dealt is 0.69 for example
+  0: "%fefee%%value%" # <-- The %fefee% placeholder means the indicator will show as &f-&e0&f.&e6&f9 if the player takes 0.69 damage
   2: "%fcfee%%value%"
   6: "%f4fcc%%value%"
   10: "%fddf44%%value%"
   15: "%f55fdd%%value%"
-  100: "%rainbow%%value%" # <-- Fancy placeholder %rainbow% for stuff like /kill
+  100: "%rainbow%%value%" # <-- The %rainbow% placeholder can be used to randomise indicator colors (fancy display for insta-kill tools like /kill)
 
-# For "+<val>"
+# Format used when players heal
+# Each heal value represents half a heart (20 points = 10 hearts)
+# The closest rounded down value will be used
 heal-format:
   0: "%f2f22%+%value%"
-  2: "%faf22%+%value%"
+  2: "%faf22%+%value%" # <-- The %fafaa% placeholder means the indicator will show as &f+&a0&f.&a6&a9 if the player heals by 4.20 points
   8: "%fbfaa%+%value%"
   10: "%f99fbb%+%value%"
-
