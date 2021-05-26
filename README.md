@@ -1,4 +1,4 @@
-![Banner](image.png)
+![Banner](https://imgur.com/9lCOZaz.png)
 #### A high performance packet-based damage indicator
 
 ## Overview
@@ -13,5 +13,5 @@ DamageIndicator is an extensive and feature-rich healthbar manager for Minecraft
 [Terms Of Service](https://gitlab.com/Zenya4/damage-indicator/-/wikis/Terms-Of-Service)
 
 ## More info
-[Download] (todo)<br>
+[Download](https://www.spigotmc.org/resources/%E2%98%A0%EF%B8%8Fdamageindicator%E2%98%A0%EF%B8%8F-customisable-damage-indicator-multicolor-support-100-lagless.92423/)<br>
 [Support](https://discord.gg/KGuaxpM) (Discord)

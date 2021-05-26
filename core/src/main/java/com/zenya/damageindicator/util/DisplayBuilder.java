@@ -1,6 +1,6 @@
 package com.zenya.damageindicator.util;
 
-import com.zenya.damageindicator.file.ConfigManager;
+import com.zenya.damageindicator.storage.StorageFileManager;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
@@ -9,20 +9,20 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class TextBuilder {
+public class DisplayBuilder {
     private String text;
     private Double value;
     private List<ChatColor> colors = new ArrayList<>();
 
-    public TextBuilder() {
+    public DisplayBuilder() {
 
     }
 
-    public TextBuilder(String text) {
+    public DisplayBuilder(String text) {
         this.text = text;
     }
 
-    public TextBuilder(double text) {
+    public DisplayBuilder(double text) {
         this.text = String.valueOf(text);
     }
 
@@ -34,38 +34,38 @@ public class TextBuilder {
         return ChatColor.stripColor(text);
     }
 
-    public TextBuilder withText(String text) {
+    public DisplayBuilder withText(String text) {
         this.text = text;
         return this;
     }
 
-    public TextBuilder withText(double text) {
+    public DisplayBuilder withText(double text) {
         this.text = String.valueOf(text);
         return this;
     }
 
-    public TextBuilder withValue(double value) {
+    public DisplayBuilder withValue(double value) {
         this.value = value;
         return this;
     }
 
-    public TextBuilder withColor(ChatColor... colors) {
+    public DisplayBuilder withColor(ChatColor... colors) {
         this.colors.addAll(Arrays.asList(colors));
         return this;
     }
 
-    public TextBuilder withColor(char... colors) {
+    public DisplayBuilder withColor(char... colors) {
         for(char color : colors) {
             this.colors.add(ChatColor.getByChar(color));
         }
         return this;
     }
 
-    public TextBuilder withRainbow() {
+    public DisplayBuilder withRainbow() {
         return withColor('a', 'b', 'c', 'd', 'e').randomize();
     }
 
-    public TextBuilder randomize() {
+    public DisplayBuilder randomize() {
         Random randObj = ThreadLocalRandom.current();
         int n = colors.size();
         for (int i = 0; i < n; i++) {
@@ -82,7 +82,7 @@ public class TextBuilder {
         if(value != null) {
             String val;
             try {
-                val = String.format("%." + ConfigManager.INSTANCE.getInt("indicator-decimals") + "f", value);
+                val = String.format("%." + StorageFileManager.getConfig().getInt("indicator-decimals") + "f", value);
             } catch(Exception exc) {
                 //Users doing something dumb in config
                 val = String.format("%.2f", value);
@@ -119,9 +119,9 @@ public class TextBuilder {
         }
 
         //Insert formatting
-        if(ConfigManager.INSTANCE.getBool("bold-indicators")) setFormat('l');
-        if(ConfigManager.INSTANCE.getBool("italic-indicators")) setFormat('o');
-        if(ConfigManager.INSTANCE.getBool("underline-indicators")) setFormat('m');
+        if(StorageFileManager.getConfig().getBool("bold-indicators")) setFormat('l');
+        if(StorageFileManager.getConfig().getBool("italic-indicators")) setFormat('o');
+        if(StorageFileManager.getConfig().getBool("underline-indicators")) setFormat('m');
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 

@@ -11,3 +11,13 @@ PRERELEASE 0.0.3:
 - Fixed indicators randomly showing in other worlds
 - Added options to bold, italicised and underline indicators
 - Updated default config
+
+PRERELEASE 0.1.0:
+- Display for 0-damage items now use the format under "damage-format" instead of "heal-format"
+- Slight changes to default config
+- Added "disabled-worlds" option in config
+- Added commands
+- Added configurable messages
+- Rewrote internal file utilities
+- Fixed an issue with indicators showing "-0" on low heals
+- Fixed an issue with incorrect indicators showing on /kill

@@ -1,17 +1,22 @@
 package com.zenya.damageindicator;
 
+import com.zenya.damageindicator.command.DamageIndicatorCommand;
 import com.zenya.damageindicator.event.Listeners;
 import com.zenya.damageindicator.nms.CompatibilityHandler;
 import com.zenya.damageindicator.nms.ProtocolNMS;
+import com.zenya.damageindicator.storage.StorageFileManager;
 import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class DamageIndicator extends JavaPlugin {
     public static DamageIndicator INSTANCE;
     public static ProtocolNMS PROTOCOL_NMS;
+    private StorageFileManager storageFileManager;
 
     public void onEnable() {
         INSTANCE = this;
+        storageFileManager = StorageFileManager.INSTANCE;
 
         if(CompatibilityHandler.getProtocol() < 8) {
             onDisable();
@@ -25,10 +30,11 @@ public class DamageIndicator extends JavaPlugin {
             e.printStackTrace();
         }
 
-        getServer().getPluginManager().registerEvents(new Listeners(), this);
+        this.getServer().getPluginManager().registerEvents(new Listeners(), this);
+        this.getCommand("damageindicator").setExecutor(new DamageIndicatorCommand());
     }
 
     public void onDisable() {
-
+        HandlerList.unregisterAll(INSTANCE);
     }
 }

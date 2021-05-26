@@ -19,6 +19,7 @@ public class Listeners implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityRegainHealthEvent(EntityRegainHealthEvent e) {
         if(!(e.getEntity() instanceof Creature || e.getEntity() instanceof Player)) return;
+        if(e.getAmount() < 1) return; //Minecraft doesn't register heals of less than half a heart
         LivingEntity entity = (LivingEntity) e.getEntity();
         Bukkit.getServer().getPluginManager().callEvent(new HologramSpawnEvent(entity, e.getAmount()));
     }
