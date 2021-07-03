@@ -21,3 +21,6 @@ PRERELEASE 0.1.0:
 - Rewrote internal file utilities
 - Fixed an issue with indicators showing "-0" on low heals
 - Fixed an issue with incorrect indicators showing on /kill
+
+1.0.0:
+- Initial release

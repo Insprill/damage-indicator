@@ -130,6 +130,20 @@
             <artifactId>1_16_R3</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <!-- 1_17_R1 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_17_R1</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- ProGuard obfuscation -->
+        <dependency>
+            <groupId>com.github.wvengen</groupId>
+            <artifactId>proguard-maven-plugin</artifactId>
+            <version>2.4.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -173,6 +187,7 @@
             <plugin>
                 <groupId>com.github.wvengen</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.4.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -195,10 +210,10 @@
                         <option>-dontwarn</option>
                     </options>
                     <libs>
-                        <lib>${java.home}/lib/rt.jar</lib>
-                        <lib>/Users/zenya/.m2/repository/com/google/guava/guava/21.0/guava-21.0.jar</lib>
-                        <lib>/Users/zenya/.m2/repository/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar</lib>
-                        <lib>/Users/zenya/.m2/repository/org/spigotmc/spigot-api/1.16.4-R0.1-SNAPSHOT/spigot-api-1.16.4-R0.1-20201203.083325-28.jar</lib>
+                        <lib>${java.home}\jmods\java.base.jmod</lib>
+                        <lib>${settings.localRepository}\com\google\guava\guava\21.0\guava-21.0.jar</lib>
+                        <lib>${settings.localRepository}\com\google\code\gson\gson\2.8.5\gson-2.8.5.jar</lib>
+                        <lib>${settings.localRepository}\org\spigotmc\spigot-api\1.17-R0.1-SNAPSHOT\spigot-api-1.17-R0.1-SNAPSHOT.jar</lib>
                     </libs>
                 </configuration>
             </plugin>
