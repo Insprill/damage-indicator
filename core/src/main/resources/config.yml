@@ -1,6 +1,6 @@
 # Config wiki and help can be found at https://gitlab.com/Zenya4/damage-indicator/-/wikis/Configuration
 # For internal reference only, do not change the config version
-config-version: 1
+config-version: 2
 
 # How many decimal places to truncate indicator values
 # A value of 2 means that all damage indicators will show as x.xx
@@ -44,8 +44,15 @@ heal-format:
   4: "%f2faa%+%value%" # <-- The %fafaa% placeholder means the indicator will show as &f+&a0&f.&a6&a9 if the player heals by 4.20 points
   8: "%f2f22%+%value%"
 
-# DamageIndicator will not display any indicators in the following worlds
+# DamageIndicator will not display any (damage/health) indicators in the following worlds
 # World names are cAsE sEnSiTiVe
 disabled-worlds:
   - nodelay
   - testworld
+
+# DamageIndicator will not display any (damage) indicators for the following entities
+ignored-entities:
+  - ARMOR_STAND
+
+# Feature to display player health below their name
+health-indicators: true

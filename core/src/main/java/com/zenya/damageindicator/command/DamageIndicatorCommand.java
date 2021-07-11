@@ -1,5 +1,6 @@
 package com.zenya.damageindicator.command;
 
+import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import com.zenya.damageindicator.storage.ToggleManager;
 import com.zenya.damageindicator.util.ChatBuilder;
@@ -57,6 +58,7 @@ public class DamageIndicatorCommand implements CommandExecutor {
 
             if(args[0].toLowerCase().equals("reload")) {
                 StorageFileManager.reloadFiles();
+                HealthIndicator.INSTANCE.reload();
                 chat.sendMessages("command.reload");
                 return true;
             }

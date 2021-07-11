@@ -1,4 +1,4 @@
-config-version: 1
+config-version: 2
 
 no-permission: "&4You do not have permission to use this command"
 player-required: "&cYou must be a player to use this command"
@@ -14,3 +14,5 @@ command:
     enable: "&aDamageIndicator displays have been enabled"
     disable: "&cDamageIndicator displays have been disabled"
   reload: "&6Successfully reloaded all plugin config and messages"
+
+health: " &cHealth"

@@ -24,3 +24,9 @@ PRERELEASE 0.1.0:
 
 1.0.0:
 - Initial release
+
+1.1.0:
+- Added feature to disable indicators for specified entity types
+- Added feature to toggle health indicators displayed below player name
+- Added 1.17.1 support
+- Dropped 1.17 support (will be re-added in the next update)

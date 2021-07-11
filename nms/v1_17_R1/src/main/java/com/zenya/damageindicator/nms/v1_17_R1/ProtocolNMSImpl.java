@@ -3,6 +3,7 @@ package com.zenya.damageindicator.nms.v1_17_R1;
 import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;
+import com.zenya.damageindicator.util.Logger;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
@@ -10,7 +11,10 @@ import net.minecraft.network.protocol.game.PacketPlayOutEntityTeleport;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.ints.IntArrayList;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.ints.IntList;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
@@ -91,7 +95,19 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendRemovePacket() {
-            PacketPlayOutEntityDestroy remove = new PacketPlayOutEntityDestroy(armorStand.getId());
+            PacketPlayOutEntityDestroy remove;
+            Integer id = armorStand.getId();
+            IntList idIntList = new IntArrayList(id);
+            try {
+                //1.17.1
+                remove = new PacketPlayOutEntityDestroy(idIntList);
+            } catch(NoSuchMethodError exc) {
+                //1.17
+                remove = null;
+                Logger.logError("DamageIndicator v1.1.0 only supports Spigot 1.17.1");
+                Logger.logError("Spigot 1.17 is not supported on this version, please use DamageIndicator v1.0.0 instead");
+                Bukkit.getServer().getPluginManager().disablePlugin(DamageIndicator.INSTANCE);
+            }
             player.b.sendPacket(remove);
         }
     }

@@ -31,7 +31,6 @@ public class HologramSpawnEvent extends Event {
         String hologram = (new DisplayBuilder()).withText(format).withValue(Math.abs(amount)).build();
         for(Player player : Bukkit.getOnlinePlayers()) {
             if(player.getWorld().equals(ent.getWorld())
-                    && !StorageFileManager.getConfig().listContains("disabled-worlds", player.getWorld().getName())
                     && ToggleManager.INSTANCE.isToggled(player.getName())) {
                 DamageIndicator.PROTOCOL_NMS.getHologram(player, ent, hologram).spawn(offset, speed, duration);
             }
