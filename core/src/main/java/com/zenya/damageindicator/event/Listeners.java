@@ -25,7 +25,7 @@ public class Listeners implements Listener {
 
         //Handle health indicator
         if(e.getEntity() instanceof Player) {
-            HealthIndicator.INSTANCE.updateHealth((Player) e.getEntity());
+            new HealthIndicator((Player) e.getEntity()).updateHealth();
         }
     }
 
@@ -42,7 +42,7 @@ public class Listeners implements Listener {
 
         //Handle health indicator
         if(e.getEntity() instanceof Player) {
-            HealthIndicator.INSTANCE.updateHealth((Player) e.getEntity());
+            new HealthIndicator((Player) e.getEntity()).updateHealth();
         }
     }
 
@@ -50,16 +50,15 @@ public class Listeners implements Listener {
     public void onPlayerJoinEvent(PlayerJoinEvent e) {
         if(StorageFileManager.getConfig().listContains("disabled-worlds", e.getPlayer().getWorld().getName())) return;
 
-        HealthIndicator.INSTANCE.setScoreboard(e.getPlayer());
-        HealthIndicator.INSTANCE.updateHealth(e.getPlayer());
+        new HealthIndicator(e.getPlayer()).updateHealth();
     }
 
     @EventHandler
     public void onPlayerTeleportEvent(PlayerTeleportEvent e) {
         if(StorageFileManager.getConfig().listContains("disabled-worlds", e.getPlayer().getWorld().getName())) {
-            HealthIndicator.INSTANCE.unsetScoreboard(e.getPlayer());
+            new HealthIndicator(e.getPlayer()).unregister();
         } else {
-            HealthIndicator.INSTANCE.setScoreboard(e.getPlayer());
+            new HealthIndicator(e.getPlayer()).updateHealth();
         }
     }
 }

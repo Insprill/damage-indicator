@@ -29,6 +29,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <module>nms/v1_16_R1</module>
         <module>nms/v1_16_R2</module>
         <module>nms/v1_16_R3</module>
+        <module>nms/v1_17_R0</module>
         <module>nms/v1_17_R1</module>
 
         <module>core</module>

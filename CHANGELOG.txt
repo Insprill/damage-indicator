@@ -30,3 +30,7 @@ PRERELEASE 0.1.0:
 - Added feature to toggle health indicators displayed below player name
 - Added 1.17.1 support
 - Dropped 1.17 support (will be re-added in the next update)
+
+1.1.1:
+- Fixed 1.17 and 1.17.1 compatibility
+- Fixed issue with health indicator conflicting with other plugin scoreboards

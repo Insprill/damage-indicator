@@ -8,47 +8,42 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 public class HealthIndicator {
-    public static final HealthIndicator INSTANCE = new HealthIndicator();
+    private static String OBJECTIVE_NAME = "health-indicator";
+    private Player player;
     private Scoreboard board;
     private Objective obj;
 
-    public HealthIndicator() {
-        board = Bukkit.getScoreboardManager().getNewScoreboard();
-        obj = board.registerNewObjective("health-indicator", "health");
-        obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        reload();
+    public HealthIndicator(Player player) {
+        this.player = player;
+        this.board = player.getScoreboard();
+        this.obj = board.getObjective(OBJECTIVE_NAME);
+        if(obj == null) {
+            obj = board.registerNewObjective(OBJECTIVE_NAME, "health");
+            obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
+            player.setScoreboard(board);
+        }
     }
 
-    public void updateHealth(Player player) {
+    public void updateHealth() {
         if(!StorageFileManager.getConfig().getBool("health-indicators")) return;
 
         obj.getScore(player.getName()).setScore((int) player.getHealth());
     }
 
-    public void setScoreboard(Player player) {
+    public void unregister() {
         if(!StorageFileManager.getConfig().getBool("health-indicators")) return;
 
-        player.setScoreboard(board);
+        if(obj != null) {
+            board.getObjective(OBJECTIVE_NAME).unregister();
+        }
     }
 
-    public void unsetScoreboard(Player player) {
-        if(!StorageFileManager.getConfig().getBool("health-indicators")) return;
-
-        player.removeScoreboardTag("health-indicator");
-    }
-
-    public void reload() {
-        if(!StorageFileManager.getConfig().getBool("health-indicators")) {
-            for(Player p : Bukkit.getOnlinePlayers()) {
-                unsetScoreboard(p);
-            }
-        } else {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                setScoreboard(p);
-                updateHealth(p);
+    public static void reload() {
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            Objective o = p.getScoreboard().getObjective(OBJECTIVE_NAME);
+            if(o != null) {
+                o.setDisplayName(StorageFileManager.getMessages().getString("health"));
             }
         }
-
-        obj.setDisplayName(StorageFileManager.getMessages().getString("health"));
     }
 }

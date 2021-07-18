@@ -1,4 +1,4 @@
-package com.zenya.damageindicator.nms.v1_17_R1;
+package com.zenya.damageindicator.nms.v1_17_R0;
 
 import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.nms.Hologram;
@@ -91,7 +91,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendRemovePacket() {
-            //PacketPlayOutEntityDestroy(int[]) in 1.17.1
+            //PacketPlayOutEntityDestroy(int) in 1.17
             PacketPlayOutEntityDestroy remove = new PacketPlayOutEntityDestroy(armorStand.getId());
             player.b.sendPacket(remove);
         }

@@ -131,6 +131,13 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <!-- 1_17_R0 protocol implementation -->
+        <dependency>
+            <groupId>com.zenya.damageindicator</groupId>
+            <artifactId>1_17_R0</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <!-- 1_17_R1 protocol implementation -->
         <dependency>
             <groupId>com.zenya.damageindicator</groupId>

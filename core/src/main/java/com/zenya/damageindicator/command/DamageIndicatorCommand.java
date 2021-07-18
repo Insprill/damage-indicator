@@ -58,7 +58,7 @@ public class DamageIndicatorCommand implements CommandExecutor {
 
             if(args[0].toLowerCase().equals("reload")) {
                 StorageFileManager.reloadFiles();
-                HealthIndicator.INSTANCE.reload();
+                HealthIndicator.reload();
                 chat.sendMessages("command.reload");
                 return true;
             }

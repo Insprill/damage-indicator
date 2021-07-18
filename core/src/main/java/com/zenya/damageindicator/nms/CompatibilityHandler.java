@@ -68,9 +68,12 @@ public class CompatibilityHandler {
         1.16.1 - v1_16_R1
         1.16.3 - v1_16_R2
         1.16.5 - v1_16_R3
+        1.17 - v1_17_R0 (due to breaking changes)
+        1.17.1 - v_17_R1
         */
         String name = Bukkit.getServer().getClass().getPackage().getName();
         String version = name.substring(name.lastIndexOf('.') + 1);
+        if(version.contains("v1_17") && !Bukkit.getServer().getVersion().matches("(.*)1\\.17\\.\\d(.*)")) version = "v1_17_R0";
         return version;
     }
 
