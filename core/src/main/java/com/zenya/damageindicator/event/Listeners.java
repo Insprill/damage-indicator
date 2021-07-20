@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class Listeners implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -25,7 +24,7 @@ public class Listeners implements Listener {
 
         //Handle health indicator
         if(e.getEntity() instanceof Player) {
-            new HealthIndicator((Player) e.getEntity()).updateHealth();
+            HealthIndicator.INSTANCE.updateHealth((Player) e.getEntity());
         }
     }
 
@@ -42,23 +41,12 @@ public class Listeners implements Listener {
 
         //Handle health indicator
         if(e.getEntity() instanceof Player) {
-            new HealthIndicator((Player) e.getEntity()).updateHealth();
+            HealthIndicator.INSTANCE.updateHealth((Player) e.getEntity());
         }
     }
 
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent e) {
-        if(StorageFileManager.getConfig().listContains("disabled-worlds", e.getPlayer().getWorld().getName())) return;
-
-        new HealthIndicator(e.getPlayer()).updateHealth();
-    }
-
-    @EventHandler
-    public void onPlayerTeleportEvent(PlayerTeleportEvent e) {
-        if(StorageFileManager.getConfig().listContains("disabled-worlds", e.getPlayer().getWorld().getName())) {
-            new HealthIndicator(e.getPlayer()).unregister();
-        } else {
-            new HealthIndicator(e.getPlayer()).updateHealth();
-        }
+        HealthIndicator.INSTANCE.updateHealth(e.getPlayer());
     }
 }

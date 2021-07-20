@@ -15,4 +15,4 @@ command:
     disable: "&cDamageIndicator displays have been disabled"
   reload: "&6Successfully reloaded all plugin config and messages"
 
-health: " &cHealth"
+health: " &c❤"

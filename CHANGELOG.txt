@@ -34,3 +34,7 @@ PRERELEASE 0.1.0:
 1.1.1:
 - Fixed 1.17 and 1.17.1 compatibility
 - Fixed issue with health indicator conflicting with other plugin scoreboards
+
+1.1.2:
+- Fixed a few bugs with health indicators
+- Updated default messages.yml

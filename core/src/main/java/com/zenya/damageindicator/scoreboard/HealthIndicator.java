@@ -2,48 +2,46 @@ package com.zenya.damageindicator.scoreboard;
 
 import com.zenya.damageindicator.storage.StorageFileManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 public class HealthIndicator {
-    private static String OBJECTIVE_NAME = "health-indicator";
-    private Player player;
+    public static HealthIndicator INSTANCE = new HealthIndicator();
     private Scoreboard board;
     private Objective obj;
 
-    public HealthIndicator(Player player) {
-        this.player = player;
-        this.board = player.getScoreboard();
-        this.obj = board.getObjective(OBJECTIVE_NAME);
-        if(obj == null) {
-            obj = board.registerNewObjective(OBJECTIVE_NAME, "health");
-            obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
-            player.setScoreboard(board);
-        }
+    private HealthIndicator() {
+        this.board = Bukkit.getScoreboardManager().getMainScoreboard();
+        this.obj = board.getObjective("di-health");
+        reload();
     }
 
-    public void updateHealth() {
-        if(!StorageFileManager.getConfig().getBool("health-indicators")) return;
-
-        obj.getScore(player.getName()).setScore((int) player.getHealth());
+    public void updateHealth(Player player) {
+        if(obj != null) obj.getScore(player.getName()).setScore((int) player.getHealth());
     }
 
-    public void unregister() {
-        if(!StorageFileManager.getConfig().getBool("health-indicators")) return;
-
-        if(obj != null) {
-            board.getObjective(OBJECTIVE_NAME).unregister();
-        }
-    }
-
-    public static void reload() {
-        for(Player p : Bukkit.getOnlinePlayers()) {
-            Objective o = p.getScoreboard().getObjective(OBJECTIVE_NAME);
-            if(o != null) {
-                o.setDisplayName(StorageFileManager.getMessages().getString("health"));
+    public void reload() {
+        if(StorageFileManager.getConfig().getBool("health-indicators")) {
+            //Enable health indicators
+            if(obj == null) {
+                //Init if not exists
+                try {
+                    obj = board.registerNewObjective("di-health", "health");
+                } catch(NullPointerException exc) {
+                    //Depreciation
+                    if(obj != null) obj.unregister();
+                    obj = board.registerNewObjective("di-health", "health", ChatColor.translateAlternateColorCodes('&', StorageFileManager.getMessages().getString("health")));
+                }
+                obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
             }
+            //Update displayname regardless
+            obj.setDisplayName(ChatColor.translateAlternateColorCodes('&', StorageFileManager.getMessages().getString("health")));
+        } else {
+            //Disable health indicators
+            if(obj != null) obj.unregister();
         }
     }
 }
