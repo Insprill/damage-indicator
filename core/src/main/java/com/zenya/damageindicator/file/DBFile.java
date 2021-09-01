@@ -6,6 +6,9 @@ import java.io.File;
 import java.sql.*;
 
 public class DBFile extends StorageFile {
+
+    private static boolean loaded = false;
+
     public DBFile(String fileName) {
         this(DamageIndicator.INSTANCE.getDataFolder().getPath(), fileName);
     }
@@ -16,18 +19,24 @@ public class DBFile extends StorageFile {
 
     public DBFile(String directory, String fileName, Integer fileVersion, boolean resetFile) {
         super(directory, fileName, fileVersion, resetFile);
-
-        if(!file.exists()) {
+        try {
+            Class.forName("org.sqlite.JDBC");
+            loaded = true;
+        } catch (ClassNotFoundException e) {
+            DamageIndicator.INSTANCE.getLogger().severe("Failed to initialize database! Toggles will not persist through server restarts.");
+        }
+        if (loaded && !file.exists()) {
             this.createTables();
         }
     }
 
     private static Connection connect() {
+        if (!loaded)
+            return null;
         String url = "jdbc:sqlite:" + DamageIndicator.INSTANCE.getDataFolder() + File.separator + "database.db";
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -35,7 +44,7 @@ public class DBFile extends StorageFile {
     }
 
     private static void sendStatement(String sql) {
-        sendPreparedStatement(sql, null);
+        sendPreparedStatement(sql, (Object) null);
     }
 
     private static void sendPreparedStatement(String sql, Object... parameters) {
@@ -47,23 +56,24 @@ public class DBFile extends StorageFile {
 
         try {
             Connection conn = connect();
-            if((parameters == null || parameters.length == 0) && query == null) {
+            if (conn == null) return null;
+            if ((parameters == null || parameters.length == 0) && query == null) {
                 //Simple statement
                 Statement statement = conn.createStatement();
                 statement.execute(sql);
             } else {
                 PreparedStatement ps = conn.prepareStatement(sql);
-                for(int i=0; i<parameters.length; i++) {
-                    ps.setObject(i+1, parameters[i]);
+                for (int i = 0; i < parameters.length; i++) {
+                    ps.setObject(i + 1, parameters[i]);
                 }
 
-                if(query == null) {
+                if (query == null) {
                     //Prepared statement
                     ps.execute();
                 } else {
                     //Query statement
                     ResultSet rs = ps.executeQuery();
-                    if(rs.next()) result = rs.getObject(query);
+                    if (rs.next()) result = rs.getObject(query);
                 }
             }
             conn.close();
@@ -93,8 +103,9 @@ public class DBFile extends StorageFile {
 
         String sql = "SELECT toggle FROM damageindicator WHERE player = ?";
         Object toggleInt = sendQueryStatement(sql, "toggle", playerName);
-        if(toggleInt != null && toggleInt instanceof Integer) {
-            status = (Integer) toggleInt == 1 ? true : false;
+        System.out.println("return: " + toggleInt);
+        if (toggleInt instanceof Integer) {
+            status = (Integer) toggleInt == 1;
         }
         return status;
     }
@@ -106,4 +117,5 @@ public class DBFile extends StorageFile {
         String sql = "UPDATE damageindicator SET toggle = ? WHERE player = ?";
         sendPreparedStatement(sql, toggleInt, playerName);
     }
+
 }
