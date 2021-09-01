@@ -16,6 +16,14 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         </repository>
     </repositories>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>22.0.0</version>
+        </dependency>
+    </dependencies>
+
     <!-- NMS jars have to be compiled via BuildTools into your local maven repository due to copyright reasons -->
     <!-- Obtain the jars from https://getbukkit.org -->
     <!-- mvn install:install-file -Dfile=%path to your spigot jar% -DgroupId=org.spigotmc -DartifactId=spigot -Dversion=%the jar version, followed by -R0.1-SNAPSHOT% -Dpackaging=jar -DgeneratePom=true -->
