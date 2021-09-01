@@ -9,12 +9,13 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.RoundingMode;
 
 public class HologramSpawnEvent extends Event {
-    private LivingEntity ent;
-    private double amount;
+    private final LivingEntity ent;
+    private final double amount;
 
     public HologramSpawnEvent(LivingEntity ent, double amount) {
         this.ent = ent;
@@ -26,14 +27,21 @@ public class HologramSpawnEvent extends Event {
         double offset = StorageFileManager.getConfig().getDouble("hologram-offset");
         double speed = StorageFileManager.getConfig().getDouble("hologram-speed");
         int duration = StorageFileManager.getConfig().getInt("hologram-duration");
-        String format = amount > 0 ? StorageFileManager.getConfig().getNearestValue("heal-format", Math.abs(amount), RoundingMode.DOWN) : StorageFileManager.getConfig().getNearestValue("damage-format", Math.abs(amount), RoundingMode.DOWN);
+        String format = amount > 0
+                ? StorageFileManager.getConfig().getNearestValue("heal-format", Math.abs(amount), RoundingMode.DOWN)
+                : StorageFileManager.getConfig().getNearestValue("damage-format", Math.abs(amount), RoundingMode.DOWN);
 
-        String hologram = (new DisplayBuilder()).withText(format).withValue(Math.abs(amount)).build();
-        for(Player player : Bukkit.getOnlinePlayers()) {
-            if(player.getWorld().equals(ent.getWorld())
-                    && ToggleManager.INSTANCE.isToggled(player.getName())) {
-                DamageIndicator.PROTOCOL_NMS.getHologram(player, ent, hologram).spawn(offset, speed, duration);
-            }
+        String hologramText = (new DisplayBuilder()).withText(format).withValue(Math.abs(amount)).build();
+        int serverViewDist = Bukkit.getViewDistance() << 5;
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getWorld() != ent.getWorld())
+                return;
+            if (player.getLocation().distanceSquared(ent.getLocation()) > Math.min(player.getClientViewDistance() << 4, serverViewDist))
+                return;
+            if (!ToggleManager.INSTANCE.isToggled(player.getName()))
+                return;
+            DamageIndicator.PROTOCOL_NMS.getHologram(player, ent, hologramText).spawn(offset, speed, duration);
         }
     }
 
@@ -41,6 +49,7 @@ public class HologramSpawnEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     @Override
+    @NotNull
     public HandlerList getHandlers() {
         return handlers;
     }

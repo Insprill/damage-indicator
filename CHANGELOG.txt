@@ -46,3 +46,4 @@ PRERELEASE 0.1.0:
 - Fixed error when enabling health-indicators on 1.13+ servers.
 - Fixed the plugin failing to load if another plugin or the server didn't initialize SQLite.
 - Fixed damage modified by other plugins sometimes not updating indicators.
+- Fixed packets being sent to all players no matter how far away they are.
