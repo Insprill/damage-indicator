@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class DamageIndicatorCommand implements CommandExecutor {
     private void sendUsage(CommandSender sender) {
@@ -17,90 +18,67 @@ public class DamageIndicatorCommand implements CommandExecutor {
 
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String alias, String[] args) {
         ChatBuilder chat = (new ChatBuilder()).withSender(sender);
 
         //No command arguments
-        if(args.length < 1) {
+        if (args.length < 1) {
             sendUsage(sender);
             return true;
         }
 
         //No permission
-        if(!sender.hasPermission("damageindicator.command." + args[0])) {
+        if (!sender.hasPermission("damageindicator.command." + args[0])) {
             chat.sendMessages("no-permission");
             return true;
         }
 
-        //help, toggle, reload
-        if(args.length == 1) {
-            if(args[0].toLowerCase().equals("help")) {
+        switch (args[0].toLowerCase()) {
+            case "help": {
                 sendUsage(sender);
-                return true;
+                break;
             }
-
-            if(args[0].toLowerCase().equals("toggle")) {
-                if(!(sender instanceof Player)) {
+            case "toggle": {
+                if (!(sender instanceof Player)) {
                     chat.sendMessages("player-required");
-                    return true;
+                    break;
                 }
                 Player player = (Player) sender;
                 chat.withPlayer(player);
-                if(ToggleManager.INSTANCE.isToggled(player.getName())) {
-                    ToggleManager.INSTANCE.registerToggle(player.getName(), false);
-                    chat.sendMessages("command.toggle.disable");
-                } else {
-                    ToggleManager.INSTANCE.registerToggle(player.getName(), true);
-                    chat.sendMessages("command.toggle.enable");
+                if (args.length == 1) {
+                    if (ToggleManager.INSTANCE.isToggled(player.getName())) {
+                        ToggleManager.INSTANCE.registerToggle(player.getName(), false);
+                        chat.sendMessages("command.toggle.disable");
+                    } else {
+                        ToggleManager.INSTANCE.registerToggle(player.getName(), true);
+                        chat.sendMessages("command.toggle.enable");
+                    }
+                } else if (args.length > 1) {
+                    if (args[1].equalsIgnoreCase("on")) {
+                        ToggleManager.INSTANCE.registerToggle(player.getName(), true);
+                        chat.sendMessages("command.toggle.enable");
+                    } else if (args[1].equalsIgnoreCase("off")) {
+                        ToggleManager.INSTANCE.registerToggle(player.getName(), false);
+                        chat.sendMessages("command.toggle.disable");
+                    } else {
+                        //Wrong arg2 for toggle
+                        sendUsage(sender);
+                        return true;
+                    }
                 }
-                return true;
+                break;
             }
-
-            if(args[0].toLowerCase().equals("reload")) {
+            case "reload": {
                 StorageFileManager.reloadFiles();
                 HealthIndicator.INSTANCE.reload();
                 chat.sendMessages("command.reload");
-                return true;
+                break;
             }
-
-            //Wrong arg1
-            sendUsage(sender);
-            return true;
-        }
-
-        //toggle
-        if(args.length == 2) {
-            if(args[0].toLowerCase().equals("toggle")) {
-                if(!(sender instanceof Player)) {
-                    chat.sendMessages("player-required");
-                    return true;
-                }
-                Player player = (Player) sender;
-
-                if (args[1].toLowerCase().equals("on")) {
-                    ToggleManager.INSTANCE.registerToggle(player.getName(), true);
-                    chat.sendMessages("command.toggle.enable");
-                }
-
-                else if (args[1].toLowerCase().equals("off")) {
-                    ToggleManager.INSTANCE.registerToggle(player.getName(), false);
-                    chat.sendMessages("command.toggle.disable");
-                }
-
-                else {
-                    //Wrong arg2 for toggle
-                    sendUsage(sender);
-                    return true;
-                }
-                return true;
+            default: {
+                sendUsage(sender);
             }
-
-            //Wrong arg1
-            sendUsage(sender);
-            return true;
         }
-        //Incorrect number of args
-        sendUsage(sender);
         return true;
     }
+
 }
