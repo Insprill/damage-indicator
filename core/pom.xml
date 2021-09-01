@@ -14,8 +14,8 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <!-- Spigot 1.17 jar used for compiling -->
     <dependencies>
+        <!-- Spigot 1.17.1 jar used for compiling -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
@@ -23,14 +23,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <!-- Main repo for Spigot API -->
-    <repositories>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
 
     <build>
         <plugins>
