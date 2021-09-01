@@ -38,3 +38,6 @@ PRERELEASE 0.1.0:
 1.1.2:
 - Fixed a few bugs with health indicators
 - Updated default messages.yml
+
+1.1.3:
+- Fixed the bottom of the default help page being too short.

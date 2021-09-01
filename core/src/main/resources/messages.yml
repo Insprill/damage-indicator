@@ -9,7 +9,7 @@ command:
     - "&6/damageindicator help&f -&e Shows this help page"
     - "&6/damageindicator toggle <on/off>&f -&e Toggle client-side damage indicators"
     - "&6/damageindicator reload&f -&e Reload all plugin config and messages"
-    - "&8&m*]------------------------------[*&r"
+    - "&8&m*]--------------------------------------[*&r"
   toggle:
     enable: "&aDamageIndicator displays have been enabled"
     disable: "&cDamageIndicator displays have been disabled"
