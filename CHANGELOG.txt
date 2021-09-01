@@ -41,3 +41,7 @@ PRERELEASE 0.1.0:
 
 1.1.3:
 - Fixed the bottom of the default help page being too short.
+- Fixed tab completer returning player names in slots with no args.
+- Fixed error when a player is damaged/ healed after disabling health-indicators with "/di reload".
+- Fixed error when enabling health-indicators on 1.13+ servers.
+- Fixed the plugin failing to load if another plugin or the server didn't initialize SQLite.
