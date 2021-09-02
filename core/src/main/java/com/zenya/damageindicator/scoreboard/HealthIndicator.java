@@ -18,7 +18,6 @@ public class HealthIndicator {
     private HealthIndicator() {
         this.board = Bukkit.getScoreboardManager().getMainScoreboard();
         this.obj = board.getObjective("di-health");
-        reload();
     }
 
     public void updateHealth(Player player) {
@@ -48,6 +47,7 @@ public class HealthIndicator {
         }
         //Update displayname regardless
         obj.setDisplayName(ChatColor.translateAlternateColorCodes('&', StorageFileManager.getMessages().getString("health")));
+        Bukkit.getOnlinePlayers().forEach(this::updateHealth);
     }
 
 }

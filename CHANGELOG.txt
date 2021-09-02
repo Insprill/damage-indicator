@@ -50,4 +50,5 @@ PRERELEASE 0.1.0:
 - Fixed damage modified by other plugins sometimes not updating indicators.
 - Fixed packets being sent to all players no matter how far away they are.
 - Fixed indicators showing to the player who's been damaged/ healed.
+- Fixed health indicator not toggling if server was reloaded instead of using "/de reload".
 - Optimized how indicators are handled.
