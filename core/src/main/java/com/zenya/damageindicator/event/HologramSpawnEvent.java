@@ -12,8 +12,11 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.RoundingMode;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class HologramSpawnEvent extends Event {
+
     private final LivingEntity ent;
     private final double amount;
 
@@ -24,25 +27,25 @@ public class HologramSpawnEvent extends Event {
     }
 
     public void fireEvent() {
+        int serverViewDist = Bukkit.getViewDistance() << 5;
+        List<Player> players = ent.getWorld().getPlayers().stream()
+                .filter(p -> p != ent)
+                .filter(p -> p.getLocation().distanceSquared(ent.getLocation()) <= serverViewDist)
+                .filter(p -> ToggleManager.INSTANCE.isToggled(p.getName()))
+                .collect(Collectors.toList());
+        if (players.isEmpty())
+            return;
+
         double offset = StorageFileManager.getConfig().getDouble("hologram-offset");
         double speed = StorageFileManager.getConfig().getDouble("hologram-speed");
         int duration = StorageFileManager.getConfig().getInt("hologram-duration");
-        String format = amount > 0
+        String format = (amount > 0)
                 ? StorageFileManager.getConfig().getNearestValue("heal-format", Math.abs(amount), RoundingMode.DOWN)
                 : StorageFileManager.getConfig().getNearestValue("damage-format", Math.abs(amount), RoundingMode.DOWN);
 
-        String hologramText = (new DisplayBuilder()).withText(format).withValue(Math.abs(amount)).build();
-        int serverViewDist = Bukkit.getViewDistance() << 5;
+        String hologramText = new DisplayBuilder().withText(format).withValue(Math.abs(amount)).build();
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getWorld() != ent.getWorld())
-                return;
-            if (player.getLocation().distanceSquared(ent.getLocation()) > Math.min(player.getClientViewDistance() << 4, serverViewDist))
-                return;
-            if (!ToggleManager.INSTANCE.isToggled(player.getName()))
-                return;
-            DamageIndicator.PROTOCOL_NMS.getHologram(player, ent, hologramText).spawn(offset, speed, duration);
-        }
+        DamageIndicator.PROTOCOL_NMS.getHologram(players, ent, hologramText).spawn(offset, speed, duration);
     }
 
     //Default custom event methods

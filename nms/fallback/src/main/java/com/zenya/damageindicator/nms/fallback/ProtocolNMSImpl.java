@@ -9,24 +9,24 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
+
 public class ProtocolNMSImpl implements ProtocolNMS {
+
     @Override
-    public Hologram getHologram(Player player, LivingEntity ent, String text) {
-        return new HologramImpl(player, ent, text);
+    public Hologram getHologram(List<Player> players, LivingEntity ent, String text) {
+        return new HologramImpl(players, ent, text);
     }
 
-    public class HologramImpl implements Hologram {
-        Player player;
-        ArmorStand armorStand;
-        LivingEntity ent;
-        Location initialLoc;
-        String text;
-        double dy;
+    public static class HologramImpl implements Hologram {
 
-        public HologramImpl(Player player, LivingEntity ent, String text) {
-            this.player = player;
+        private ArmorStand armorStand;
+        private final LivingEntity ent;
+        private final String text;
+        private double dy;
+
+        public HologramImpl(List<Player> players, LivingEntity ent, String text) {
             this.ent = ent;
-            this.initialLoc = ent.getEyeLocation();
             this.dy = 0;
             this.text = text;
         }
@@ -46,7 +46,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
                     dy += speed;
 
                     tick++;
-                    if(tick > duration) {
+                    if (tick > duration) {
                         sendRemovePacket();
                         this.cancel();
                     }
@@ -65,7 +65,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
             armorStand.setInvisible(true);
             try {
                 armorStand.setMarker(true);
-            } catch(Exception exc) {
+            } catch (Exception exc) {
                 //Method does not exist pre-1.8
 
             }
@@ -84,5 +84,10 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         public void sendRemovePacket() {
             armorStand.remove();
         }
+
+        @Override
+        public void sendPacket(Object packet) {
+        }
+
     }
 }

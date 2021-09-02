@@ -47,3 +47,5 @@ PRERELEASE 0.1.0:
 - Fixed the plugin failing to load if another plugin or the server didn't initialize SQLite.
 - Fixed damage modified by other plugins sometimes not updating indicators.
 - Fixed packets being sent to all players no matter how far away they are.
+- Fixed indicators showing to the player who's been damaged/ healed.
+- Optimized how indicators are handled.

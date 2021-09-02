@@ -4,6 +4,7 @@ import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;
 import net.minecraft.network.chat.ChatComponentText;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityTeleport;
@@ -17,26 +18,30 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ProtocolNMSImpl implements ProtocolNMS {
+
     @Override
-    public Hologram getHologram(Player player, LivingEntity ent, String text) {
-        return new HologramImpl(player, ent, text);
+    public Hologram getHologram(List<Player> players, LivingEntity ent, String text) {
+        return new HologramImpl(players, ent, text);
     }
 
-    public class HologramImpl implements Hologram {
-        EntityPlayer player;
-        EntityArmorStand armorStand;
-        LivingEntity ent;
-        Location initialLoc;
-        double dy;
+    public static class HologramImpl implements Hologram {
 
-        public HologramImpl(Player player, LivingEntity ent, String text) {
-            this.player = ((CraftPlayer) player).getHandle();
+        private final List<EntityPlayer> players;
+        private final EntityArmorStand armorStand;
+        private final LivingEntity ent;
+        private double dy;
+
+        public HologramImpl(List<Player> players, LivingEntity ent, String text) {
+            this.players = players.stream().map(p -> ((CraftPlayer) p).getHandle()).collect(Collectors.toList());
             this.ent = ent;
-            this.initialLoc = ent.getEyeLocation();
             this.dy = 0;
+            Location loc = ent.getLocation();
 
-            EntityArmorStand armorStand = new EntityArmorStand(((CraftWorld) initialLoc.getWorld()).getHandle(), ent.getLocation().getX(), ent.getLocation().getY(), ent.getLocation().getZ());
+            EntityArmorStand armorStand = new EntityArmorStand(((CraftWorld) loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ());
             armorStand.setInvisible(true);
             armorStand.setMarker(true);
             armorStand.setSmall(true);
@@ -62,7 +67,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
                     dy += speed;
 
                     tick++;
-                    if(tick > duration) {
+                    if (tick > duration) {
                         sendRemovePacket();
                         this.cancel();
                     }
@@ -74,26 +79,35 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         @Override
         public void sendCreatePacket() {
             PacketPlayOutSpawnEntityLiving create = new PacketPlayOutSpawnEntityLiving(armorStand);
-            player.b.sendPacket(create);
+            sendPacket(create);
         }
 
         @Override
         public void sendMetaPacket() {
             PacketPlayOutEntityMetadata meta = new PacketPlayOutEntityMetadata(armorStand.getId(), armorStand.getDataWatcher(), true);
-            player.b.sendPacket(meta);
+            sendPacket(meta);
         }
 
         @Override
         public void sendTeleportPacket() {
             PacketPlayOutEntityTeleport teleport = new PacketPlayOutEntityTeleport(armorStand);
-            player.b.sendPacket(teleport);
+            sendPacket(teleport);
         }
 
         @Override
         public void sendRemovePacket() {
             //PacketPlayOutEntityDestroy(int) in 1.17
             PacketPlayOutEntityDestroy remove = new PacketPlayOutEntityDestroy(armorStand.getId());
-            player.b.sendPacket(remove);
+            sendPacket(remove);
         }
+
+        @Override
+        public void sendPacket(Object packet) {
+            for (EntityPlayer player : players) {
+                player.b.sendPacket((Packet<?>) packet);
+            }
+        }
+
     }
+
 }
