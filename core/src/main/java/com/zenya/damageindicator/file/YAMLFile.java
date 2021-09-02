@@ -131,33 +131,22 @@ public class YAMLFile extends StorageFile {
 
     public boolean listContains(String node, String item) {
         List<String> list = getList(node);
-        return list != null && list.size() != 0 && list.contains(item);
+        return !list.isEmpty() && list.contains(item);
     }
 
     /**
-     * Checks if a String is blacklisted.
+     * Checks if a string is allowed according to config whitelist/ blacklist.
      *
-     * @param node   Path to blacklist.
+     * @param node   Path to list.
      * @param string String to test.
-     * @return True if the string is blacklist is enabled and the string is blacklisted, false otherwise.
+     * @return True if allowed, false otherwise. If list is disabled, it is assumed to be allowed.
      */
-    public boolean isBlackListed(String node, String string) {
-        if (!StorageFileManager.getConfig().getBool(node + "-enabled:"))
-            return false;
-        return StorageFileManager.getConfig().listContains(node, string);
-    }
-
-    /**
-     * Checks if a String is whitelisted.
-     *
-     * @param node   Path to whitelist.
-     * @param string String to test.
-     * @return True if the whitelist is disabled, or the string is whitelisted, false otherwise.
-     */
-    public boolean isWhiteListed(String node, String string) {
-        if (!StorageFileManager.getConfig().getBool(node + "-enabled:"))
+    public boolean isAllowed(String node, String string) {
+        boolean isWhitelist = StorageFileManager.getConfig().getBool(node + "-as-whitelist");
+        if (!StorageFileManager.getConfig().getBool(node + "-enabled"))
             return true;
-        return !StorageFileManager.getConfig().listContains(node, string);
+        boolean result = StorageFileManager.getConfig().listContains(node, string);
+        return isWhitelist == result;
     }
 
     public <T extends Number & Comparable<T>> String getNearestValue(String node, T reference, RoundingMode mode) {
