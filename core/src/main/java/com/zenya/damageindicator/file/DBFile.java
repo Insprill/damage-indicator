@@ -44,7 +44,7 @@ public class DBFile extends StorageFile {
     }
 
     private static void sendStatement(String sql) {
-        sendPreparedStatement(sql, (Object) null);
+        sendPreparedStatement(sql);
     }
 
     private static void sendPreparedStatement(String sql, Object... parameters) {
