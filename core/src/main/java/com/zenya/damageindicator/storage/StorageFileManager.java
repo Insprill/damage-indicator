@@ -13,19 +13,19 @@ import java.util.Set;
 public class StorageFileManager {
     /**
      * config.yml
-     * **/
-    private static final int CONFIG_FILE_VERSION = 2;
+     **/
+    private static final int CONFIG_FILE_VERSION = 3;
     private static final boolean CONFIG_RESET_FILE = false;
     private static final List<String> CONFIG_IGNORED_NODES = new ArrayList<String>() {{
         add("config-version");
     }};
     private static final List<String> CONFIG_REPLACE_NODES = new ArrayList<String>() {{
-       add("disabled-worlds");
+        add("disabled-worlds");
     }};
 
     /**
      * messages.yml
-     * **/
+     **/
     private static final int MESSAGES_FILE_VERSION = 2;
     private static final boolean MESSAGES_RESET_FILE = false;
     private static final List<String> MESSAGES_IGNORED_NODES = new ArrayList<String>() {{
@@ -35,17 +35,17 @@ public class StorageFileManager {
 
     /**
      * database.db
-     * **/
+     **/
     private static final int DATABASE_FILE_VERSION = 0; //Unused for now
     private static final boolean DATABASE_RESET_FILE = false;
 
     public static final StorageFileManager INSTANCE = new StorageFileManager();
-    private HashMap<String, StorageFile> fileMap = new HashMap<>();
+    private final HashMap<String, StorageFile> fileMap = new HashMap<>();
 
     public StorageFileManager() {
         registerFile("config.yml", new YAMLFile(DamageIndicator.INSTANCE.getDataFolder().getPath(), "config.yml", CONFIG_FILE_VERSION, CONFIG_RESET_FILE, CONFIG_IGNORED_NODES, CONFIG_REPLACE_NODES));
         registerFile("messages.yml", new YAMLFile(DamageIndicator.INSTANCE.getDataFolder().getPath(), "messages.yml", MESSAGES_FILE_VERSION, MESSAGES_RESET_FILE, MESSAGES_IGNORED_NODES, MESSAGES_REPLACE_NODES));
-        registerFile("database.db", new DBFile(DamageIndicator.INSTANCE.getDataFolder().getPath(),"database.db", DATABASE_FILE_VERSION, DATABASE_RESET_FILE));
+        registerFile("database.db", new DBFile(DamageIndicator.INSTANCE.getDataFolder().getPath(), "database.db", DATABASE_FILE_VERSION, DATABASE_RESET_FILE));
     }
 
     public static void reloadFiles() {

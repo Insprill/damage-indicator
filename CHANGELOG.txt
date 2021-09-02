@@ -40,6 +40,8 @@ PRERELEASE 0.1.0:
 - Updated default messages.yml
 
 1.1.3:
+- Added option to only show entity damage indicators when damage is dealt by a player.
+- Added entity-type whitelist/ blacklist.
 - Fixed the bottom of the default help page being too short.
 - Fixed tab completer returning player names in slots with no args.
 - Fixed error when a player is damaged/ healed after disabling health-indicators with "/di reload".
