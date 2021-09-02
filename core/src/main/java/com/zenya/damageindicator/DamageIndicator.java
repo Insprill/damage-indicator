@@ -5,23 +5,25 @@ import com.zenya.damageindicator.command.DamageIndicatorTab;
 import com.zenya.damageindicator.event.Listeners;
 import com.zenya.damageindicator.nms.CompatibilityHandler;
 import com.zenya.damageindicator.nms.ProtocolNMS;
+import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class DamageIndicator extends JavaPlugin {
+
     public static DamageIndicator INSTANCE;
     public static ProtocolNMS PROTOCOL_NMS;
-    private StorageFileManager storageFileManager;
 
     public void onEnable() {
         INSTANCE = this;
 
         //Init all configs and storage files
-        storageFileManager = StorageFileManager.INSTANCE;
+        //noinspection UnusedDeclaration
+        StorageFileManager storageFileManager = StorageFileManager.INSTANCE;
 
         //Disable for versions below 1.8
-        if(CompatibilityHandler.getProtocol() < 8) {
+        if (CompatibilityHandler.getProtocol() < 8) {
             onDisable();
             getServer().getPluginManager().disablePlugin(INSTANCE);
             return;
@@ -42,9 +44,11 @@ public class DamageIndicator extends JavaPlugin {
         this.getCommand("damageindicator").setExecutor(new DamageIndicatorCommand());
         try {
             this.getCommand("damageindicator").setTabCompleter(new DamageIndicatorTab());
-        } catch(Exception exc) {
+        } catch (Exception exc) {
             //Do nothing, version doesn't support tabcomplete
         }
+
+        HealthIndicator.INSTANCE.reload();
     }
 
     public void onDisable() {
