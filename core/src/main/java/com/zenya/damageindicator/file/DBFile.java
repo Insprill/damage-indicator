@@ -103,7 +103,7 @@ public class DBFile extends StorageFile {
 
         String sql = "SELECT toggle FROM damageindicator WHERE player = ?";
         Object toggleInt = sendQueryStatement(sql, "toggle", playerName);
-        System.out.println("return: " + toggleInt);
+
         if (toggleInt instanceof Integer) {
             status = (Integer) toggleInt == 1;
         }
