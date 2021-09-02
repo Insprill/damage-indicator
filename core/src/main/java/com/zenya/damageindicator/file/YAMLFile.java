@@ -1,6 +1,7 @@
 package com.zenya.damageindicator.file;
 
 import com.zenya.damageindicator.DamageIndicator;
+import com.zenya.damageindicator.storage.StorageFileManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.util.FileUtil;
@@ -13,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class YAMLFile extends StorageFile {
-    private FileConfiguration origConfig;
+
+    private final FileConfiguration origConfig;
     private FileConfiguration config;
 
     public YAMLFile(String fileName) {
@@ -25,11 +27,10 @@ public class YAMLFile extends StorageFile {
     }
 
     /**
-     *
-     * @param directory Directory the file exists in.
-     * @param fileName Full name of the file, excluding its directory.
-     * @param fileVersion Version of the file as specified in "config-version.
-     * @param resetFile Whether or not the file should be deleted and overwritten by the original resource.
+     * @param directory    Directory the file exists in.
+     * @param fileName     Full name of the file, excluding its directory.
+     * @param fileVersion  Version of the file as specified in "config-version.
+     * @param resetFile    Whether the file should be deleted and overwritten by the original resource.
      * @param ignoredNodes Nodes that will use the latest resource config's values.
      * @param replaceNodes Nodes that will use old config values instead of being appended (applicable to nested keys)
      */
@@ -39,7 +40,7 @@ public class YAMLFile extends StorageFile {
         this.origConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(DamageIndicator.INSTANCE.getResource(fileName)));
         this.config = YamlConfiguration.loadConfiguration(file);
 
-        if(fileVersion != null) {
+        if (fileVersion != null) {
             try {
                 updateFile(ignoredNodes, replaceNodes);
             } catch (IOException e) {
@@ -53,17 +54,17 @@ public class YAMLFile extends StorageFile {
     }
 
     private void updateFile(List<String> ignoredNodes, List<String> replaceNodes) throws IOException {
-        if(!file.exists()) {
+        if (!file.exists()) {
             //Init file
             DamageIndicator.INSTANCE.saveResource(fileName, false);
             config = YamlConfiguration.loadConfiguration(file);
         } else {
             //Reset file for backward-compatibility
-            if(getFileVersion() > fileVersion) resetFile = true;
+            if (getFileVersion() > fileVersion) resetFile = true;
 
             //Update file
-            if(getFileVersion() != fileVersion) {
-                File oldConfigFile = new File(directory, fileName + ".v" + String.valueOf(getFileVersion()));
+            if (getFileVersion() != fileVersion) {
+                File oldConfigFile = new File(directory, fileName + ".v" + getFileVersion());
                 FileUtil.copy(file, oldConfigFile);
                 file.delete();
                 origConfig.save(file);
@@ -72,15 +73,15 @@ public class YAMLFile extends StorageFile {
                 config = YamlConfiguration.loadConfiguration(file);
 
                 //Add old values
-                if(!resetFile) {
-                    for(String node : config.getKeys(true)) {
-                        if(ignoredNodes != null && ignoredNodes.contains(node)) continue;
-                        if(oldConfig.getKeys(true).contains(node + ".")) continue;
-                        if(replaceNodes != null && replaceNodes.contains(node)) {
+                if (!resetFile) {
+                    for (String node : config.getKeys(true)) {
+                        if (ignoredNodes != null && ignoredNodes.contains(node)) continue;
+                        if (oldConfig.getKeys(true).contains(node + ".")) continue;
+                        if (replaceNodes != null && replaceNodes.contains(node)) {
                             config.set(node, null);
                             config.createSection(node);
                         }
-                        if(oldConfig.contains(node, true)) {
+                        if (oldConfig.contains(node, true)) {
                             config.set(node, oldConfig.get(node));
                         }
                     }
@@ -94,69 +95,34 @@ public class YAMLFile extends StorageFile {
     }
 
     public String getString(String node) {
-        String val;
-        try {
-            val = config.getString(node);
-        } catch(Exception e) {
-            val = "";
-        }
-        return val;
+        return config.getString(node);
     }
 
     public int getInt(String node) {
-        int val;
-        try {
-            val = config.getInt(node);
-        } catch(Exception e) {
-            val = 0;
-        }
-        return val;
+        return config.getInt(node);
     }
 
     public double getDouble(String node) {
-        double val;
-        try {
-            val = config.getDouble(node);
-        } catch(Exception e) {
-            val = 0d;
-        }
-        return val;
+        return config.getDouble(node);
     }
 
     public boolean getBool(String node) {
-        boolean val;
-        try {
-            val = config.getBoolean(node);
-        } catch(Exception e) {
-            val = false;
-        }
-        return val;
+        return config.getBoolean(node);
     }
 
     public List<String> getKeys(String node) {
-        List<String> val = new ArrayList<>();
+        List<String> val;
         try {
-            for(String key : config.getConfigurationSection(node).getKeys(false)) {
-                val.add(key);
-            }
-        } catch(Exception e) {
-            val = new ArrayList<>();
+            val = new ArrayList<>(config.getConfigurationSection(node).getKeys(false));
+        } catch (Exception e) {
             e.printStackTrace();
+            val = new ArrayList<>();
         }
         return val;
     }
 
     public List<String> getList(String node) {
-        List<String> val = new ArrayList<>();
-        try {
-            for(String s : config.getStringList(node)) {
-                val.add(s);
-            }
-        } catch(Exception e) {
-            val = new ArrayList<>();
-            e.printStackTrace();
-        }
-        return val;
+        return config.getStringList(node);
     }
 
     public boolean isList(String node) {
@@ -165,27 +131,52 @@ public class YAMLFile extends StorageFile {
 
     public boolean listContains(String node, String item) {
         List<String> list = getList(node);
-        if(list != null && list.size() != 0 && list.contains(item)) return true;
-        return false;
+        return list != null && list.size() != 0 && list.contains(item);
+    }
+
+    /**
+     * Checks if a String is blacklisted.
+     *
+     * @param node   Path to blacklist.
+     * @param string String to test.
+     * @return True if the string is blacklist is enabled and the string is blacklisted, false otherwise.
+     */
+    public boolean isBlackListed(String node, String string) {
+        if (!StorageFileManager.getConfig().getBool(node + "-enabled:"))
+            return false;
+        return StorageFileManager.getConfig().listContains(node, string);
+    }
+
+    /**
+     * Checks if a String is whitelisted.
+     *
+     * @param node   Path to whitelist.
+     * @param string String to test.
+     * @return True if the whitelist is disabled, or the string is whitelisted, false otherwise.
+     */
+    public boolean isWhiteListed(String node, String string) {
+        if (!StorageFileManager.getConfig().getBool(node + "-enabled:"))
+            return true;
+        return !StorageFileManager.getConfig().listContains(node, string);
     }
 
     public <T extends Number & Comparable<T>> String getNearestValue(String node, T reference, RoundingMode mode) {
         List<String> keyList = getKeys(node);
-        if(keyList != null && keyList.size() != 0) {
-            double smallestDiff = Math.abs(Double.valueOf(keyList.get(0)) - reference.doubleValue());
+        if (keyList != null && keyList.size() != 0) {
+            double smallestDiff = Math.abs(Double.parseDouble(keyList.get(0)) - reference.doubleValue());
             int smallestIndex = 0;
             for (int i = 1; i < keyList.size(); i++) {
-                double difference = Math.abs(Double.valueOf(keyList.get(i)) - reference.doubleValue());
+                double difference = Math.abs(Double.parseDouble(keyList.get(i)) - reference.doubleValue());
                 if (difference <= smallestDiff) {
-                    switch(mode) {
+                    switch (mode) {
                         case DOWN:
-                            if (Math.abs(reference.doubleValue()) >= Math.abs(Double.valueOf(keyList.get(i)))) {
+                            if (Math.abs(reference.doubleValue()) >= Math.abs(Double.parseDouble(keyList.get(i)))) {
                                 smallestDiff = difference;
                                 smallestIndex = i;
                             }
                             break;
                         case UP:
-                            if (Math.abs(reference.doubleValue()) <= Math.abs(Double.valueOf(keyList.get(i)))) {
+                            if (Math.abs(reference.doubleValue()) <= Math.abs(Double.parseDouble(keyList.get(i)))) {
                                 smallestDiff = difference;
                                 smallestIndex = i;
                             }
