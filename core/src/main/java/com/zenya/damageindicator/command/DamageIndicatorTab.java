@@ -17,9 +17,6 @@ public class DamageIndicatorTab implements TabCompleter {
         List<String> matches = new ArrayList<>();
 
         switch (args.length) {
-            case 0:
-                matches.add("damageindicator");
-                return StringUtil.copyPartialMatches(cmd.getName(), matches, new ArrayList<>());
             case 1:
                 matches.add("help");
                 matches.add("toggle");
