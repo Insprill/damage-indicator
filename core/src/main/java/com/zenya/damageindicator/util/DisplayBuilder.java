@@ -10,12 +10,12 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DisplayBuilder {
+
     private String text;
     private Double value;
-    private List<ChatColor> colors = new ArrayList<>();
+    private final List<ChatColor> colors = new ArrayList<>();
 
     public DisplayBuilder() {
-
     }
 
     public DisplayBuilder(String text) {
@@ -54,9 +54,9 @@ public class DisplayBuilder {
         return this;
     }
 
-    public DisplayBuilder withColor(char... colors) {
-        for(char color : colors) {
-            this.colors.add(ChatColor.getByChar(color));
+    public DisplayBuilder withColor(char... codes) {
+        for (char code : codes) {
+            this.colors.add(ChatColor.getByChar(code));
         }
         return this;
     }
@@ -79,11 +79,11 @@ public class DisplayBuilder {
 
     public String build() {
         //%damage% placeholder
-        if(value != null) {
+        if (value != null) {
             String val;
             try {
                 val = String.format("%." + StorageFileManager.getConfig().getInt("indicator-decimals") + "f", value);
-            } catch(Exception exc) {
+            } catch (Exception exc) {
                 //Users doing something dumb in config
                 val = String.format("%.2f", value);
             }
@@ -91,11 +91,11 @@ public class DisplayBuilder {
         }
 
         //%rainbow% & %<color>% placeholder
-        String colorModifier = "";
+        String colorModifier;
         try {
             colorModifier = text.substring(text.indexOf('%'), text.indexOf('%', text.indexOf('%') + 1) + 1);
             text = text.replaceAll(colorModifier, "");
-            if(colorModifier.toLowerCase().equals("%rainbow%")) {
+            if (colorModifier.equalsIgnoreCase("%rainbow%")) {
                 withRainbow();
             } else {
                 char[] colors = new char[colorModifier.length() - 2];
@@ -107,40 +107,41 @@ public class DisplayBuilder {
         }
 
         //Insert colors
-        if(colors.size() > 0) {
+        if (colors.size() > 0) {
             int textIndex = text.length() - 1;
             int colorIndex = colors.size() - 1;
-            while(textIndex >= 0) {
+            while (textIndex >= 0) {
                 setColorAt(textIndex, colorIndex);
                 textIndex--;
                 colorIndex--;
-                if(colorIndex < 0) colorIndex = colors.size() - 1;
+                if (colorIndex < 0) colorIndex = colors.size() - 1;
             }
         }
 
         //Insert formatting
-        if(StorageFileManager.getConfig().getBool("bold-indicators")) setFormat('l');
-        if(StorageFileManager.getConfig().getBool("italic-indicators")) setFormat('o');
-        if(StorageFileManager.getConfig().getBool("underline-indicators")) setFormat('m');
+        if (StorageFileManager.getConfig().getBool("bold-indicators")) setFormat('l');
+        if (StorageFileManager.getConfig().getBool("italic-indicators")) setFormat('o');
+        if (StorageFileManager.getConfig().getBool("underline-indicators")) setFormat('m');
         return ChatColor.translateAlternateColorCodes('&', text);
     }
 
     private void setColorAt(int textIndex, int colorIndex) {
-        StringBuffer buffer = new StringBuffer(text);
-        buffer.insert(textIndex, "&" + colors.get(colorIndex).getChar());
-        text = buffer.toString();
+        StringBuilder builder = new StringBuilder(text);
+        builder.insert(textIndex, "&" + colors.get(colorIndex).getChar());
+        text = builder.toString();
     }
 
     private void setFormat(char format) {
-        String formatted = "";
-        for(int i=0 ; i<text.length(); i++) {
-            if(text.toCharArray()[i] == '&') {
+        StringBuilder formatted = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            if (text.toCharArray()[i] == '&') {
                 i++;
-                formatted += "&" + text.toCharArray()[i];
+                formatted.append("&").append(text.toCharArray()[i]);
                 continue;
             }
-            formatted += "&" + format + text.toCharArray()[i];
+            formatted.append("&").append(format).append(text.toCharArray()[i]);
         }
-        text = formatted;
+        text = formatted.toString();
     }
+
 }
