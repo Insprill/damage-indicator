@@ -59,7 +59,7 @@ only-show-entity-damage-from-players: true
 # Toggles the below entity type whitelist/blacklist.
 entity-type-list-enabled: true
 # If true, the following list will act as a whitelist instead of a blacklist.
-entity-type-list-as-whitelist: true
+entity-type-list-as-whitelist: false
 entity-type-list:
   - ARMOR_STAND
 
