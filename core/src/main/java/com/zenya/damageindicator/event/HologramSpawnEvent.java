@@ -39,10 +39,8 @@ public class HologramSpawnEvent extends Event {
         double offset = StorageFileManager.getConfig().getDouble("hologram-offset");
         double speed = StorageFileManager.getConfig().getDouble("hologram-speed");
         int duration = StorageFileManager.getConfig().getInt("hologram-duration");
-        String format = (amount > 0)
-                ? StorageFileManager.getConfig().getNearestValue("heal-format", Math.abs(amount), RoundingMode.DOWN)
-                : StorageFileManager.getConfig().getNearestValue("damage-format", Math.abs(amount), RoundingMode.DOWN);
 
+        String format = StorageFileManager.getConfig().getNearestValue(amount > 0 ? "heal-format" : "damage-format", Math.abs(amount), RoundingMode.DOWN);
         String hologramText = new DisplayBuilder().withText(format).withValue(Math.abs(amount)).build();
 
         DamageIndicator.PROTOCOL_NMS.getHologram(players, ent, hologramText).spawn(offset, speed, duration);
