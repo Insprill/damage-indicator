@@ -1,3 +1,7 @@
+1.1.4:
+- Added support for 1.18-pre8.
+- Fixed entity-type-list-as-whitelist being true by default.
+
 1.1.3:
 - Added option to only show entity damage indicators when damage is dealt by a player.
 - Added entity-type whitelist/ blacklist.
