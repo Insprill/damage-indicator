@@ -1,7 +1,7 @@
 package com.zenya.damageindicator.nms;
 
+import com.zenya.damageindicator.DamageIndicator;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 
 public class CompatibilityHandler {
 
@@ -26,8 +26,8 @@ public class CompatibilityHandler {
         1.16.3 - v1_16_R2
         1.16.5 - v1_16_R3
         1.17 - v1_17_R0 (due to breaking changes)
-        1.17.1 - v_17_R1
-        1.18 - v_18_R1
+        1.17.1 - v1_17_R1
+        1.18 - v1_18_R1
         */
         String name = Bukkit.getServer().getClass().getPackage().getName();
         String version = name.substring(name.lastIndexOf('.') + 1);
@@ -45,8 +45,8 @@ public class CompatibilityHandler {
         try {
             return (Class<? extends ProtocolNMS>) Class.forName(PACKAGE_DOMAIN + getVersion() + CLASS_NAME);
         } catch (Exception exc) {
-            Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "You are running DamageIndicator on an unsupported NMS version " + getVersion());
-            Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "Some features may be disabled or broken");
+            DamageIndicator.INSTANCE.getLogger().warning("You are running DamageIndicator on an unsupported NMS version " + getVersion());
+            DamageIndicator.INSTANCE.getLogger().warning("Some features may be disabled or broken");
             return (Class<? extends ProtocolNMS>) Class.forName(PACKAGE_DOMAIN + "fallback" + CLASS_NAME);
         }
     }
