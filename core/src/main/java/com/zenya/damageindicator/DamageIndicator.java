@@ -7,6 +7,7 @@ import com.zenya.damageindicator.nms.CompatibilityHandler;
 import com.zenya.damageindicator.nms.ProtocolNMS;
 import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
+import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,17 +25,17 @@ public class DamageIndicator extends JavaPlugin {
 
         //Disable for versions below 1.8
         if (CompatibilityHandler.getProtocol() < 8) {
-            onDisable();
-            getServer().getPluginManager().disablePlugin(INSTANCE);
+            Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
         //Init NMS
-        //Spigot buyer ID check in here
         try {
-            PROTOCOL_NMS = CompatibilityHandler.getProtocolNMS().newInstance();
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            PROTOCOL_NMS = (ProtocolNMS) CompatibilityHandler.getProtocolNMS().getConstructors()[0].newInstance();
+        } catch (ReflectiveOperationException e) {
             e.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
         }
 
         //Register events
@@ -54,4 +55,5 @@ public class DamageIndicator extends JavaPlugin {
     public void onDisable() {
         HandlerList.unregisterAll(INSTANCE);
     }
+
 }
