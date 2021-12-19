@@ -46,19 +46,19 @@ public class DamageIndicatorCommand implements CommandExecutor {
                 Player player = (Player) sender;
                 chat.withPlayer(player);
                 if (args.length == 1) {
-                    if (ToggleManager.INSTANCE.isToggled(player.getName())) {
-                        ToggleManager.INSTANCE.registerToggle(player.getName(), false);
+                    if (ToggleManager.INSTANCE.isToggled(player.getUniqueId())) {
+                        ToggleManager.INSTANCE.registerToggle(player.getUniqueId(), false);
                         chat.sendMessages("command.toggle.disable");
                     } else {
-                        ToggleManager.INSTANCE.registerToggle(player.getName(), true);
+                        ToggleManager.INSTANCE.registerToggle(player.getUniqueId(), true);
                         chat.sendMessages("command.toggle.enable");
                     }
                 } else if (args.length > 1) {
                     if (args[1].equalsIgnoreCase("on")) {
-                        ToggleManager.INSTANCE.registerToggle(player.getName(), true);
+                        ToggleManager.INSTANCE.registerToggle(player.getUniqueId(), true);
                         chat.sendMessages("command.toggle.enable");
                     } else if (args[1].equalsIgnoreCase("off")) {
-                        ToggleManager.INSTANCE.registerToggle(player.getName(), false);
+                        ToggleManager.INSTANCE.registerToggle(player.getUniqueId(), false);
                         chat.sendMessages("command.toggle.disable");
                     } else {
                         //Wrong arg2 for toggle

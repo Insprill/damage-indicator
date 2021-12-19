@@ -3,7 +3,13 @@ package com.zenya.damageindicator.file;
 import com.zenya.damageindicator.DamageIndicator;
 
 import java.io.File;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.UUID;
 
 public class DBFile extends StorageFile {
 
@@ -92,17 +98,17 @@ public class DBFile extends StorageFile {
         sendStatement(sql);
     }
 
-    public void initData(String playerName) {
+    public void initData(UUID uuid) {
         String sql = "INSERT OR IGNORE INTO damageindicator(player, toggle) VALUES(?, ?)";
-        sendPreparedStatement(sql, playerName, 1);
+        sendPreparedStatement(sql, uuid, 1);
     }
 
-    public boolean getToggleStatus(String playerName) {
-        initData(playerName);
+    public boolean getToggleStatus(UUID uuid) {
+        initData(uuid);
         boolean status = false;
 
         String sql = "SELECT toggle FROM damageindicator WHERE player = ?";
-        Object toggleInt = sendQueryStatement(sql, "toggle", playerName);
+        Object toggleInt = sendQueryStatement(sql, "toggle", uuid);
 
         if (toggleInt instanceof Integer) {
             status = (Integer) toggleInt == 1;
@@ -110,12 +116,12 @@ public class DBFile extends StorageFile {
         return status;
     }
 
-    public void setToggleStatus(String playerName, boolean status) {
-        initData(playerName);
+    public void setToggleStatus(UUID uuid, boolean status) {
+        initData(uuid);
         int toggleInt = status ? 1 : 0;
 
         String sql = "UPDATE damageindicator SET toggle = ? WHERE player = ?";
-        sendPreparedStatement(sql, toggleInt, playerName);
+        sendPreparedStatement(sql, toggleInt, uuid);
     }
 
 }

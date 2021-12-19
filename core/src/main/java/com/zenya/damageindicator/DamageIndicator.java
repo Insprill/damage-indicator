@@ -16,6 +16,7 @@ public class DamageIndicator extends JavaPlugin {
     public static DamageIndicator INSTANCE;
     public static ProtocolNMS PROTOCOL_NMS;
 
+    @Override
     public void onEnable() {
         INSTANCE = this;
 
@@ -52,6 +53,7 @@ public class DamageIndicator extends JavaPlugin {
         HealthIndicator.INSTANCE.reload();
     }
 
+    @Override
     public void onDisable() {
         HandlerList.unregisterAll(INSTANCE);
     }

@@ -31,7 +31,7 @@ public class HologramSpawnEvent extends Event {
         List<Player> players = ent.getWorld().getPlayers().stream()
                 .filter(p -> p != ent)
                 .filter(p -> p.getLocation().distanceSquared(ent.getLocation()) <= serverViewDist)
-                .filter(p -> ToggleManager.INSTANCE.isToggled(p.getName()))
+                .filter(p -> ToggleManager.INSTANCE.isToggled(p.getUniqueId()))
                 .collect(Collectors.toList());
         if (players.isEmpty())
             return;

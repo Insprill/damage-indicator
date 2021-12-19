@@ -2,6 +2,7 @@ package com.zenya.damageindicator.event;
 
 import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
+import com.zenya.damageindicator.storage.ToggleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -12,6 +13,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class Listeners implements Listener {
 
@@ -67,6 +69,12 @@ public class Listeners implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoinEvent(PlayerJoinEvent e) {
         HealthIndicator.INSTANCE.updateHealth(e.getPlayer());
+        ToggleManager.INSTANCE.isToggled(e.getPlayer().getUniqueId());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerJoinEvent(PlayerQuitEvent e) {
+        ToggleManager.INSTANCE.uncacheToggle(e.getPlayer().getUniqueId());
     }
 
 }

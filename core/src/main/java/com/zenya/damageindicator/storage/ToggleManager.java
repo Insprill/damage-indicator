@@ -1,43 +1,41 @@
 package com.zenya.damageindicator.storage;
 
 import com.zenya.damageindicator.DamageIndicator;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.Bukkit;
 
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class ToggleManager {
+
     public static final ToggleManager INSTANCE = new ToggleManager();
-    private ConcurrentMap<String, Boolean> toggleMap = new ConcurrentHashMap<>();
 
-    public Boolean isToggled(String playerName) {
-        if(!toggleMap.containsKey(playerName)) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    boolean status = StorageFileManager.getDatabase().getToggleStatus(playerName);
-                    cacheToggle(playerName, status);
-                }
-            }.runTask(DamageIndicator.INSTANCE);
+    private final ConcurrentMap<UUID, Boolean> toggleMap = new ConcurrentHashMap<>();
+
+    public Boolean isToggled(UUID uuid) {
+        if (!toggleMap.containsKey(uuid)) {
+            Bukkit.getScheduler().runTaskAsynchronously(DamageIndicator.INSTANCE, () -> {
+                boolean status = StorageFileManager.getDatabase().getToggleStatus(uuid);
+                cacheToggle(uuid, status);
+            });
         }
-        return toggleMap.getOrDefault(playerName, false);
+        return toggleMap.getOrDefault(uuid, false);
     }
 
-    public void registerToggle(String playerName, boolean status) {
-        cacheToggle(playerName, status);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                StorageFileManager.getDatabase().setToggleStatus(playerName, status);
-            }
-        }.runTask(DamageIndicator.INSTANCE);
+    public void registerToggle(UUID uuid, boolean status) {
+        cacheToggle(uuid, status);
+        Bukkit.getScheduler().runTaskAsynchronously(DamageIndicator.INSTANCE, () -> {
+            StorageFileManager.getDatabase().setToggleStatus(uuid, status);
+        });
     }
 
-    public void cacheToggle(String playerName, boolean enabled) {
-        toggleMap.put(playerName, enabled);
+    public void cacheToggle(UUID uuid, boolean enabled) {
+        toggleMap.put(uuid, enabled);
     }
 
-    public void uncacheToggle(String playerName) {
-        toggleMap.remove(playerName);
+    public void uncacheToggle(UUID uuid) {
+        toggleMap.remove(uuid);
     }
+
 }
