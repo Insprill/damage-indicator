@@ -1,6 +1,6 @@
 name: DamageIndicator
 main: com.zenya.damageindicator.DamageIndicator
-version: 1.1.4
+version: 1.1.5
 authors: [Insprill, Zenya4]
 description: A high performance packet-based damage indicator
 api-version: 1.13
