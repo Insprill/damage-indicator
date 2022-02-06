@@ -6,6 +6,7 @@ import com.zenya.damageindicator.storage.ToggleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -27,8 +28,13 @@ public class Listeners implements Listener {
         if (!(e.getEntity() instanceof Player) && StorageFileManager.getConfig().getBool("only-show-entity-damage-from-players")) {
             if (!(e instanceof EntityDamageByEntityEvent))
                 return;
-            if (!(((EntityDamageByEntityEvent) e).getDamager() instanceof Player))
+            EntityDamageByEntityEvent ev = (EntityDamageByEntityEvent) e;
+            if (ev.getDamager() instanceof Projectile) {
+                if (!(((Projectile) ev.getDamager()).getShooter() instanceof Player))
+                    return;
+            } else if (!(((EntityDamageByEntityEvent) e).getDamager() instanceof Player)) {
                 return;
+            }
         }
 
         if (!StorageFileManager.getConfig().isAllowed("entity-type-list", e.getEntity().getType().name()))
