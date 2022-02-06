@@ -1,3 +1,7 @@
+1.1.6:
+- Fixed indicators not showing from player-shot arrows when 'only-show-entity-damage-from-players' is enabled.
+
+
 1.1.5:
 - Fixed the first damage a player does not showing an indicator.
 - Fixed database requests not being run async.
