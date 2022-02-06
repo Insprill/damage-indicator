@@ -15,11 +15,10 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     </parent>
 
     <dependencies>
-        <!-- Spigot 1.17.1 jar used for compiling -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <version>1.18.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
