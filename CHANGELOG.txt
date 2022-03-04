@@ -1,3 +1,7 @@
+1.1.7:
+- Added support for 1.18.2.
+
+
 1.1.6:
 - Fixed indicators not showing from player-shot arrows when 'only-show-entity-damage-from-players' is enabled.
 
