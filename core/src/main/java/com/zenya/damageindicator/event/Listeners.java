@@ -20,9 +20,11 @@ public class Listeners implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityDamageEvent(EntityDamageEvent e) {
+        if (!(e.getEntity() instanceof LivingEntity))
+            return;
         if (StorageFileManager.getConfig().listContains("disabled-worlds", e.getEntity().getWorld().getName()))
             return;
-        if (!(e.getEntity() instanceof LivingEntity))
+        if (!StorageFileManager.getConfig().getBool("damage-indicators"))
             return;
 
         if (!(e.getEntity() instanceof Player) && StorageFileManager.getConfig().getBool("only-show-entity-damage-from-players")) {
@@ -52,13 +54,14 @@ public class Listeners implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityRegainHealthEvent(EntityRegainHealthEvent e) {
-        if (StorageFileManager.getConfig().listContains("disabled-worlds", e.getEntity().getWorld().getName()))
+        if (!(e.getEntity() instanceof LivingEntity))
             return;
         if (e.getAmount() < 1) // Minecraft doesn't register heals of less than half a heart
             return;
-        if (!(e.getEntity() instanceof LivingEntity))
+        if (StorageFileManager.getConfig().listContains("disabled-worlds", e.getEntity().getWorld().getName()))
             return;
-
+        if (!StorageFileManager.getConfig().getBool("heal-indicators"))
+            return;
         if (!StorageFileManager.getConfig().isAllowed("entity-type-list", e.getEntity().getType().name()))
             return;
         if (StorageFileManager.getConfig().listContains("ignored-entities", e.getEntity().getName()))

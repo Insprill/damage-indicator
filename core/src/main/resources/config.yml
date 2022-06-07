@@ -23,6 +23,9 @@ italic-indicators: false
 # Whether or not all damage indicators should be underlined
 underline-indicators: false
 
+# Whether damage indicators should be shown.
+damage-indicators: true
+
 # Format used when players take damage
 # Each damage value represents half a heart (20 points = 10 hearts)
 # The closest rounded down value will be used
@@ -35,6 +38,9 @@ damage-format:
   10: "%f44fdd%-%value%"
   12: "%f55fdd%-%value%"
   100: "%rainbow%-%value%" # <-- The %rainbow% placeholder can be used to randomise indicator colors (fancy display for insta-kill tools like /kill)
+
+# Whether damage heal indicators should be shown.
+heal-indicators: true
 
 # Format used when players heal
 # Each heal value represents half a heart (20 points = 10 hearts)
