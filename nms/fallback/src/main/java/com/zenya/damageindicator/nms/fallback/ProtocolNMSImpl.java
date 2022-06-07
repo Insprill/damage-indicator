@@ -63,11 +63,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         @Override
         public void sendMetaPacket() {
             armorStand.setVisible(false);
-            try {
-                armorStand.setMarker(true);
-            } catch (Exception ignored) {
-                //Method does not exist pre-1.8
-            }
+            armorStand.setMarker(true);
             armorStand.setSmall(true);
             armorStand.setGravity(false);
             armorStand.setCustomName(text);
