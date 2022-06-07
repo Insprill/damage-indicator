@@ -7,6 +7,7 @@ import com.zenya.damageindicator.nms.CompatibilityHandler;
 import com.zenya.damageindicator.nms.ProtocolNMS;
 import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
+import net.insprill.xenlib.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,7 +26,8 @@ public class DamageIndicator extends JavaPlugin {
         StorageFileManager storageFileManager = StorageFileManager.INSTANCE;
 
         //Disable for versions below 1.8
-        if (CompatibilityHandler.getProtocol() < 8) {
+        if (!MinecraftVersion.isAtLeast(MinecraftVersion.v1_8_0)) {
+            getLogger().severe("DamageIndicator does not support pre-1.8 versions of Minecraft!");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }

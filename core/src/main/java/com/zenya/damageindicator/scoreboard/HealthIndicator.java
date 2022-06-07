@@ -1,8 +1,9 @@
 package com.zenya.damageindicator.scoreboard;
 
 import com.zenya.damageindicator.storage.StorageFileManager;
+import net.insprill.xenlib.ColourUtils;
+import net.insprill.xenlib.MinecraftVersion;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -25,6 +26,7 @@ public class HealthIndicator {
             obj.getScore(player.getName()).setScore((int) player.getHealth());
     }
 
+    @SuppressWarnings("deprecation")
     public void reload() {
         if (!StorageFileManager.getConfig().getBool("health-indicators")) {
             //Disable health indicators
@@ -34,19 +36,20 @@ public class HealthIndicator {
             }
             return;
         }
+
         //Enable health indicators
         if (obj == null) {
             //Init if not exists
-            try {
+            if (MinecraftVersion.isNew()) {
+                obj = board.registerNewObjective("di-health", "health", ColourUtils.format(StorageFileManager.getMessages().getString("health")));
+            } else {
                 obj = board.registerNewObjective("di-health", "health");
-            } catch (NullPointerException exc) {
-                //Depreciation
-                obj = board.registerNewObjective("di-health", "health", ChatColor.translateAlternateColorCodes('&', StorageFileManager.getMessages().getString("health")));
             }
             obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
         }
+
         //Update displayname regardless
-        obj.setDisplayName(ChatColor.translateAlternateColorCodes('&', StorageFileManager.getMessages().getString("health")));
+        obj.setDisplayName(ColourUtils.format(StorageFileManager.getMessages().getString("health")));
         Bukkit.getOnlinePlayers().forEach(this::updateHealth);
     }
 
