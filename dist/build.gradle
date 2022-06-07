@@ -33,6 +33,10 @@ shadowJar {
     def version = (gradle.rootProject.version.contains('-SNAPSHOT')) ? "${gradle.rootProject.version}+rev.${getGitRevision()}" : gradle.rootProject.version
     archiveFileName.set("${gradle.rootProject.name}-${version}.jar")
 
+    def libPackage = 'com.zenya.damageindicator.libs'
+    relocate("net.insprill.xenlib", "${libPackage}.net.insprill.xenlib")
+    relocate("org.bstats", "${libPackage}.org.bstats")
+
     minimize{
         exclude(dependency(':.*'))
     }

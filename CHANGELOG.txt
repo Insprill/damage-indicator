@@ -1,3 +1,6 @@
+1.1.8:
+- Added bStats analytics.
+
 1.1.7:
 - Added support for 1.18.2.
 

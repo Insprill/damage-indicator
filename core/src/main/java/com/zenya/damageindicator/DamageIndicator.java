@@ -8,11 +8,14 @@ import com.zenya.damageindicator.nms.ProtocolNMS;
 import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import net.insprill.xenlib.MinecraftVersion;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class DamageIndicator extends JavaPlugin {
+
+    private static final int BSTATS_ID = 15403;
 
     public static DamageIndicator INSTANCE;
     public static ProtocolNMS PROTOCOL_NMS;
@@ -20,6 +23,8 @@ public class DamageIndicator extends JavaPlugin {
     @Override
     public void onEnable() {
         INSTANCE = this;
+
+        new Metrics(this, BSTATS_ID);
 
         //Init all configs and storage files
         //noinspection UnusedDeclaration
