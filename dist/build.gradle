@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':core')
+    implementation project(':nms:fallback')
+    implementation project(':nms:v1_8_R1')
+    implementation project(':nms:v1_8_R2')
+    implementation project(':nms:v1_8_R3')
+    implementation project(':nms:v1_9_R1')
+    implementation project(':nms:v1_9_R2')
+    implementation project(':nms:v1_10_R1')
+    implementation project(':nms:v1_11_R1')
+    implementation project(':nms:v1_12_R1')
+    implementation project(':nms:v1_13_R1')
+    implementation project(':nms:v1_13_R2')
+    implementation project(':nms:v1_14_R1')
+    implementation project(':nms:v1_15_R1')
+    implementation project(':nms:v1_16_R1')
+    implementation project(':nms:v1_16_R2')
+    implementation project(':nms:v1_16_R3')
+    implementation project(':nms:v1_17_R1')
+    implementation project(':nms:v1_18_R1')
+    implementation project(':nms:v1_18_R2')
+}
+
+shadowJar {
+    def version = (gradle.rootProject.version.contains('-SNAPSHOT')) ? "${gradle.rootProject.version}+rev.${getGitRevision()}" : gradle.rootProject.version
+    archiveFileName.set("${gradle.rootProject.name}-${version}.jar")
+
+    minimize{
+        exclude(dependency(':.*'))
+    }
+}
+
+static def getGitRevision() {
+    return 'git rev-parse --verify --short HEAD'.execute().text.trim()
+}
+
+task copyJars() {
+    doLast {
+        copy {
+            from("build/libs")
+            into("../build/libs")
+        }
+    }
+}
+shadowJar.finalizedBy(copyJars)

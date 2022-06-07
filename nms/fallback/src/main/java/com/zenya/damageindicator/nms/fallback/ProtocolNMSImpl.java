@@ -15,7 +15,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
     @Override
     public Hologram getHologram(List<Player> players, LivingEntity ent, String text) {
-        return new HologramImpl(players, ent, text);
+        return new HologramImpl(ent, text);
     }
 
     public static class HologramImpl implements Hologram {
@@ -25,7 +25,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         private final String text;
         private double dy;
 
-        public HologramImpl(List<Player> players, LivingEntity ent, String text) {
+        public HologramImpl(LivingEntity ent, String text) {
             this.ent = ent;
             this.dy = 0;
             this.text = text;
@@ -62,12 +62,11 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendMetaPacket() {
-            armorStand.setInvisible(true);
+            armorStand.setVisible(false);
             try {
                 armorStand.setMarker(true);
-            } catch (Exception exc) {
+            } catch (Exception ignored) {
                 //Method does not exist pre-1.8
-
             }
             armorStand.setSmall(true);
             armorStand.setGravity(false);

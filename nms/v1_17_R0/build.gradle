@@ -1,0 +1,15 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
+
+repositories {
+    mavenLocal()
+}
+
+dependencies {
+    compileOnly project(':core')
+    compileOnly 'org.spigotmc:spigot:1.17-R0.1-SNAPSHOT'
+}

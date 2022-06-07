@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+}
+
+group 'net.insprill'
+version '1.1.8-SNAPSHOT'
+
+build {
+    enabled = false
+    dependsOn(":dist:shadowJar")
+}
+
+jar {
+    enabled = false
+}
+
+allprojects {
+    group "${gradle.rootProject.group}"
+    version "${gradle.rootProject.version}"
+
+    compileJava.options.encoding = 'UTF-8'
+}

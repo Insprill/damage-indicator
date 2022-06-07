@@ -3,18 +3,16 @@ package com.zenya.damageindicator.nms.v1_18_R2;
 import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityTeleport;
-import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.entity.decoration.EntityArmorStand;
-import org.bukkit.Bukkit;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
+import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftArmorStand;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -32,8 +30,8 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
     public static class HologramImpl implements Hologram {
 
-        private final List<EntityPlayer> players;
-        private final CraftArmorStand armorStand;
+        private final List<ServerPlayer> players;
+        private final ArmorStand armorStand;
         private final LivingEntity ent;
         private double dy;
 
@@ -43,12 +41,12 @@ public class ProtocolNMSImpl implements ProtocolNMS {
             this.dy = 0;
             Location loc = ent.getLocation();
 
-            CraftArmorStand armorStand = new CraftArmorStand((CraftServer) Bukkit.getServer(), new EntityArmorStand(((CraftWorld) loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ()));
+            ArmorStand armorStand = new ArmorStand(((CraftWorld) loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ());
             armorStand.setInvisible(true);
             armorStand.setMarker(true);
             armorStand.setSmall(true);
-            armorStand.setGravity(true);
-            armorStand.setCustomName(text);
+            armorStand.setNoGravity(true);
+            armorStand.setCustomName(new TextComponent(text));
             armorStand.setCustomNameVisible(true);
             this.armorStand = armorStand;
         }
@@ -64,7 +62,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
                 @Override
                 public void run() {
-                    armorStand.teleport(new Location(armorStand.getWorld(), ent.getEyeLocation().getX(), ent.getEyeLocation().getY() + dy, ent.getEyeLocation().getZ()));
+                    armorStand.teleportTo(ent.getEyeLocation().getX(), ent.getEyeLocation().getY() + dy, ent.getEyeLocation().getZ());
                     sendTeleportPacket();
                     dy += speed;
 
@@ -80,34 +78,35 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendCreatePacket() {
-            PacketPlayOutSpawnEntityLiving create = new PacketPlayOutSpawnEntityLiving(armorStand.getHandle());
+            ClientboundAddEntityPacket create = new ClientboundAddEntityPacket(armorStand);
             sendPacket(create);
         }
 
         @Override
         public void sendMetaPacket() {
-            PacketPlayOutEntityMetadata meta = new PacketPlayOutEntityMetadata(armorStand.getEntityId(), armorStand.getHandle().ai(), true);
+            ClientboundSetEntityDataPacket meta = new ClientboundSetEntityDataPacket(armorStand.getId(), armorStand.getEntityData(), false);
             sendPacket(meta);
         }
 
         @Override
         public void sendTeleportPacket() {
-            PacketPlayOutEntityTeleport teleport = new PacketPlayOutEntityTeleport(armorStand.getHandle());
+            ClientboundTeleportEntityPacket teleport = new ClientboundTeleportEntityPacket(armorStand);
             sendPacket(teleport);
         }
 
         @Override
         public void sendRemovePacket() {
-            PacketPlayOutEntityDestroy remove = new PacketPlayOutEntityDestroy(armorStand.getEntityId());
+            ClientboundRemoveEntitiesPacket remove = new ClientboundRemoveEntitiesPacket(armorStand.getId());
             sendPacket(remove);
         }
 
         @Override
         public void sendPacket(Object packet) {
-            for (EntityPlayer player : players) {
-                player.b.a((Packet<?>) packet);
+            for (ServerPlayer player : players) {
+                player.connection.send((Packet<?>) packet);
             }
         }
 
     }
+
 }
