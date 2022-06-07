@@ -19,4 +19,11 @@ allprojects {
     version "${gradle.rootProject.version}"
 
     compileJava.options.encoding = 'UTF-8'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven { url = 'https://jitpack.io' }
+        maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    }
 }
