@@ -1,5 +1,6 @@
-1.1.8:
+1.2.0:
 - Added bStats analytics.
+- Added options to disable damage and heal indicators.
 
 1.1.7:
 - Added support for 1.18.2.
