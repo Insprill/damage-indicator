@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'net.insprill'
-version '1.1.8-SNAPSHOT'
+version "${gradle.ext.version}${getVersionMetadata()}"
 
 build {
     enabled = false
@@ -25,5 +25,13 @@ allprojects {
         mavenLocal()
         maven { url = 'https://jitpack.io' }
         maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    }
+}
+
+def getVersionMetadata() {
+    if (gradle.ext.version.contains('-SNAPSHOT')) {
+        return '+rev.' + 'git rev-parse --verify --short HEAD'.execute().text.trim()
+    } else {
+        return ''
     }
 }
