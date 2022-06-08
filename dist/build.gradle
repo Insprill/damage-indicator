@@ -36,10 +36,6 @@ shadowJar {
     def libPackage = 'com.zenya.damageindicator.libs'
     relocate("net.insprill.xenlib", "${libPackage}.net.insprill.xenlib")
     relocate("org.bstats", "${libPackage}.org.bstats")
-
-    minimize{
-        exclude(dependency(':.*'))
-    }
 }
 
 static def getGitRevision() {
