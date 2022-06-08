@@ -8,6 +8,7 @@ import com.zenya.damageindicator.nms.ProtocolNMS;
 import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import net.insprill.xenlib.MinecraftVersion;
+import net.insprill.xenlib.XenLib;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -26,12 +27,14 @@ public class DamageIndicator extends JavaPlugin {
 
         new Metrics(this, BSTATS_ID);
 
+        XenLib.init(this);
+
         //Init all configs and storage files
         //noinspection UnusedDeclaration
         StorageFileManager storageFileManager = StorageFileManager.INSTANCE;
 
         //Disable for versions below 1.8
-        if (!MinecraftVersion.isAtLeast(MinecraftVersion.v1_8_0)) {
+        if (MinecraftVersion.isOlderThan(MinecraftVersion.v1_8_0)) {
             getLogger().severe("DamageIndicator does not support pre-1.8 versions of Minecraft!");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
