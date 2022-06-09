@@ -7,8 +7,8 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
     compileOnly 'org.jetbrains:annotations:23.0.0'
-    compileOnly 'org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT'
-    implementation 'net.insprill:XenLib:e613a4329e'
+    compileOnly 'org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT'
+    implementation 'net.insprill:XenLib:d54730ae0f'
     implementation 'org.bstats:bstats-bukkit:3.0.0'
 }
 
