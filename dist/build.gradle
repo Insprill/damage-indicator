@@ -42,8 +42,9 @@ shadowJar {
 task copyJars() {
     doLast {
         copy {
-            from("build/libs")
+            from(shadowJar)
             into("../build/libs")
+            into("../server/plugins")
         }
     }
 }
