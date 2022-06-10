@@ -1,6 +1,10 @@
 1.2.0:
+- Added support for 1.19.
 - Added bStats analytics.
 - Added options to disable damage and heal indicators.
+- Fixed config files not being regenerated under certain circumstances.
+- Moved the 'messages.yml' contents to its own customizable locale file. Any changes will be migrated.
+
 
 1.1.7:
 - Added support for 1.18.2.
