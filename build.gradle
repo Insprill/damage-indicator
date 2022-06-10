@@ -5,15 +5,6 @@ plugins {
 group 'net.insprill'
 version "${gradle.ext.version}${getVersionMetadata()}"
 
-build {
-    enabled = false
-    dependsOn(":dist:shadowJar")
-}
-
-jar {
-    enabled = false
-}
-
 allprojects {
     group "${gradle.rootProject.group}"
     version "${gradle.rootProject.version}"
@@ -26,6 +17,30 @@ allprojects {
         maven { url = 'https://jitpack.io' }
         maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     }
+}
+
+jar {
+    enabled = false
+}
+
+task copyJars() {
+    doLast {
+        copy {
+            from("dist/build/libs")
+            into("build/libs")
+        }
+        if (new File("server/plugins").exists()) {
+            copy {
+                from("dist/build/libs")
+                into("server/plugins")
+            }
+        }
+    }
+}
+
+build {
+    enabled = false
+    dependsOn(":dist:shadowJar").finalizedBy(copyJars)
 }
 
 def getVersionMetadata() {

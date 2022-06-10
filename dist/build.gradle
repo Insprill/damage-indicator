@@ -30,6 +30,10 @@ dependencies {
     implementation project(':nms:v1_19_R1')
 }
 
+jar {
+    enabled = false
+}
+
 shadowJar {
     archiveBaseName.set(gradle.rootProject.name)
     archiveClassifier.set('')
