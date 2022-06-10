@@ -24,16 +24,6 @@ public class StorageFileManager {
     }};
 
     /**
-     * messages.yml
-     **/
-    private static final int MESSAGES_FILE_VERSION = 2;
-    private static final boolean MESSAGES_RESET_FILE = false;
-    private static final List<String> MESSAGES_IGNORED_NODES = new ArrayList<String>() {{
-        add("config-version");
-    }};
-    private static final List<String> MESSAGES_REPLACE_NODES = new ArrayList<>();
-
-    /**
      * database.db
      **/
     private static final int DATABASE_FILE_VERSION = 0; //Unused for now
@@ -42,17 +32,10 @@ public class StorageFileManager {
     public static final StorageFileManager INSTANCE = new StorageFileManager();
     private final HashMap<String, StorageFile> fileMap = new HashMap<>();
 
-    public StorageFileManager() {
-        registerFile("config.yml", new YAMLFile(DamageIndicator.INSTANCE.getDataFolder().getPath(), "config.yml", CONFIG_FILE_VERSION, CONFIG_RESET_FILE, CONFIG_IGNORED_NODES, CONFIG_REPLACE_NODES));
-        registerFile("messages.yml", new YAMLFile(DamageIndicator.INSTANCE.getDataFolder().getPath(), "messages.yml", MESSAGES_FILE_VERSION, MESSAGES_RESET_FILE, MESSAGES_IGNORED_NODES, MESSAGES_REPLACE_NODES));
-        registerFile("database.db", new DBFile(DamageIndicator.INSTANCE.getDataFolder().getPath(), "database.db", DATABASE_FILE_VERSION, DATABASE_RESET_FILE));
-    }
-
-    public static void reloadFiles() {
+    public void reloadFiles() {
         INSTANCE.fileMap.clear();
-        INSTANCE.registerFile("config.yml", new YAMLFile("config.yml"));
-        INSTANCE.registerFile("messages.yml", new YAMLFile("messages.yml"));
-        INSTANCE.registerFile("database.db", new DBFile("database.db"));
+        registerFile("config.yml", new YAMLFile(DamageIndicator.INSTANCE.getDataFolder().getPath(), "config.yml", CONFIG_FILE_VERSION, CONFIG_RESET_FILE, CONFIG_IGNORED_NODES, CONFIG_REPLACE_NODES));
+        registerFile("database.db", new DBFile(DamageIndicator.INSTANCE.getDataFolder().getPath(), "database.db", DATABASE_FILE_VERSION, DATABASE_RESET_FILE));
     }
 
     public StorageFile getFile(String fileName) {
@@ -82,11 +65,6 @@ public class StorageFileManager {
     public static YAMLFile getConfig() {
         return (YAMLFile) INSTANCE.getFile("config.yml");
     }
-
-    public static YAMLFile getMessages() {
-        return (YAMLFile) INSTANCE.getFile("messages.yml");
-    }
-
 
     public static DBFile getDatabase() {
         return (DBFile) INSTANCE.getFile("database.db");

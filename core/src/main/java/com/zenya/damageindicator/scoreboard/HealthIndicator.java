@@ -1,8 +1,8 @@
 package com.zenya.damageindicator.scoreboard;
 
 import com.zenya.damageindicator.storage.StorageFileManager;
-import net.insprill.xenlib.ColourUtils;
 import net.insprill.xenlib.MinecraftVersion;
+import net.insprill.xenlib.localization.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -41,7 +41,7 @@ public class HealthIndicator {
         if (obj == null) {
             //Init if not exists
             if (MinecraftVersion.isNew()) {
-                obj = board.registerNewObjective("di-health", "health", ColourUtils.format(StorageFileManager.getMessages().getString("health")));
+                obj = board.registerNewObjective("di-health", "health", Lang.get("health"));
             } else {
                 obj = board.registerNewObjective("di-health", "health");
             }
@@ -49,7 +49,7 @@ public class HealthIndicator {
         }
 
         //Update displayname regardless
-        obj.setDisplayName(ColourUtils.format(StorageFileManager.getMessages().getString("health")));
+        obj.setDisplayName(Lang.get("health"));
         Bukkit.getOnlinePlayers().forEach(this::updateHealth);
     }
 

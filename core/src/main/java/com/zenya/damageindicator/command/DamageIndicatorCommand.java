@@ -3,7 +3,7 @@ package com.zenya.damageindicator.command;
 import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import com.zenya.damageindicator.storage.ToggleManager;
-import com.zenya.damageindicator.util.ChatBuilder;
+import net.insprill.xenlib.localization.Lang;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,15 +11,13 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class DamageIndicatorCommand implements CommandExecutor {
-    private void sendUsage(CommandSender sender) {
-        ChatBuilder chat = (new ChatBuilder()).withSender(sender);
-        chat.sendMessages("command.help");
-    }
 
+    private void sendUsage(CommandSender sender) {
+        Lang.send(sender, "commands.help");
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String alias, String[] args) {
-        ChatBuilder chat = (new ChatBuilder()).withSender(sender);
 
         //No command arguments
         if (args.length < 1) {
@@ -29,7 +27,7 @@ public class DamageIndicatorCommand implements CommandExecutor {
 
         //No permission
         if (!sender.hasPermission("damageindicator.command." + args[0])) {
-            chat.sendMessages("no-permission");
+            Lang.send(sender, "commands.no-permission");
             return true;
         }
 
@@ -40,26 +38,25 @@ public class DamageIndicatorCommand implements CommandExecutor {
             }
             case "toggle": {
                 if (!(sender instanceof Player)) {
-                    chat.sendMessages("player-required");
+                    Lang.send(sender, "commands.player-only");
                     break;
                 }
                 Player player = (Player) sender;
-                chat.withPlayer(player);
                 if (args.length == 1) {
                     if (ToggleManager.INSTANCE.isToggled(player.getUniqueId())) {
                         ToggleManager.INSTANCE.registerToggle(player.getUniqueId(), false);
-                        chat.sendMessages("command.toggle.disable");
+                        Lang.send(sender, "commands.toggle.disable");
                     } else {
                         ToggleManager.INSTANCE.registerToggle(player.getUniqueId(), true);
-                        chat.sendMessages("command.toggle.enable");
+                        Lang.send(sender, "commands.toggle.enable");
                     }
                 } else if (args.length > 1) {
                     if (args[1].equalsIgnoreCase("on")) {
                         ToggleManager.INSTANCE.registerToggle(player.getUniqueId(), true);
-                        chat.sendMessages("command.toggle.enable");
+                        Lang.send(sender, "commands.toggle.enable");
                     } else if (args[1].equalsIgnoreCase("off")) {
                         ToggleManager.INSTANCE.registerToggle(player.getUniqueId(), false);
-                        chat.sendMessages("command.toggle.disable");
+                        Lang.send(sender, "commands.toggle.disable");
                     } else {
                         //Wrong arg2 for toggle
                         sendUsage(sender);
@@ -69,9 +66,9 @@ public class DamageIndicatorCommand implements CommandExecutor {
                 break;
             }
             case "reload": {
-                StorageFileManager.reloadFiles();
+                StorageFileManager.INSTANCE.reloadFiles();
                 HealthIndicator.INSTANCE.reload();
-                chat.sendMessages("command.reload");
+                Lang.send(sender, "commands.reload");
                 break;
             }
             default: {

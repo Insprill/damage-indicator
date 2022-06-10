@@ -2,6 +2,9 @@
 # For internal reference only, do not change the config version
 config-version: 3
 
+# The locale file the plugin is using. To create your own locale, copy the en-us.yml, rename it, and set its name here.
+language: "en-us"
+
 # How many decimal places to truncate indicator values
 # A value of 2 means that all damage indicators will show as x.xx
 indicator-decimals: 2

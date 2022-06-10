@@ -1,9 +1,13 @@
-config-version: 2
-
-no-permission: "&4You do not have permission to use this command"
-player-required: "&cYou must be a player to use this command"
-
-command:
+prefix: "&8[&6Damage Indicator&8]"
+commands:
+  unknown-command: "%p% &cUnknown command! Type \"/%label% help\" for help."
+  player-only: "%p% &cThat command can only be used by a player!"
+  no-permission: "%p% &cYou don't have permission to do that!"
+  invalid-usage: "%p% &cInvalid usage! Please refer to \"/di help\" for help."
+  reload: "%p% &aPlugin reloaded."
+  plinfo:
+    success: "%p% &a%link%"
+    fail: "%p% &cFailed to create paste! Error: %error%"
   help:
     - "&8&m*]----------[*&r &6DamageIndicator &8&m*]----------[*&r"
     - "&6/damageindicator help&f -&e Shows this help page"
@@ -13,6 +17,4 @@ command:
   toggle:
     enable: "&aDamageIndicator displays have been enabled"
     disable: "&cDamageIndicator displays have been disabled"
-  reload: "&6Successfully reloaded all plugin config and messages"
-
 health: " &c❤"

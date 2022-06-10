@@ -7,6 +7,7 @@ import com.zenya.damageindicator.nms.CompatibilityHandler;
 import com.zenya.damageindicator.nms.ProtocolNMS;
 import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
+import com.zenya.damageindicator.util.MessagesMigrator;
 import net.insprill.xenlib.MinecraftVersion;
 import net.insprill.xenlib.XenLib;
 import org.bstats.bukkit.Metrics;
@@ -29,9 +30,11 @@ public class DamageIndicator extends JavaPlugin {
 
         XenLib.init(this);
 
+        // Migrate messages.yml to the default locale file.
+        MessagesMigrator.migrate(this);
+
         //Init all configs and storage files
-        //noinspection UnusedDeclaration
-        StorageFileManager storageFileManager = StorageFileManager.INSTANCE;
+        StorageFileManager.INSTANCE.reloadFiles();
 
         //Disable for versions below 1.8
         if (MinecraftVersion.isOlderThan(MinecraftVersion.v1_8_0)) {
