@@ -1,7 +1,6 @@
 package com.zenya.damageindicator;
 
-import com.zenya.damageindicator.command.DamageIndicatorCommand;
-import com.zenya.damageindicator.command.DamageIndicatorTab;
+import com.zenya.damageindicator.command.ReloadArg;
 import com.zenya.damageindicator.event.Listeners;
 import com.zenya.damageindicator.nms.CompatibilityHandler;
 import com.zenya.damageindicator.nms.ProtocolNMS;
@@ -10,6 +9,7 @@ import com.zenya.damageindicator.storage.StorageFileManager;
 import com.zenya.damageindicator.util.MessagesMigrator;
 import net.insprill.xenlib.MinecraftVersion;
 import net.insprill.xenlib.XenLib;
+import net.insprill.xenlib.commands.Command;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -56,12 +56,7 @@ public class DamageIndicator extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new Listeners(), this);
 
         //Register commands
-        this.getCommand("damageindicator").setExecutor(new DamageIndicatorCommand());
-        try {
-            this.getCommand("damageindicator").setTabCompleter(new DamageIndicatorTab());
-        } catch (Exception exc) {
-            //Do nothing, version doesn't support tabcomplete
-        }
+        new Command("damageindicator", ReloadArg.class.getPackage().getName());
 
         HealthIndicator.INSTANCE.reload();
     }

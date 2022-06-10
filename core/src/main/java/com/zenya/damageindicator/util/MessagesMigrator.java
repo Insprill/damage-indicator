@@ -20,7 +20,6 @@ public final class MessagesMigrator {
 
         Lang.getLocaleConfig().set("commands.no-permission", messages.getStringRaw("no-permission"));
         Lang.getLocaleConfig().set("commands.player-only", messages.getStringRaw("player-required"));
-        Lang.getLocaleConfig().set("commands.help", messages.getStringRaw("command.help"));
         Lang.getLocaleConfig().set("commands.toggle.enable", messages.getStringRaw("command.toggle.enable"));
         Lang.getLocaleConfig().set("commands.toggle.disable", messages.getStringRaw("command.toggle.disable"));
         Lang.getLocaleConfig().set("commands.reload", messages.getStringRaw("command.reload"));

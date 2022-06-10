@@ -17,16 +17,20 @@ permissions:
   damageindicator.*:
     children:
       damageindicator.command.help: true
-      damageindicator.command.toggle: true
+      damageindicator.command.plinfo: true
       damageindicator.command.reload: true
+      damageindicator.command.toggle: true
   damageindicator.command.*:
     children:
       damageindicator.command.help: true
-      damageindicator.command.toggle: true
+      damageindicator.command.plinfo: true
       damageindicator.command.reload: true
+      damageindicator.command.toggle: true
   damageindicator.command.help:
     default: true
-  damageindicator.command.toggle:
-    default: true
+  damageindicator.command.plinfo:
+    default: op
   damageindicator.command.reload:
     default: op
+  damageindicator.command.toggle:
+    default: true
