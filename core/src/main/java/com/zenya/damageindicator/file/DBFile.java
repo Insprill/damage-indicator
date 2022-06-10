@@ -1,6 +1,7 @@
 package com.zenya.damageindicator.file;
 
 import com.zenya.damageindicator.DamageIndicator;
+import org.intellij.lang.annotations.Language;
 
 import java.io.File;
 import java.sql.Connection;
@@ -90,6 +91,7 @@ public class DBFile extends StorageFile {
     }
 
     public void createTables() {
+        @Language("sqlite")
         String sql = "CREATE TABLE IF NOT EXISTS damageindicator ("
                 + "id integer PRIMARY KEY AUTOINCREMENT, "
                 + "player text NOT NULL UNIQUE, "
@@ -99,6 +101,7 @@ public class DBFile extends StorageFile {
     }
 
     public void initData(UUID uuid) {
+        @Language("sqlite")
         String sql = "INSERT OR IGNORE INTO damageindicator(player, toggle) VALUES(?, ?)";
         sendPreparedStatement(sql, uuid, 1);
     }
@@ -107,6 +110,7 @@ public class DBFile extends StorageFile {
         initData(uuid);
         boolean status = false;
 
+        @Language("sqlite")
         String sql = "SELECT toggle FROM damageindicator WHERE player = ?";
         Object toggleInt = sendQueryStatement(sql, "toggle", uuid);
 
@@ -120,6 +124,7 @@ public class DBFile extends StorageFile {
         initData(uuid);
         int toggleInt = status ? 1 : 0;
 
+        @Language("sqlite")
         String sql = "UPDATE damageindicator SET toggle = ? WHERE player = ?";
         sendPreparedStatement(sql, toggleInt, uuid);
     }
