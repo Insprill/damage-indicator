@@ -2,6 +2,7 @@
 - Added support for 1.19.
 - Added bStats analytics.
 - Added options to disable damage and heal indicators.
+- Added '/di plinfo' for debugging purposes.
 - Fixed config files not being regenerated under certain circumstances.
 - Moved the 'messages.yml' contents to its own customizable locale file. Any changes will be migrated.
 
