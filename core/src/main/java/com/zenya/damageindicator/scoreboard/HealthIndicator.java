@@ -15,7 +15,7 @@ public class HealthIndicator {
     private static final String OBJECTIVE_CRITERIA = "health";
     private static final String OBJECTIVE_NAME_KEY = "health";
 
-    public static HealthIndicator INSTANCE = new HealthIndicator();
+    public static final HealthIndicator INSTANCE = new HealthIndicator();
 
     private final Scoreboard board;
     private Objective obj;
