@@ -11,6 +11,10 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class HealthIndicator {
 
+    private static final String OBJECTIVE_NAME = "di-health";
+    private static final String OBJECTIVE_CRITERIA = "health";
+    private static final String OBJECTIVE_NAME_KEY = "health";
+
     public static HealthIndicator INSTANCE = new HealthIndicator();
 
     private final Scoreboard board;
@@ -18,7 +22,7 @@ public class HealthIndicator {
 
     private HealthIndicator() {
         this.board = Bukkit.getScoreboardManager().getMainScoreboard();
-        this.obj = board.getObjective("di-health");
+        this.obj = board.getObjective(OBJECTIVE_NAME);
     }
 
     public void updateHealth(Player player) {
@@ -41,15 +45,15 @@ public class HealthIndicator {
         if (obj == null) {
             //Init if not exists
             if (MinecraftVersion.isNew()) {
-                obj = board.registerNewObjective("di-health", "health", Lang.get("health"));
+                obj = board.registerNewObjective(OBJECTIVE_NAME, OBJECTIVE_CRITERIA, Lang.get(OBJECTIVE_NAME_KEY));
             } else {
-                obj = board.registerNewObjective("di-health", "health");
+                obj = board.registerNewObjective(OBJECTIVE_NAME, OBJECTIVE_CRITERIA);
             }
             obj.setDisplaySlot(DisplaySlot.BELOW_NAME);
         }
 
         //Update displayname regardless
-        obj.setDisplayName(Lang.get("health"));
+        obj.setDisplayName(Lang.get(OBJECTIVE_NAME_KEY));
         Bukkit.getOnlinePlayers().forEach(this::updateHealth);
     }
 
