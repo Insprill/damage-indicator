@@ -8,5 +8,5 @@ targetCompatibility = JavaVersion.VERSION_17
 
 dependencies {
     compileOnly project(':core')
-    paperweightDevelopmentBundle('io.papermc.paper:dev-bundle:1.18-R0.1-SNAPSHOT')
+    paperweightDevelopmentBundle('io.papermc.paper:dev-bundle:1.18-rc3-R0.1-SNAPSHOT')
 }
