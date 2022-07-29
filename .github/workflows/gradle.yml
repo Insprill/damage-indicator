@@ -14,42 +14,41 @@ jobs:
         with:
           java-version: 8
           distribution: 'temurin'
-      - run: echo "JAVA_8=$JAVA_HOME" >> $GITHUB_ENV
+        run: alias java8="$JAVA_HOME" >> $GITHUB_ENV
 
       - name: Set up JDK 16
         uses: actions/setup-java@v3
         with:
           java-version: 16
           distribution: 'temurin'
-      - run: echo "JAVA_16=$JAVA_HOME" >> $GITHUB_ENV
+        run: alias java16="$JAVA_HOME" >> $GITHUB_ENV
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: 17
           distribution: 'temurin'
-      - run: echo "JAVA_17=$JAVA_HOME" >> $GITHUB_ENV
 
       - name: Download BuildTools
         run: wget -O BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
 
       - name: Run BuildTools
         run: |
-          JAVA_8 -jar BuildTools.jar --rev 1.8.3
-          JAVA_8 -jar BuildTools.jar --rev 1.8.8
-          JAVA_8 -jar BuildTools.jar --rev 1.9.2
-          JAVA_8 -jar BuildTools.jar --rev 1.9.4
-          JAVA_8 -jar BuildTools.jar --rev 1.10.2
-          JAVA_8 -jar BuildTools.jar --rev 1.11.2
-          JAVA_8 -jar BuildTools.jar --rev 1.12.2
-          JAVA_8 -jar BuildTools.jar --rev 1.13
-          JAVA_8 -jar BuildTools.jar --rev 1.13.2
-          JAVA_8 -jar BuildTools.jar --rev 1.14.4
-          JAVA_8 -jar BuildTools.jar --rev 1.15.2
-          JAVA_8 -jar BuildTools.jar --rev 1.16.1
-          JAVA_8 -jar BuildTools.jar --rev 1.16.3
-          JAVA_8 -jar BuildTools.jar --rev 1.16.5
-          JAVA_16 -jar BuildTools.jar --rev 1.17
+          java8 -jar BuildTools.jar --rev 1.8.3
+          java8 -jar BuildTools.jar --rev 1.8.8
+          java8 -jar BuildTools.jar --rev 1.9.2
+          java8 -jar BuildTools.jar --rev 1.9.4
+          java8 -jar BuildTools.jar --rev 1.10.2
+          java8 -jar BuildTools.jar --rev 1.11.2
+          java8 -jar BuildTools.jar --rev 1.12.2
+          java8 -jar BuildTools.jar --rev 1.13
+          java8 -jar BuildTools.jar --rev 1.13.2
+          java8 -jar BuildTools.jar --rev 1.14.4
+          java8 -jar BuildTools.jar --rev 1.15.2
+          java8 -jar BuildTools.jar --rev 1.16.1
+          java8 -jar BuildTools.jar --rev 1.16.3
+          java8 -jar BuildTools.jar --rev 1.16.5
+          java16 -jar BuildTools.jar --rev 1.17
         # paperweight is used for 1.17.1+
 
       - name: Validate Gradle Wrapper
