@@ -17,5 +17,10 @@
   ],
   "ignoreTests": true,
   "automergeType": "branch",
-  "dependencyDashboard": false
+  "dependencyDashboard": false,
+  "ignoreDeps": [
+    "org.spigotmc:spigot",
+    "org.spigotmc:spigot-api"
+    "io.papermc.paper:dev-bundle",
+  ]
 }
