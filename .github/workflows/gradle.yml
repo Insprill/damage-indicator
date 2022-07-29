@@ -15,6 +15,7 @@ jobs:
           java-version: 8
           distribution: 'temurin'
 
+        # TODO: Figure out a way to cache the BuildTools artifacts
       - name: Download BuildTools
         run: wget -O BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
 
