@@ -14,14 +14,14 @@ jobs:
         with:
           java-version: 8
           distribution: 'temurin'
-        run: alias java8="$JAVA_HOME" >> $GITHUB_ENV
+      - run: alias java8="$JAVA_HOME" >> $GITHUB_ENV
 
       - name: Set up JDK 16
         uses: actions/setup-java@v3
         with:
           java-version: 16
           distribution: 'temurin'
-        run: alias java16="$JAVA_HOME" >> $GITHUB_ENV
+      - run: alias java16="$JAVA_HOME" >> $GITHUB_ENV
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
