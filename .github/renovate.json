@@ -15,7 +15,6 @@
       "automerge": true
     }
   ],
-  "ignoreTests": true,
   "automergeType": "branch",
   "dependencyDashboard": false,
   "ignoreDeps": [
