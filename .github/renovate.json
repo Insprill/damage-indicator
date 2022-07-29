@@ -5,5 +5,17 @@
   "baseBranches": [
     "develop"
   ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true
+    }
+  ],
+  "ignoreTests": true,
+  "automergeType": "branch",
   "dependencyDashboard": false
 }
