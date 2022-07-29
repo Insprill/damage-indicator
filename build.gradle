@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'net.insprill'
-version "${gradle.ext.version}${getVersionMetadata()}"
+version this.getFullVersion()
 
 allprojects {
     group "${gradle.rootProject.group}"
@@ -43,10 +43,11 @@ build {
     dependsOn(":dist:shadowJar").finalizedBy(copyJars)
 }
 
-def getVersionMetadata() {
-    if (gradle.ext.version.contains('-SNAPSHOT')) {
-        return '+rev.' + 'git rev-parse --verify --short HEAD'.execute().text.trim()
+def getFullVersion() {
+    var version = project.property("version");
+    if (version.contains('-SNAPSHOT')) {
+        return version + '+rev.' + 'git rev-parse --verify --short HEAD'.execute().text.trim()
     } else {
-        return ''
+        return version
     }
 }

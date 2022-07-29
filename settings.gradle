@@ -6,7 +6,6 @@ pluginManagement {
 }
 
 rootProject.name = 'damage-indicator'
-gradle.ext.version = '1.2.0'
 
 include 'core'
 include 'dist'
