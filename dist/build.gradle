@@ -48,7 +48,6 @@ task copyJars() {
         copy {
             from(shadowJar)
             into("../build/libs")
-            into("../server/plugins")
         }
     }
 }

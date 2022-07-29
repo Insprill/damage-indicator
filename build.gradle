@@ -1,13 +1,14 @@
 plugins {
     id 'java'
+    id 'com.rikonardo.papermake' version '1.0.4'
 }
 
 group 'net.insprill'
 version this.getFullVersion()
 
 allprojects {
-    group "${gradle.rootProject.group}"
-    version "${gradle.rootProject.version}"
+    group gradle.rootProject.group
+    version gradle.rootProject.version
 
     compileJava.options.encoding = 'UTF-8'
 
@@ -23,24 +24,9 @@ jar {
     enabled = false
 }
 
-task copyJars() {
-    doLast {
-        copy {
-            from("dist/build/libs")
-            into("build/libs")
-        }
-        if (new File("server/plugins").exists()) {
-            copy {
-                from("dist/build/libs")
-                into("server/plugins")
-            }
-        }
-    }
-}
-
 build {
     enabled = false
-    dependsOn(":dist:shadowJar").finalizedBy(copyJars)
+    dependsOn(":dist:shadowJar")
 }
 
 def getFullVersion() {
