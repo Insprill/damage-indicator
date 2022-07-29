@@ -18,6 +18,8 @@ jobs:
       - name: Download BuildTools
         run: wget -O BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
 
+      - name: Run BuildTools 1.8
+        run: java -jar BuildTools.jar --rev 1.8
       - name: Run BuildTools 1.8.3
         run: java -jar BuildTools.jar --rev 1.8.3
       - name: Run BuildTools 1.8.8
