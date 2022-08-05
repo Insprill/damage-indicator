@@ -1,6 +1,6 @@
 # Config wiki and help can be found at https://github.com/Insprill/Damage-Indicator/wiki
 # For internal reference only, do not change the config version
-config-version: 3
+config-version: 4
 
 # The locale file the plugin is using. To create your own locale, copy the en-us.yml, rename it, and set its name here.
 language: "en-us"
