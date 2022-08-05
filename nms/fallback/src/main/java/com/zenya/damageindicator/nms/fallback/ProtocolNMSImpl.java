@@ -76,8 +76,8 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         }
 
         @Override
-        public void sendTeleportPacket() {
-            armorStand.teleport(new Location(ent.getWorld(), ent.getEyeLocation().getX(), ent.getEyeLocation().getY() + dy, ent.getEyeLocation().getZ()));
+        public void sendTeleportPacket(Location loc) {
+            armorStand.teleport(loc);
         }
 
         @Override

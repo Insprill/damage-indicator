@@ -61,8 +61,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
                         entity.getLocation(loc);
                     }
                     loc.setY(startY + dy);
-                    armorStand.setPosition(loc.getX(), loc.getY(), loc.getZ());
-                    sendTeleportPacket();
+                    sendTeleportPacket(loc);
                     dy += speed;
 
                     tick++;
@@ -88,7 +87,8 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         }
 
         @Override
-        public void sendTeleportPacket() {
+        public void sendTeleportPacket(Location loc) {
+            armorStand.setPosition(loc.getX(), loc.getY(), loc.getZ());
             PacketPlayOutEntityTeleport teleport = new PacketPlayOutEntityTeleport(armorStand);
             sendPacket(teleport);
         }

@@ -1,5 +1,7 @@
 package com.zenya.damageindicator.nms;
 
+import org.bukkit.Location;
+
 public interface Hologram {
 
     Hologram spawn(double offset, double speed, long duration);
@@ -8,7 +10,7 @@ public interface Hologram {
 
     void sendMetaPacket();
 
-    void sendTeleportPacket();
+    void sendTeleportPacket(Location loc);
 
     void sendRemovePacket();
 

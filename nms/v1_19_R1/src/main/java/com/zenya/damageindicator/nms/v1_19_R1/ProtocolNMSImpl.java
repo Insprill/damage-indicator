@@ -64,8 +64,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
                         entity.getLocation(loc);
                     }
                     loc.setY(startY + dy);
-                    armorStand.teleportTo(loc.getX(), loc.getY(), loc.getZ());
-                    sendTeleportPacket();
+                    sendTeleportPacket(loc);
                     dy += speed;
 
                     tick++;
@@ -91,7 +90,8 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         }
 
         @Override
-        public void sendTeleportPacket() {
+        public void sendTeleportPacket(Location loc) {
+            armorStand.teleportTo(loc.getX(), loc.getY(), loc.getZ());
             ClientboundTeleportEntityPacket teleport = new ClientboundTeleportEntityPacket(armorStand);
             sendPacket(teleport);
         }
