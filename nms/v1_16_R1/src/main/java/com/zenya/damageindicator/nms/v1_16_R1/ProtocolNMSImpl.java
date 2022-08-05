@@ -10,9 +10,10 @@ import net.minecraft.server.v1_16_R1.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_16_R1.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_16_R1.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_16_R1.PacketPlayOutSpawnEntityLiving;
+import net.minecraft.server.v1_16_R1.PlayerChunkMap;
+import net.minecraft.server.v1_16_R1.WorldServer;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -23,30 +24,27 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
     @Override
     public Hologram getHologram(List<Player> players, LivingEntity ent, String text) {
-        return new HologramImpl(players, ent, text);
+        return new HologramImpl(ent, text);
     }
 
     public static class HologramImpl implements Hologram {
 
-        private final List<Player> players;
         private final EntityArmorStand armorStand;
-        private final LivingEntity ent;
+        private final LivingEntity entity;
         private double dy;
 
-        public HologramImpl(List<Player> players, LivingEntity ent, String text) {
-            this.players = players;
-            this.ent = ent;
+        public HologramImpl(LivingEntity entity, String text) {
+            this.entity = entity;
             this.dy = 0;
-            Location loc = ent.getLocation();
+            Location loc = entity.getLocation();
 
-            EntityArmorStand armorStand = new EntityArmorStand(((CraftWorld) loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ());
-            armorStand.setInvisible(true);
-            armorStand.setMarker(true);
-            armorStand.setSmall(true);
-            armorStand.setNoGravity(true);
-            armorStand.setCustomName(new ChatComponentText(text));
-            armorStand.setCustomNameVisible(true);
-            this.armorStand = armorStand;
+            this.armorStand = new EntityArmorStand(((CraftWorld) loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ());
+            this.armorStand.setInvisible(true);
+            this.armorStand.setMarker(true);
+            this.armorStand.setSmall(true);
+            this.armorStand.setNoGravity(true);
+            this.armorStand.setCustomName(new ChatComponentText(text));
+            this.armorStand.setCustomNameVisible(true);
         }
 
         @Override
@@ -60,7 +58,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
                 @Override
                 public void run() {
-                    armorStand.setPosition(ent.getEyeLocation().getX(), ent.getEyeLocation().getY() + dy, ent.getEyeLocation().getZ());
+                    armorStand.setPosition(entity.getEyeLocation().getX(), entity.getEyeLocation().getY() + dy, entity.getEyeLocation().getZ());
                     sendTeleportPacket();
                     dy += speed;
 
@@ -100,9 +98,10 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendPacket(Object packet) {
-            for (Player player : players) {
-                ((CraftPlayer) player).getHandle().playerConnection.sendPacket((Packet<?>) packet);
-            }
+            PlayerChunkMap.EntityTracker tracker = ((WorldServer) armorStand.world).getChunkProvider().playerChunkMap.trackedEntities.get(entity.getEntityId());
+            if (tracker == null)
+                return;
+            tracker.broadcast((Packet<?>) packet);
         }
 
     }
