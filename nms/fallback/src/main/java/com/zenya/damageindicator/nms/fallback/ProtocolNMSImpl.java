@@ -3,6 +3,7 @@ package com.zenya.damageindicator.nms.fallback;
 import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;
+import com.zenya.damageindicator.storage.StorageFileManager;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
@@ -18,12 +19,12 @@ public class ProtocolNMSImpl implements ProtocolNMS {
     public static class HologramImpl implements Hologram {
 
         private ArmorStand armorStand;
-        private final LivingEntity ent;
+        private final LivingEntity entity;
         private final String text;
         private double dy;
 
-        public HologramImpl(LivingEntity ent, String text) {
-            this.ent = ent;
+        public HologramImpl(LivingEntity entity, String text) {
+            this.entity = entity;
             this.dy = 0;
             this.text = text;
         }
@@ -36,10 +37,17 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
             new BukkitRunnable() {
                 int tick = 0;
+                final boolean relative = StorageFileManager.getConfig().getBool("relative-holograms");
+                final Location loc = entity.getLocation();
+                final double startY = loc.getY();
 
                 @Override
                 public void run() {
-                    sendTeleportPacket();
+                    if (relative) {
+                        entity.getLocation(loc);
+                    }
+                    loc.setY(startY + dy);
+                    sendTeleportPacket(loc);
                     dy += speed;
 
                     tick++;
@@ -54,7 +62,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendCreatePacket() {
-            armorStand = ent.getWorld().spawn(ent.getLocation(), ArmorStand.class);
+            armorStand = entity.getWorld().spawn(entity.getLocation(), ArmorStand.class);
         }
 
         @Override
@@ -79,6 +87,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendPacket(Object packet) {
+            throw new UnsupportedOperationException("Fallback isn't packet based!");
         }
 
     }
