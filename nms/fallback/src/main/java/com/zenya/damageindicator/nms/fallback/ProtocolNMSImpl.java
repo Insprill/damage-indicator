@@ -67,6 +67,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendMetaPacket() {
+            armorStand.setInvulnerable(true);
             armorStand.setVisible(false);
             armorStand.setMarker(true);
             armorStand.setSmall(true);
