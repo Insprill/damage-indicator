@@ -3,7 +3,12 @@ package com.zenya.damageindicator.nms.v1_12_R1;
 import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;
-import net.minecraft.server.v1_12_R1.*;
+import net.minecraft.server.v1_12_R1.EntityArmorStand;
+import net.minecraft.server.v1_12_R1.Packet;
+import net.minecraft.server.v1_12_R1.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_12_R1.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_12_R1.PacketPlayOutEntityTeleport;
+import net.minecraft.server.v1_12_R1.PacketPlayOutSpawnEntityLiving;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
@@ -12,7 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProtocolNMSImpl implements ProtocolNMS {
 
@@ -23,13 +27,13 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
     public static class HologramImpl implements Hologram {
 
-        private final List<EntityPlayer> players;
+        private final List<Player> players;
         private final EntityArmorStand armorStand;
         private final LivingEntity ent;
         private double dy;
 
         public HologramImpl(List<Player> players, LivingEntity ent, String text) {
-            this.players = players.stream().map(p -> ((CraftPlayer) p).getHandle()).collect(Collectors.toList());
+            this.players = players;
             this.ent = ent;
             this.dy = 0;
             Location loc = ent.getLocation();
@@ -60,7 +64,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
                     dy += speed;
 
                     tick++;
-                    if(tick > duration) {
+                    if (tick > duration) {
                         sendRemovePacket();
                         this.cancel();
                     }
@@ -92,13 +96,14 @@ public class ProtocolNMSImpl implements ProtocolNMS {
             PacketPlayOutEntityDestroy remove = new PacketPlayOutEntityDestroy(armorStand.getId());
             sendPacket(remove);
         }
-        
+
         @Override
         public void sendPacket(Object packet) {
-            for (EntityPlayer player : players) {
-                player.playerConnection.sendPacket((Packet<?>) packet);
+            for (Player player : players) {
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket((Packet<?>) packet);
             }
         }
+
     }
 
 }

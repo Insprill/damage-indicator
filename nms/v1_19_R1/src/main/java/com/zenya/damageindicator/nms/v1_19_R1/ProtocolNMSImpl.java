@@ -10,7 +10,6 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
@@ -20,7 +19,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProtocolNMSImpl implements ProtocolNMS {
 
@@ -31,13 +29,13 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
     public static class HologramImpl implements Hologram {
 
-        private final List<ServerPlayer> players;
+        private final List<Player> players;
         private final ArmorStand armorStand;
         private final LivingEntity ent;
         private double dy;
 
         public HologramImpl(List<Player> players, LivingEntity ent, String text) {
-            this.players = players.stream().map(p -> ((CraftPlayer) p).getHandle()).collect(Collectors.toList());
+            this.players = players;
             this.ent = ent;
             this.dy = 0;
             Location loc = ent.getLocation();
@@ -103,8 +101,8 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendPacket(Object packet) {
-            for (ServerPlayer player : players) {
-                player.connection.send((Packet<?>) packet);
+            for (Player player : players) {
+                ((CraftPlayer) player).getHandle().connection.send((Packet<?>) packet);
             }
         }
 

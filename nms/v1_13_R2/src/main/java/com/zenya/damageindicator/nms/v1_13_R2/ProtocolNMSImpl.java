@@ -3,7 +3,13 @@ package com.zenya.damageindicator.nms.v1_13_R2;
 import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;
-import net.minecraft.server.v1_13_R2.*;
+import net.minecraft.server.v1_13_R2.ChatComponentText;
+import net.minecraft.server.v1_13_R2.EntityArmorStand;
+import net.minecraft.server.v1_13_R2.Packet;
+import net.minecraft.server.v1_13_R2.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_13_R2.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_13_R2.PacketPlayOutEntityTeleport;
+import net.minecraft.server.v1_13_R2.PacketPlayOutSpawnEntityLiving;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
@@ -12,7 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProtocolNMSImpl implements ProtocolNMS {
 
@@ -23,13 +28,13 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
     public static class HologramImpl implements Hologram {
 
-        private final List<EntityPlayer> players;
+        private final List<Player> players;
         private final EntityArmorStand armorStand;
         private final LivingEntity ent;
         private double dy;
 
         public HologramImpl(List<Player> players, LivingEntity ent, String text) {
-            this.players = players.stream().map(p -> ((CraftPlayer) p).getHandle()).collect(Collectors.toList());
+            this.players = players;
             this.ent = ent;
             this.dy = 0;
             Location loc = ent.getLocation();
@@ -95,10 +100,11 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendPacket(Object packet) {
-            for (EntityPlayer player : players) {
-                player.playerConnection.sendPacket((Packet<?>) packet);
+            for (Player player : players) {
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket((Packet<?>) packet);
             }
         }
+
     }
 
 }
