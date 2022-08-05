@@ -29,13 +29,14 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         private final EntityArmorStand armorStand;
         private final LivingEntity entity;
+        private final PlayerChunkMap.EntityTracker tracker;
         private double dy;
 
         public HologramImpl(LivingEntity entity, String text) {
             this.entity = entity;
             this.dy = 0;
-            Location loc = entity.getLocation();
 
+            Location loc = entity.getLocation();
             this.armorStand = new EntityArmorStand(((CraftWorld) loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ());
             this.armorStand.setInvisible(true);
             this.armorStand.setMarker(true);
@@ -43,6 +44,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
             this.armorStand.setNoGravity(true);
             this.armorStand.setCustomName(new ChatComponentText(text));
             this.armorStand.setCustomNameVisible(true);
+            this.tracker = ((WorldServer) armorStand.t).getChunkProvider().a.G.get(entity.getEntityId());
         }
 
         @Override
@@ -104,9 +106,6 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendPacket(Object packet) {
-            PlayerChunkMap.EntityTracker tracker = ((WorldServer) armorStand.t).getChunkProvider().a.G.get(entity.getEntityId());
-            if (tracker == null)
-                return;
             if (StorageFileManager.getConfig().getBool("show-self-holograms")) {
                 tracker.broadcastIncludingSelf((Packet<?>) packet);
             } else {
