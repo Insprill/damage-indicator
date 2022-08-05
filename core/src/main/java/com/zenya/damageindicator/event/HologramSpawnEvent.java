@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 
 public class HologramSpawnEvent extends Event {
 
+    private static final int VIEW_DIST = Bukkit.getViewDistance() << 5;
+
     private final LivingEntity ent;
     private final double amount;
 
@@ -27,10 +29,9 @@ public class HologramSpawnEvent extends Event {
     }
 
     public void fireEvent() {
-        int serverViewDist = Bukkit.getViewDistance() << 5;
         List<Player> players = ent.getWorld().getPlayers().stream()
                 .filter(p -> p != ent)
-                .filter(p -> p.getLocation().distanceSquared(ent.getLocation()) <= serverViewDist)
+                .filter(p -> p.getLocation().distanceSquared(ent.getLocation()) <= VIEW_DIST)
                 .filter(p -> ToggleManager.INSTANCE.isToggled(p.getUniqueId()))
                 .collect(Collectors.toList());
         if (players.isEmpty())
