@@ -1,6 +1,7 @@
 1.3.0:
 - Added option to let indicators move independently of the entity they came from (relative-holograms).
 - Added option to show your own indicators (show-self-holograms).
+- Fixed error when updating configs on legacy servers.
 - Optimized how what players to send packets to is determined.
 
 

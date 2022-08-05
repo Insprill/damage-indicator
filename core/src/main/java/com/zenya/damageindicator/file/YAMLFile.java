@@ -81,7 +81,7 @@ public class YAMLFile extends StorageFile {
                             config.set(node, null);
                             config.createSection(node);
                         }
-                        if (oldConfig.contains(node, true)) {
+                        if (oldConfig.contains(node)) {
                             config.set(node, oldConfig.get(node));
                         }
                     }
