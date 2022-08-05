@@ -3,7 +3,6 @@ package com.zenya.damageindicator.event;
 import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import com.zenya.damageindicator.util.DisplayBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -12,8 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.math.RoundingMode;
 
 public class HologramSpawnEvent extends Event {
-
-    private static final int VIEW_DIST = Bukkit.getViewDistance() << 5;
 
     private final LivingEntity ent;
     private final double amount;
