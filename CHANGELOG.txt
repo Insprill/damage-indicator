@@ -1,3 +1,8 @@
+1.3.0:
+- Added option to let holograms move independently of the entity they came from (relative-holograms).
+- Optimized how what players to send packets to is determined.
+
+
 1.2.1:
 - Fixed missing 1.17 support.
 
