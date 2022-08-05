@@ -6,15 +6,12 @@ import com.zenya.damageindicator.nms.ProtocolNMS;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.List;
 
 public class ProtocolNMSImpl implements ProtocolNMS {
 
     @Override
-    public Hologram getHologram(List<Player> players, LivingEntity ent, String text) {
+    public Hologram getHologram(LivingEntity ent, String text) {
         return new HologramImpl(ent, text);
     }
 

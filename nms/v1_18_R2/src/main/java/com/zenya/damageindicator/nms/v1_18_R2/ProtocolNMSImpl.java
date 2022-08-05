@@ -15,15 +15,12 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.List;
 
 public class ProtocolNMSImpl implements ProtocolNMS {
 
     @Override
-    public Hologram getHologram(List<Player> players, LivingEntity ent, String text) {
+    public Hologram getHologram(LivingEntity ent, String text) {
         return new HologramImpl(ent, text);
     }
 

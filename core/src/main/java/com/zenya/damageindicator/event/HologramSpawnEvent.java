@@ -2,18 +2,14 @@ package com.zenya.damageindicator.event;
 
 import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
-import com.zenya.damageindicator.storage.ToggleManager;
 import com.zenya.damageindicator.util.DisplayBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.RoundingMode;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class HologramSpawnEvent extends Event {
 
@@ -29,14 +25,6 @@ public class HologramSpawnEvent extends Event {
     }
 
     public void fireEvent() {
-        List<Player> players = ent.getWorld().getPlayers().stream()
-                .filter(p -> p != ent)
-                .filter(p -> p.getLocation().distanceSquared(ent.getLocation()) <= VIEW_DIST)
-                .filter(p -> ToggleManager.INSTANCE.isToggled(p.getUniqueId()))
-                .collect(Collectors.toList());
-        if (players.isEmpty())
-            return;
-
         double offset = StorageFileManager.getConfig().getDouble("hologram-offset");
         double speed = StorageFileManager.getConfig().getDouble("hologram-speed");
         int duration = StorageFileManager.getConfig().getInt("hologram-duration");
@@ -44,7 +32,7 @@ public class HologramSpawnEvent extends Event {
         String format = StorageFileManager.getConfig().getNearestValue(amount > 0 ? "heal-format" : "damage-format", Math.abs(amount), RoundingMode.DOWN);
         String hologramText = new DisplayBuilder().withText(format).withValue(Math.abs(amount)).build();
 
-        DamageIndicator.PROTOCOL_NMS.getHologram(players, ent, hologramText).spawn(offset, speed, duration);
+        DamageIndicator.PROTOCOL_NMS.getHologram(ent, hologramText).spawn(offset, speed, duration);
     }
 
     //Default custom event methods
