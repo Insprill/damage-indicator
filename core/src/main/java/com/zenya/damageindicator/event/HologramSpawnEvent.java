@@ -32,7 +32,7 @@ public class HologramSpawnEvent extends Event {
         String format = StorageFileManager.getConfig().getNearestValue(amount > 0 ? "heal-format" : "damage-format", Math.abs(amount), RoundingMode.DOWN);
         String hologramText = new DisplayBuilder().withText(format).withValue(Math.abs(amount)).build();
 
-        DamageIndicator.PROTOCOL_NMS.getHologram(ent, hologramText).spawn(offset, speed, duration);
+        DamageIndicator.PROTOCOL_NMS.getHologram(ent, hologramText).spawn(offset + ent.getEyeHeight(), speed, duration);
     }
 
     //Default custom event methods

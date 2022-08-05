@@ -16,6 +16,8 @@ hologram-offset: 0.25
 hologram-speed: 0.15
 # How long (in ticks) should indicators stay for
 hologram-duration: 20
+# Whether the position of holograms should stay relative to the entity they came from.
+relative-holograms: true
 
 # Whether or not all damage indicators should be bold
 bold-indicators: true

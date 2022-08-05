@@ -3,6 +3,7 @@ package com.zenya.damageindicator.nms.v1_8_R2;
 import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;
+import com.zenya.damageindicator.storage.StorageFileManager;
 import net.minecraft.server.v1_8_R2.EntityArmorStand;
 import net.minecraft.server.v1_8_R2.EntityTrackerEntry;
 import net.minecraft.server.v1_8_R2.Packet;
@@ -50,10 +51,17 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
             new BukkitRunnable() {
                 int tick = 0;
+                final boolean relative = StorageFileManager.getConfig().getBool("relative-holograms");
+                final Location loc = entity.getLocation();
+                final double startY = loc.getY();
 
                 @Override
                 public void run() {
-                    armorStand.setPosition(entity.getEyeLocation().getX(), entity.getEyeLocation().getY() + dy, entity.getEyeLocation().getZ());
+                    if (relative) {
+                        entity.getLocation(loc);
+                    }
+                    loc.setY(startY + dy);
+                    armorStand.setPosition(loc.getX(), loc.getY(), loc.getZ());
                     sendTeleportPacket();
                     dy += speed;
 
