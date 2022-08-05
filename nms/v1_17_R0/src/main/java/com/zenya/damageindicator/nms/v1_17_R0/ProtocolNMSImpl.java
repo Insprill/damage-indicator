@@ -107,7 +107,11 @@ public class ProtocolNMSImpl implements ProtocolNMS {
             PlayerChunkMap.EntityTracker tracker = ((WorldServer) armorStand.t).getChunkProvider().a.G.get(entity.getEntityId());
             if (tracker == null)
                 return;
-            tracker.broadcast((Packet<?>) packet);
+            if (StorageFileManager.getConfig().getBool("show-self-holograms")) {
+                tracker.broadcastIncludingSelf((Packet<?>) packet);
+            } else {
+                tracker.broadcast((Packet<?>) packet);
+            }
         }
 
     }

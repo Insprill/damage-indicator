@@ -106,7 +106,11 @@ public class ProtocolNMSImpl implements ProtocolNMS {
             ChunkMap.TrackedEntity tracker = ((ServerLevel) armorStand.level).chunkSource.chunkMap.entityMap.get(entity.getEntityId());
             if (tracker == null)
                 return;
-            tracker.broadcast((Packet<?>) packet);
+            if (StorageFileManager.getConfig().getBool("show-self-holograms")) {
+                tracker.broadcastAndSend((Packet<?>) packet);
+            } else {
+                tracker.broadcast((Packet<?>) packet);
+            }
         }
 
     }

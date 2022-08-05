@@ -106,7 +106,11 @@ public class ProtocolNMSImpl implements ProtocolNMS {
             EntityTrackerEntry tracker = ((WorldServer) armorStand.world).tracker.trackedEntities.get(entity.getEntityId());
             if (tracker == null)
                 return;
-            tracker.broadcast((Packet<?>) packet);
+            if (StorageFileManager.getConfig().getBool("show-self-holograms")) {
+                tracker.broadcastIncludingSelf((Packet<?>) packet);
+            } else {
+                tracker.broadcast((Packet<?>) packet);
+            }
         }
 
     }
