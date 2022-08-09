@@ -30,7 +30,7 @@ build {
 }
 
 def getFullVersion() {
-    var version = project.property("version");
+    var version = project.property("version")
     if (version.contains('-SNAPSHOT')) {
         return version + '+rev.' + 'git rev-parse --verify --short HEAD'.execute().text.trim()
     } else {
