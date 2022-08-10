@@ -14,6 +14,8 @@ public interface Hologram {
 
     void sendRemovePacket();
 
-    void sendPacket(Object packet);
+    void sendPacketToTracked(Object packet);
+
+    void sendPacketToAllInWorld(Object packet);
 
 }

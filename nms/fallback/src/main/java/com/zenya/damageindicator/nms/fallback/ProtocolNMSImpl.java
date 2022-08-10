@@ -87,7 +87,12 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         }
 
         @Override
-        public void sendPacket(Object packet) {
+        public void sendPacketToTracked(Object packet) {
+            throw new UnsupportedOperationException("Fallback isn't packet based!");
+        }
+
+        @Override
+        public void sendPacketToAllInWorld(Object packet) {
             throw new UnsupportedOperationException("Fallback isn't packet based!");
         }
 

@@ -16,7 +16,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ProtocolNMSImpl implements ProtocolNMS {
@@ -82,34 +84,41 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         @Override
         public void sendCreatePacket() {
             ClientboundAddEntityPacket create = new ClientboundAddEntityPacket(armorStand);
-            sendPacket(create);
+            sendPacketToTracked(create);
         }
 
         @Override
         public void sendMetaPacket() {
             ClientboundSetEntityDataPacket meta = new ClientboundSetEntityDataPacket(armorStand.getId(), armorStand.getEntityData(), false);
-            sendPacket(meta);
+            sendPacketToTracked(meta);
         }
 
         @Override
         public void sendTeleportPacket(Location loc) {
             armorStand.teleportTo(loc.getX(), loc.getY(), loc.getZ());
             ClientboundTeleportEntityPacket teleport = new ClientboundTeleportEntityPacket(armorStand);
-            sendPacket(teleport);
+            sendPacketToTracked(teleport);
         }
 
         @Override
         public void sendRemovePacket() {
             ClientboundRemoveEntitiesPacket remove = new ClientboundRemoveEntitiesPacket(armorStand.getId());
-            sendPacket(remove);
+            sendPacketToAllInWorld(remove);
         }
 
         @Override
-        public void sendPacket(Object packet) {
+        public void sendPacketToTracked(Object packet) {
             if (StorageFileManager.getConfig().getBool("show-self-holograms")) {
                 tracker.broadcastAndSend((Packet<?>) packet);
             } else {
                 tracker.broadcast((Packet<?>) packet);
+            }
+        }
+
+        @Override
+        public void sendPacketToAllInWorld(Object packet) {
+            for (Player player : entity.getWorld().getPlayers()) {
+                ((CraftPlayer) player).getHandle().connection.send((Packet<?>) packet);
             }
         }
 
