@@ -15,6 +15,12 @@ allprojects {
     version = project.version
 }
 
+// todo: Why does this need to be here?
+repositories {
+    mavenCentral()
+    maven("https://jitpack.io")
+}
+
 dependencies {
     implementation(project(":core"))
     implementation(project(":nms:fallback"))
