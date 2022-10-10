@@ -1,0 +1,15 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenLocal()
+}
+
+dependencies {
+    compileOnly project(':core')
+    compileOnly 'org.spigotmc:spigot:1.8.3-R0.1-SNAPSHOT'
+}
