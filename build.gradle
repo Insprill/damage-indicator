@@ -29,6 +29,10 @@ build {
     dependsOn(":dist:shadowJar")
 }
 
+papermakeFinalizeBuild {
+    dependsOn(":dist:copyJars")
+}
+
 def getFullVersion() {
     var version = project.property("version")
     if (version.contains('-SNAPSHOT')) {
