@@ -39,6 +39,8 @@ public class Listeners implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityDamageEvent(EntityDamageEvent e) {
+        if (e.getFinalDamage() < 0.01)
+            return;
         if (!(e.getEntity() instanceof LivingEntity))
             return;
         if (StorageFileManager.getConfig().listContains("disabled-worlds", e.getEntity().getWorld().getName()))
