@@ -19,7 +19,11 @@
 
 package com.zenya.damageindicator.nms;
 
+import com.zenya.damageindicator.DamageIndicator;
+import com.zenya.damageindicator.storage.StorageFileManager;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public interface Hologram {
 
@@ -36,5 +40,50 @@ public interface Hologram {
     void sendPacketToTracked(Object packet);
 
     void sendPacketToAllInWorld(Object packet);
+
+    class HologramRunnable extends BukkitRunnable {
+
+        private final Hologram hologram;
+        private final Entity entity;
+        private final Location loc;
+        private final double startY;
+        private final boolean relative;
+        private final double speed;
+        private final double duration;
+
+        private int tick;
+        private double dy;
+
+        public HologramRunnable(Hologram hologram, Entity entity, double offset, double speed, double duration) {
+            this.hologram = hologram;
+            this.entity = entity;
+            this.loc = entity.getLocation();
+            this.startY = loc.getY();
+            this.relative = StorageFileManager.getConfig().getBool("relative-holograms");
+            this.speed = speed;
+            this.duration = duration;
+            this.dy = offset;
+        }
+
+        @Override
+        public void run() {
+            if (relative) {
+                entity.getLocation(loc);
+            }
+            loc.setY(startY + dy);
+            hologram.sendTeleportPacket(loc);
+            dy += speed;
+
+            tick++;
+            if (tick > duration) {
+                hologram.sendRemovePacket();
+                this.cancel();
+            }
+        }
+
+        public void start() {
+            this.runTaskTimer(DamageIndicator.INSTANCE, 0, 1);
+        }
+    }
 
 }

@@ -1,6 +1,5 @@
 package com.zenya.damageindicator.nms.v1_13_R2;
 
-import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;
 import com.zenya.damageindicator.storage.StorageFileManager;
@@ -18,7 +17,6 @@ import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class ProtocolNMSImpl implements ProtocolNMS {
 
@@ -32,11 +30,9 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         private final EntityArmorStand armorStand;
         private final LivingEntity entity;
         private final EntityTrackerEntry tracker;
-        private double dy;
 
         public HologramImpl(LivingEntity entity, String text) {
             this.entity = entity;
-            this.dy = 0;
 
             Location loc = entity.getLocation();
             this.armorStand = new EntityArmorStand(((CraftWorld) loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ());
@@ -53,30 +49,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         public Hologram spawn(double offset, double speed, long duration) {
             sendCreatePacket();
             sendMetaPacket();
-            this.dy += offset;
-
-            new BukkitRunnable() {
-                int tick = 0;
-                final boolean relative = StorageFileManager.getConfig().getBool("relative-holograms");
-                final Location loc = entity.getLocation();
-                final double startY = loc.getY();
-
-                @Override
-                public void run() {
-                    if (relative) {
-                        entity.getLocation(loc);
-                    }
-                    loc.setY(startY + dy);
-                    sendTeleportPacket(loc);
-                    dy += speed;
-
-                    tick++;
-                    if (tick > duration) {
-                        sendRemovePacket();
-                        this.cancel();
-                    }
-                }
-            }.runTaskTimer(DamageIndicator.INSTANCE, 0, 1);
+            new HologramRunnable(this, entity, offset, speed, duration).start();
             return this;
         }
 
