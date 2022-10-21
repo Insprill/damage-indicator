@@ -20,7 +20,7 @@
 package com.zenya.damageindicator.scoreboard;
 
 import com.zenya.damageindicator.storage.StorageFileManager;
-import net.insprill.xenlib.MinecraftVersion;
+import net.insprill.spigotutils.MinecraftVersion;
 import net.insprill.xenlib.localization.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

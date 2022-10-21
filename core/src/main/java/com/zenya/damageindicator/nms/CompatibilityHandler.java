@@ -20,7 +20,7 @@
 package com.zenya.damageindicator.nms;
 
 import com.zenya.damageindicator.DamageIndicator;
-import net.insprill.xenlib.MinecraftVersion;
+import net.insprill.spigotutils.MinecraftVersion;
 
 public class CompatibilityHandler {
 

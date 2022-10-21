@@ -26,7 +26,7 @@ import com.zenya.damageindicator.nms.ProtocolNMS;
 import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import com.zenya.damageindicator.util.MessagesMigrator;
-import net.insprill.xenlib.MinecraftVersion;
+import net.insprill.spigotutils.MinecraftVersion;
 import net.insprill.xenlib.XenLib;
 import net.insprill.xenlib.commands.Command;
 import org.bstats.bukkit.Metrics;
