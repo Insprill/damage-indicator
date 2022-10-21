@@ -33,7 +33,7 @@ public class CompatibilityHandler {
             String version = (MinecraftVersion.is(MinecraftVersion.v1_17_0)) ? "v1_17_R0" : MinecraftVersion.getCraftBukkitVersion();
             return (Class<? extends ProtocolNMS>) Class.forName(String.format(FULLY_QUALIFIED_PATH, version));
         } catch (Exception exc) {
-            DamageIndicator.INSTANCE.getLogger().warning("You are running DamageIndicator on an unsupported NMS version " + MinecraftVersion.getCraftBukkitVersion());
+            DamageIndicator.INSTANCE.getLogger().warning("You are running DamageIndicator on an unsupported NMS version (" + MinecraftVersion.getCraftBukkitVersion() + ")");
             DamageIndicator.INSTANCE.getLogger().warning("Some features may be disabled or broken, and expect degraded performance.");
             return (Class<? extends ProtocolNMS>) Class.forName(String.format(FULLY_QUALIFIED_PATH, "fallback"));
         }
