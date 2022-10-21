@@ -39,7 +39,7 @@ public interface Hologram {
 
     void sendPacketToTracked(Object packet);
 
-    void sendPacketToAllInWorld(Object packet);
+    void sendPacketToWorld(Object packet);
 
     class HologramRunnable extends BukkitRunnable {
 

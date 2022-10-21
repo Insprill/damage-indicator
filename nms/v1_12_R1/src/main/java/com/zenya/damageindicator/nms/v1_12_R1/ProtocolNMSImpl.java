@@ -74,7 +74,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         @Override
         public void sendRemovePacket() {
             PacketPlayOutEntityDestroy remove = new PacketPlayOutEntityDestroy(armorStand.getId());
-            sendPacketToAllInWorld(remove);
+            sendPacketToWorld(remove);
         }
 
         @Override
@@ -87,7 +87,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         }
 
         @Override
-        public void sendPacketToAllInWorld(Object packet) {
+        public void sendPacketToWorld(Object packet) {
             for (Player player : entity.getWorld().getPlayers()) {
                 ((CraftPlayer) player).getHandle().playerConnection.sendPacket((Packet<?>) packet);
             }
