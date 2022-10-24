@@ -10,7 +10,8 @@ language: "en-us"
 indicator-decimals: 2
 
 # How many blocks should indicators spawn above the player
-# It is best to keep this value nonzero to prevent indicators from blocking the player's view
+# It is best to keep this value nonzero to prevent indicators
+# from blocking the player's view if show-self-holograms is enabled.
 hologram-offset: 0.25
 # How fast should indicators float upwards
 hologram-speed: 0.15
