@@ -1,5 +1,5 @@
 1.3.4:
-- Fixed the last build not working on Spigot 1.19.2 servers (NMS mapping conflict with Paper)
+- Fixed 1.3.3 not working on Spigot 1.19.2 servers (NMS mapping conflict with Paper).
 - Fixed some grammar in the default configs comments.
 
 
