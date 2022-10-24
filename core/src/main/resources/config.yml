@@ -10,7 +10,7 @@ language: "en-us"
 indicator-decimals: 2
 
 # How many blocks should indicators spawn above the player
-# It is best to keep this value nonzero to prevent indicators from blocking the player view
+# It is best to keep this value nonzero to prevent indicators from blocking the player's view
 hologram-offset: 0.25
 # How fast should indicators float upwards
 hologram-speed: 0.15
@@ -21,13 +21,13 @@ relative-holograms: true
 # Whether you should be able to see your own holograms.
 show-self-holograms: false
 
-# Whether or not all damage indicators should be bold
+# Whether all damage indicators should be bold
 bold-indicators: true
 
-# Whether or not all damage indicators should be italicised
+# Whether all damage indicators should be italicized
 italic-indicators: false
 
-# Whether or not all damage indicators should be underlined
+# Whether all damage indicators should be underlined
 underline-indicators: false
 
 # Whether damage indicators should be shown.
@@ -35,7 +35,7 @@ damage-indicators: true
 
 # Format used when players take damage
 # Each damage value represents half a heart (20 points = 10 hearts)
-# The closest rounded down value will be used
+# The closest rounded-down value will be used
 damage-format:
   0: "%fefee%-%value%" # <-- The %fefee% placeholder means the indicator will show as &f-&e0&f.&e6&f9 if the player takes 0.69 damage
   2: "%f6fee%-%value%"
@@ -44,14 +44,14 @@ damage-format:
   9: "%f4f44%-%value%"
   10: "%f44fdd%-%value%"
   12: "%f55fdd%-%value%"
-  100: "%rainbow%-%value%" # <-- The %rainbow% placeholder can be used to randomise indicator colors (fancy display for insta-kill tools like /kill)
+  100: "%rainbow%-%value%" # <-- The %rainbow% placeholder can be used to randomize indicator colors (fancy display for insta-kill tools like /kill)
 
 # Whether damage heal indicators should be shown.
 heal-indicators: true
 
 # Format used when players heal
 # Each heal value represents half a heart (20 points = 10 hearts)
-# The closest rounded down value will be used
+# The closest rounded-down value will be used
 heal-format:
   0: "%fafaa%+%value%"
   4: "%f2faa%+%value%" # <-- The %fafaa% placeholder means the indicator will show as &f+&a0&f.&a6&a9 if the player heals by 4.20 points
@@ -66,7 +66,7 @@ disabled-worlds:
   - nodelay
   - testworld
 
-# If enabled, damage indicators will only be shown if it was caused by a player.
+# If enabled, damage indicators will only be shown if a player caused it.
 only-show-entity-damage-from-players: true
 
 # Toggles the below entity type whitelist/blacklist.
@@ -76,5 +76,5 @@ entity-type-list-as-whitelist: false
 entity-type-list:
   - ARMOR_STAND
 
-# DamageIndicator will not display any (damage) indicators for entities whom name is in this list.
+# DamageIndicator will not display any (damage) indicators for entities whose name is in this list.
 ignored-entities: [ ]
