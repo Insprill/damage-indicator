@@ -43,7 +43,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
             this.armorStand.setNoGravity(true);
             this.armorStand.setCustomName(MutableComponent.create(new LiteralContents(text)));
             this.armorStand.setCustomNameVisible(true);
-            this.tracker = ((ServerLevel) armorStand.level).chunkSource.chunkMap.entityMap.get(entity.getEntityId());
+            this.tracker = ((ServerLevel) armorStand.level).getChunkSource().chunkMap.entityMap.get(entity.getEntityId());
         }
 
         @Override
