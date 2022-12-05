@@ -19,8 +19,7 @@
 
 package com.zenya.damageindicator.util;
 
-import net.insprill.xenlib.files.YamlFile;
-import net.insprill.xenlib.localization.Lang;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -32,10 +31,7 @@ public final class MessagesMigrator {
         if (!messagesFile.exists())
             return;
 
-        YamlFile messages = new YamlFile(messagesFile);
-
-        if (!Lang.getLocaleConfig().isModifiable())
-            return;
+        YamlConfiguration messages = YamlConfiguration.loadConfiguration(messagesFile);
 
         Lang.getLocaleConfig().set("commands.no-permission", messages.getStringRaw("no-permission"));
         Lang.getLocaleConfig().set("commands.player-only", messages.getStringRaw("player-required"));

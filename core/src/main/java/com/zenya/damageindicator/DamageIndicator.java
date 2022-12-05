@@ -19,20 +19,27 @@
 
 package com.zenya.damageindicator;
 
-import com.zenya.damageindicator.command.ReloadArg;
+import co.aikar.commands.PaperCommandManager;
+import com.zenya.damageindicator.command.CommandCompletion;
+import com.zenya.damageindicator.command.DiCommand;
 import com.zenya.damageindicator.event.Listeners;
 import com.zenya.damageindicator.nms.CompatibilityHandler;
 import com.zenya.damageindicator.nms.ProtocolNMS;
 import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
+import com.zenya.damageindicator.util.Lang;
 import com.zenya.damageindicator.util.MessagesMigrator;
 import net.insprill.spigotutils.MinecraftVersion;
-import net.insprill.xenlib.XenLib;
-import net.insprill.xenlib.commands.Command;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class DamageIndicator extends JavaPlugin {
 
@@ -40,14 +47,13 @@ public class DamageIndicator extends JavaPlugin {
 
     public static DamageIndicator INSTANCE;
     public static ProtocolNMS PROTOCOL_NMS;
+    public static Lang lang;
 
     @Override
     public void onEnable() {
         INSTANCE = this;
 
         new Metrics(this, BSTATS_ID);
-
-        XenLib.init(this);
 
         // Migrate messages.yml to the default locale file.
         MessagesMigrator.migrate(this);
@@ -74,8 +80,35 @@ public class DamageIndicator extends JavaPlugin {
         //Register events
         this.getServer().getPluginManager().registerEvents(new Listeners(), this);
 
-        //Register commands
-        new Command("damageindicator", ReloadArg.class.getPackage().getName());
+        // Commands
+        PaperCommandManager commandManager = new PaperCommandManager(this);
+
+        String requestedLang = StorageFileManager.getConfig().getString("language");
+        Locale requestedLocale = new Locale(requestedLang);
+        commandManager.addSupportedLanguage(requestedLocale);
+
+        Optional<Locale> locale = commandManager.getSupportedLanguages().stream().filter(it -> it.equals(requestedLocale)).findFirst();
+        File localeFolder = new File(getDataFolder(), "locale");
+        File localeFile = new File(localeFolder, requestedLang + ".yml");
+        if (locale.isPresent()) {
+            commandManager.getLocales().setDefaultLocale(locale.get());
+            try {
+                commandManager.getLocales().loadYamlLanguageFile(localeFile, locale.get());
+            } catch (Exception e) {
+                getLogger().log(Level.SEVERE, "Failed to load locale file", e);
+            }
+        } else {
+            getLogger().log(Level.SEVERE, "Unsupported language '{}'. Defaulting to 'en'. Please choose from one of the following: {}", new Object[]{ requestedLang, commandManager.getSupportedLanguages().stream().map(Locale::getLanguage).collect(Collectors.toList()) });
+        }
+        lang = new Lang(commandManager.getLocales(), localeFile);
+
+        commandManager.enableUnstableAPI("help");
+        commandManager.enableUnstableAPI("brigadier");
+
+        CommandCompletion.register(commandManager);
+
+        DiCommand cjmCommand = new DiCommand();
+        commandManager.registerCommand(cjmCommand);
 
         HealthIndicator.INSTANCE.reload();
     }

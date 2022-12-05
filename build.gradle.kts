@@ -17,7 +17,7 @@ allprojects {
 // todo: Why does this need to be here?
 repositories {
     mavenCentral()
-    maven("https://jitpack.io")
+    maven("https://repo.aikar.co/content/groups/aikar/")
 }
 
 dependencies {
