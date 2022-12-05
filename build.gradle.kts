@@ -4,7 +4,6 @@ plugins {
     id("java")
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("com.rikonardo.papermake") version "1.0.4"
-//    id("net.insprill.gradle-buildtools") version "0.1.0-SNAPSHOT"
 }
 
 group = "net.insprill"
@@ -40,10 +39,10 @@ dependencies {
     implementation(project(":nms:v1_16_R2"))
     implementation(project(":nms:v1_16_R3"))
     implementation(project(":nms:v1_17_R0"))
-    implementation(project(":nms:v1_17_R1"))
-    implementation(project(":nms:v1_18_R1"))
-    implementation(project(":nms:v1_18_R2"))
-    implementation(project(":nms:v1_19_R1"))
+    implementation(project(":nms:v1_17_R1", "reobf"))
+    implementation(project(":nms:v1_18_R1", "reobf"))
+    implementation(project(":nms:v1_18_R2", "reobf"))
+    implementation(project(":nms:v1_19_R1", "reobf"))
 }
 
 tasks {
