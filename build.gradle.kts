@@ -56,6 +56,7 @@ tasks {
 
         val libPackage = "com.zenya.damageindicator.libs"
         relocate("net.insprill.xenlib", "${libPackage}.net.insprill.xenlib")
+        relocate("net.insprill.spigotutils", "${libPackage}.net.insprill.spigotutils")
         relocate("org.bstats", "${libPackage}.org.bstats")
 
         minimize()
