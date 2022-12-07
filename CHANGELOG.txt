@@ -1,4 +1,5 @@
 1.4.0:
+- Added support for 1.19.3.
 - Fixed toggles not working.
 - Removed the 'show-self-holograms' option.
 
