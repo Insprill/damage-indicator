@@ -11,6 +11,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutEntityTeleport;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving;
 import net.minecraft.server.level.PlayerChunkMap;
 import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.network.ServerPlayerConnection;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
@@ -81,18 +82,21 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendPacketToTracked(Object packet) {
-            if (StorageFileManager.getConfig().getBool("show-self-holograms")) {
-                tracker.broadcastIncludingSelf((Packet<?>) packet);
-            } else {
-                tracker.broadcast((Packet<?>) packet);
+            for (ServerPlayerConnection conn : tracker.f) {
+                sendPacketIfToggled(conn.d().getUniqueID(), conn, packet);
             }
         }
 
         @Override
         public void sendPacketToWorld(Object packet) {
             for (Player player : entity.getWorld().getPlayers()) {
-                ((CraftPlayer) player).getHandle().b.sendPacket((Packet<?>) packet);
+                sendPacketIfToggled(player.getUniqueId(), ((CraftPlayer) player).getHandle().b, packet);
             }
+        }
+
+        @Override
+        public void sendPacket(Object connection, Object packet) {
+            ((ServerPlayerConnection) connection).sendPacket((Packet<?>) packet);
         }
 
     }

@@ -21,9 +21,12 @@ package com.zenya.damageindicator.nms;
 
 import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
+import com.zenya.damageindicator.storage.ToggleManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.UUID;
 
 public interface Hologram {
 
@@ -40,6 +43,13 @@ public interface Hologram {
     void sendPacketToTracked(Object packet);
 
     void sendPacketToWorld(Object packet);
+
+    default void sendPacketIfToggled(UUID uuid, Object connection, Object packet) {
+        if (ToggleManager.INSTANCE.isToggled(uuid))
+            sendPacket(connection, packet);
+    }
+
+    void sendPacket(Object connection, Object packet);
 
     class HologramRunnable extends BukkitRunnable {
 
@@ -84,6 +94,7 @@ public interface Hologram {
         public void start() {
             this.runTaskTimer(DamageIndicator.INSTANCE, 0, 1);
         }
+
     }
 
 }

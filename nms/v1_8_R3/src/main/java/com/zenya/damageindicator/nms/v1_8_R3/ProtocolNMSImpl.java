@@ -4,12 +4,14 @@ import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import net.minecraft.server.v1_8_R3.EntityArmorStand;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.EntityTrackerEntry;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
+import net.minecraft.server.v1_8_R3.PlayerConnection;
 import net.minecraft.server.v1_8_R3.WorldServer;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
@@ -79,18 +81,21 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendPacketToTracked(Object packet) {
-            if (StorageFileManager.getConfig().getBool("show-self-holograms")) {
-                tracker.broadcastIncludingSelf((Packet<?>) packet);
-            } else {
-                tracker.broadcast((Packet<?>) packet);
+            for (EntityPlayer conn : tracker.trackedPlayers) {
+                sendPacketIfToggled(conn.getUniqueID(), conn.playerConnection, packet);
             }
         }
 
         @Override
         public void sendPacketToWorld(Object packet) {
             for (Player player : entity.getWorld().getPlayers()) {
-                ((CraftPlayer) player).getHandle().playerConnection.sendPacket((Packet<?>) packet);
+                sendPacketIfToggled(player.getUniqueId(), ((CraftPlayer) player).getHandle().playerConnection, packet);
             }
+        }
+
+        @Override
+        public void sendPacket(Object connection, Object packet) {
+            ((PlayerConnection) connection).sendPacket((Packet<?>) packet);
         }
 
     }

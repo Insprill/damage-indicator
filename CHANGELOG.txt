@@ -1,3 +1,8 @@
+1.4.0:
+- Fixed toggles not working.
+- Removed the 'show-self-holograms' option.
+
+
 1.3.4:
 - Fixed 1.3.3 not working on Spigot 1.19.2 servers (NMS mapping conflict with Paper).
 - Fixed some grammar in the default configs comments.
