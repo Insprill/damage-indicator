@@ -27,7 +27,6 @@ import com.zenya.damageindicator.nms.CompatibilityHandler;
 import com.zenya.damageindicator.nms.ProtocolNMS;
 import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
-import com.zenya.damageindicator.util.Lang;
 import com.zenya.damageindicator.util.MessagesMigrator;
 import net.insprill.spigotutils.MinecraftVersion;
 import org.bstats.bukkit.Metrics;
@@ -36,6 +35,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -47,7 +47,6 @@ public class DamageIndicator extends JavaPlugin {
 
     public static DamageIndicator INSTANCE;
     public static ProtocolNMS PROTOCOL_NMS;
-    public static Lang lang;
 
     @Override
     public void onEnable() {
@@ -55,11 +54,29 @@ public class DamageIndicator extends JavaPlugin {
 
         new Metrics(this, BSTATS_ID);
 
-        // Migrate messages.yml to the default locale file.
-        MessagesMigrator.migrate(this);
-
-        //Init all configs and storage files
+        // Init all configs and storage files
         StorageFileManager.INSTANCE.reloadFiles();
+
+        String requestedLang = StorageFileManager.getConfig().getString("language");
+        File localeFolder = new File(getDataFolder(), "locale");
+        File localeFile = new File(localeFolder, requestedLang + ".yml");
+        if (!localeFile.isFile()) {
+            getLogger().severe("Failed to find locale file for '" + requestedLang + "'!");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        // Migrate legacy configs
+        try {
+            if (MessagesMigrator.migrate(this, localeFile)) {
+                // Update locale file if changed
+                StorageFileManager.INSTANCE.reloadFiles();
+            }
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, "Failed to migrate messages file!", e);
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
 
         //Disable for versions below 1.8
         if (MinecraftVersion.isOlderThan(MinecraftVersion.v1_8_0)) {
@@ -68,7 +85,7 @@ public class DamageIndicator extends JavaPlugin {
             return;
         }
 
-        //Init NMS
+        // Init NMS
         try {
             PROTOCOL_NMS = (ProtocolNMS) CompatibilityHandler.getProtocolNMS().getConstructors()[0].newInstance();
         } catch (ReflectiveOperationException e) {
@@ -77,30 +94,21 @@ public class DamageIndicator extends JavaPlugin {
             return;
         }
 
-        //Register events
+        // Register events
         this.getServer().getPluginManager().registerEvents(new Listeners(), this);
 
         // Commands
         PaperCommandManager commandManager = new PaperCommandManager(this);
 
-        String requestedLang = StorageFileManager.getConfig().getString("language");
         Locale requestedLocale = new Locale(requestedLang);
         commandManager.addSupportedLanguage(requestedLocale);
 
         Optional<Locale> locale = commandManager.getSupportedLanguages().stream().filter(it -> it.equals(requestedLocale)).findFirst();
-        File localeFolder = new File(getDataFolder(), "locale");
-        File localeFile = new File(localeFolder, requestedLang + ".yml");
-        if (locale.isPresent()) {
+        if (locale.isPresent() && localeFile.exists()) {
             commandManager.getLocales().setDefaultLocale(locale.get());
-            try {
-                commandManager.getLocales().loadYamlLanguageFile(localeFile, locale.get());
-            } catch (Exception e) {
-                getLogger().log(Level.SEVERE, "Failed to load locale file", e);
-            }
         } else {
             getLogger().log(Level.SEVERE, "Unsupported language '{}'. Defaulting to 'en'. Please choose from one of the following: {}", new Object[]{ requestedLang, commandManager.getSupportedLanguages().stream().map(Locale::getLanguage).collect(Collectors.toList()) });
         }
-        lang = new Lang(commandManager.getLocales(), localeFile);
 
         commandManager.enableUnstableAPI("help");
         commandManager.enableUnstableAPI("brigadier");

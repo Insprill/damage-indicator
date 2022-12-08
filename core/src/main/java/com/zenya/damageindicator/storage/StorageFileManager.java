@@ -24,6 +24,7 @@ import com.zenya.damageindicator.file.DBFile;
 import com.zenya.damageindicator.file.StorageFile;
 import com.zenya.damageindicator.file.YAMLFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,11 @@ public class StorageFileManager {
     }};
 
     /**
+     * locale
+     **/
+    private static final int LOCALE_FILE_VERSION = 3;
+
+    /**
      * database.db
      **/
     private static final int DATABASE_FILE_VERSION = 0; //Unused for now
@@ -54,6 +60,7 @@ public class StorageFileManager {
     public void reloadFiles() {
         INSTANCE.fileMap.clear();
         registerFile("config.yml", new YAMLFile(DamageIndicator.INSTANCE.getDataFolder().getPath(), "config.yml", CONFIG_FILE_VERSION, CONFIG_RESET_FILE, CONFIG_IGNORED_NODES, CONFIG_REPLACE_NODES));
+        registerFile("locale", new YAMLFile(DamageIndicator.INSTANCE.getDataFolder().getPath() + File.separator + "locale", getConfig().getString("language") + ".yml", LOCALE_FILE_VERSION, false, null, null));
         registerFile("database.db", new DBFile(DamageIndicator.INSTANCE.getDataFolder().getPath(), "database.db", DATABASE_FILE_VERSION, DATABASE_RESET_FILE));
     }
 
@@ -83,6 +90,10 @@ public class StorageFileManager {
 
     public static YAMLFile getConfig() {
         return (YAMLFile) INSTANCE.getFile("config.yml");
+    }
+
+    public static YAMLFile getLocale() {
+        return (YAMLFile) INSTANCE.getFile("locale");
     }
 
     public static DBFile getDatabase() {

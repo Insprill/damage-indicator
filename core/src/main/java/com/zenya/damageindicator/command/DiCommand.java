@@ -20,9 +20,9 @@ import org.bukkit.entity.Player;
 public class DiCommand extends BaseCommand {
 
     @HelpCommand
-    @Syntax("{@@cjm.command.help.syntax}")
+    @Syntax("(page)")
+    @Description("Shows the help page")
     @CommandPermission("cjm.command.help")
-    @Description("{@@cjm.command.help.description}")
     @SuppressWarnings("UNUSED_PARAMETER")
     public void onHelp(CommandSender sender, CommandHelp help) {
         help.showHelp();
@@ -34,10 +34,11 @@ public class DiCommand extends BaseCommand {
     public void onReload(CommandSender sender) {
         StorageFileManager.INSTANCE.reloadFiles();
         HealthIndicator.INSTANCE.reload();
-        sender.sendMessage("Reloaded");
+        sender.sendMessage(StorageFileManager.getLocale().getString("commands.reload"));
     }
 
     @Subcommand("toggle")
+    @Syntax("(status)")
     @Description("Toggles whether you see indicators")
     @CommandPermission("damageindicator.command.toggle")
     public void onToggle(Player sender, @Optional String toggle) {
@@ -45,6 +46,7 @@ public class DiCommand extends BaseCommand {
                 ? toggle.equalsIgnoreCase("on")
                 : !ToggleManager.INSTANCE.isToggled(sender.getUniqueId());
         ToggleManager.INSTANCE.registerToggle(sender.getUniqueId(), newStatus);
+        sender.sendMessage(StorageFileManager.getLocale().getString("commands.toggle." + (newStatus ? "enable" : "disable")));
     }
 
 }

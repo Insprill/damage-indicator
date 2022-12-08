@@ -1,14 +1,7 @@
-prefix: "&8[&6Damage Indicator&8]"
 commands:
-  unknown-command: "%p% &cUnknown command! Type \"/%label% help\" for help."
-  player-only: "%p% &cThat command can only be used by a player!"
-  no-permission: "%p% &cYou don't have permission to do that!"
-  invalid-usage: "%p% &cInvalid usage! Please refer to \"/%label% help\" for help."
-  reload: "%p% &aPlugin reloaded."
-  plinfo:
-    success: "%p% &a%link%"
-    fail: "%p% &cFailed to create paste! Error: %error%"
+  reload: "&8[&6Damage Indicator&8] %p% &aPlugin reloaded."
   toggle:
-    enable: "&aDamageIndicator displays have been enabled"
-    disable: "&cDamageIndicator displays have been disabled"
+    enable: "&8[&6Damage Indicator&8] &aDamageIndicator displays have been enabled"
+    disable: "&8[&6Damage Indicator&8] &cDamageIndicator displays have been disabled"
 health: " &c❤"
+config-version: 3

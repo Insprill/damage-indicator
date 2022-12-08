@@ -1,36 +1,10 @@
 name: DamageIndicator
 main: com.zenya.damageindicator.DamageIndicator
 version: ${version}
-authors: [Insprill, Zenya4]
+authors: [ Insprill, Zenya4 ]
 description: A high performance packet-based damage indicator
 api-version: 1.13
 
-commands:
-  damageindicator:
-    description: Main command for DamageIndicator
-    aliases:
-      - di
-    permission: damageindicator.command.help
-    usage: /<command>
-
 permissions:
-  damageindicator.*:
-    children:
-      damageindicator.command.help: true
-      damageindicator.command.plinfo: true
-      damageindicator.command.reload: true
-      damageindicator.command.toggle: true
-  damageindicator.command.*:
-    children:
-      damageindicator.command.help: true
-      damageindicator.command.plinfo: true
-      damageindicator.command.reload: true
-      damageindicator.command.toggle: true
-  damageindicator.command.help:
-    default: true
-  damageindicator.command.plinfo:
-    default: op
-  damageindicator.command.reload:
-    default: op
   damageindicator.command.toggle:
     default: true

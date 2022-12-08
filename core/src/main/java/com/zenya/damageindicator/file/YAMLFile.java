@@ -56,12 +56,17 @@ public class YAMLFile extends StorageFile {
     public YAMLFile(String directory, String fileName, Integer fileVersion, boolean resetFile, List<String> ignoredNodes, List<String> replaceNodes) {
         super(directory, fileName, fileVersion, resetFile);
 
-        this.origConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(DamageIndicator.INSTANCE.getResource(fileName)));
+        String resourceName = directory.replace(DamageIndicator.INSTANCE.getDataFolder().getPath(), "") + "/" + fileName;
+        if (resourceName.startsWith("/")) {
+            resourceName = resourceName.substring(1);
+        }
+
+        this.origConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(DamageIndicator.INSTANCE.getResource(resourceName)));
         this.config = YamlConfiguration.loadConfiguration(file);
 
         if (fileVersion != null) {
             try {
-                updateFile(ignoredNodes, replaceNodes);
+                updateFile(ignoredNodes, replaceNodes, resourceName, !directory.contains("locale"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -72,12 +77,12 @@ public class YAMLFile extends StorageFile {
         return getInt("config-version");
     }
 
-    private void updateFile(List<String> ignoredNodes, List<String> replaceNodes) throws IOException {
+    private void updateFile(List<String> ignoredNodes, List<String> replaceNodes, String resourceName, boolean update) throws IOException {
         if (!file.exists()) {
             //Init file
-            DamageIndicator.INSTANCE.saveResource(fileName, false);
+            DamageIndicator.INSTANCE.saveResource(resourceName, false);
             config = YamlConfiguration.loadConfiguration(file);
-        } else {
+        } else if (update) {
             //Reset file for backward-compatibility
             if (getFileVersion() > fileVersion) resetFile = true;
 

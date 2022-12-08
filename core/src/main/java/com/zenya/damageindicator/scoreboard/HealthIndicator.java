@@ -63,7 +63,7 @@ public class HealthIndicator {
         if (obj == null) {
             //Init if not exists
             if (MinecraftVersion.isNew()) {
-                obj = board.registerNewObjective(OBJECTIVE_NAME, OBJECTIVE_CRITERIA, Lang.get(OBJECTIVE_NAME_KEY));
+                obj = board.registerNewObjective(OBJECTIVE_NAME, OBJECTIVE_CRITERIA, StorageFileManager.getLocale().getString(OBJECTIVE_NAME_KEY));
             } else {
                 obj = board.registerNewObjective(OBJECTIVE_NAME, OBJECTIVE_CRITERIA);
             }
@@ -71,7 +71,7 @@ public class HealthIndicator {
         }
 
         //Update displayname regardless
-        obj.setDisplayName(Lang.get(OBJECTIVE_NAME_KEY));
+        obj.setDisplayName(StorageFileManager.getLocale().getString(OBJECTIVE_NAME_KEY));
         Bukkit.getOnlinePlayers().forEach(this::updateHealth);
     }
 
