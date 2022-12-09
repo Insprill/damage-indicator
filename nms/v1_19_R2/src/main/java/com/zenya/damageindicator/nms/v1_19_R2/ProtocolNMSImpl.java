@@ -2,7 +2,6 @@ package com.zenya.damageindicator.nms.v1_19_R2;
 
 import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;
-import com.zenya.damageindicator.storage.StorageFileManager;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.network.protocol.Packet;
@@ -10,14 +9,18 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.network.ServerPlayerConnection;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_19_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class ProtocolNMSImpl implements ProtocolNMS {
 
@@ -62,7 +65,10 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendMetaPacket() {
-            ClientboundSetEntityDataPacket meta = new ClientboundSetEntityDataPacket(armorStand.getId(), armorStand.getEntityData(), false);
+            List<SynchedEntityData.DataValue<?>> dataValues = armorStand.getEntityData().packDirty();
+            if (dataValues == null)
+                return;
+            ClientboundSetEntityDataPacket meta = new ClientboundSetEntityDataPacket(armorStand.getId(), dataValues);
             sendPacketToTracked(meta);
         }
 
