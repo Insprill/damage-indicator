@@ -1,3 +1,7 @@
+1.4.1:
+- Fixed an error when registering commands on legacy servers.
+
+
 1.4.0:
 - Added support for 1.19.3.
 - Fixed toggles not working.

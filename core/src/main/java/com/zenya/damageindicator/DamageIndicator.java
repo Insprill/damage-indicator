@@ -74,8 +74,8 @@ public class DamageIndicator extends JavaPlugin {
         //Register events
         this.getServer().getPluginManager().registerEvents(new Listeners(), this);
 
-        //Register commands
-        new Command("damageindicator", ReloadArg.class.getPackage().getName());
+        //Register commands. Legacy servers try to register permissions again from the plugin.yml and throw errors.
+        Bukkit.getScheduler().runTaskLater(this, () -> new Command("damageindicator", ReloadArg.class.getPackage().getName()), 10L);
 
         HealthIndicator.INSTANCE.reload();
     }
