@@ -1,11 +1,11 @@
 plugins {
     id("java")
-    id("io.papermc.paperweight.userdev") version "1.3.11"
+    id("io.papermc.paperweight.userdev") version "1.5.3"
 }
 
 dependencies {
     compileOnly(project(":core"))
-    paperDevBundle("1.19.3-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.19.3-R0.1-SNAPSHOT")
 }
 
 tasks {
