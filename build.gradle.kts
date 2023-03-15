@@ -44,6 +44,7 @@ dependencies {
     implementation(project(":nms:v1_18_R2", "reobf"))
     implementation(project(":nms:v1_19_R1", "reobf"))
     implementation(project(":nms:v1_19_R2", "reobf"))
+    implementation(project(":nms:v1_19_R3", "reobf"))
 }
 
 tasks {
