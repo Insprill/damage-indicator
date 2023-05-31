@@ -13,7 +13,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT")
     implementation("net.insprill:spigot-utils:0.2.2")
     implementation("net.insprill:XenLib:d7d95983fe")
-    implementation("org.bstats:bstats-bukkit:3.0.0")
+    implementation("org.bstats:bstats-bukkit:3.0.2")
 }
 
 tasks {
