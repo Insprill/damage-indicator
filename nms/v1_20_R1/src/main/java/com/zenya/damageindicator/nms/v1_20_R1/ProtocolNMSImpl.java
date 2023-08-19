@@ -1,4 +1,4 @@
-package com.zenya.damageindicator.nms.v1_19_R3;
+package com.zenya.damageindicator.nms.v1_20_R1;
 
 import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;

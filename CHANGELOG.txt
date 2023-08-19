@@ -1,3 +1,8 @@
+1.7.0:
+- Added support for 1.20.1.
+- Fixed 1.20 support not working correctly.
+
+
 1.6.0:
 - Added support for 1.20.
 
