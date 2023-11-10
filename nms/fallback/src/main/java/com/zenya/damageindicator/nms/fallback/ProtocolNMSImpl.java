@@ -34,18 +34,22 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendCreatePacket() {
-            armorStand = entity.getWorld().spawn(entity.getLocation(), ArmorStand.class);
+            armorStand = entity.getWorld().spawn(entity.getLocation(), ArmorStand.class, this::sendMetaPacket);
         }
 
         @Override
         public void sendMetaPacket() {
-            armorStand.setInvulnerable(true);
-            armorStand.setVisible(false);
-            armorStand.setMarker(true);
-            armorStand.setSmall(true);
-            armorStand.setGravity(false);
-            armorStand.setCustomName(text);
-            armorStand.setCustomNameVisible(true);
+            // Metadata is sent from the spawners callback
+        }
+
+        public void sendMetaPacket(ArmorStand as) {
+            as.setInvulnerable(true);
+            as.setVisible(false);
+            as.setMarker(true);
+            as.setSmall(true);
+            as.setGravity(false);
+            as.setCustomName(text);
+            as.setCustomNameVisible(true);
         }
 
         @Override
