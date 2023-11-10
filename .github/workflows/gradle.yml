@@ -34,5 +34,5 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: Compiled JARs
+          name: Damage Indicator
           path: build/libs
