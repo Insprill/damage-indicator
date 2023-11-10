@@ -10,7 +10,7 @@ repositories {
 
 dependencies {
     compileOnly("org.jetbrains:annotations:24.0.1")
-    compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
     implementation("net.insprill:spigot-utils:0.2.2")
     implementation("net.insprill:XenLib:d7d95983fe")
     implementation("org.bstats:bstats-bukkit:3.0.2")
