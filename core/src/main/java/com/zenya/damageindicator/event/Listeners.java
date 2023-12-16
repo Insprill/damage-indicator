@@ -66,11 +66,6 @@ public class Listeners implements Listener {
             return;
 
         Bukkit.getServer().getPluginManager().callEvent(new HologramSpawnEvent((LivingEntity) e.getEntity(), -e.getFinalDamage()));
-
-        // Handle health indicator
-        if (e.getEntity() instanceof Player) {
-            HealthIndicator.INSTANCE.updateHealth((Player) e.getEntity());
-        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -89,16 +84,10 @@ public class Listeners implements Listener {
             return;
 
         Bukkit.getServer().getPluginManager().callEvent(new HologramSpawnEvent((LivingEntity) e.getEntity(), e.getAmount()));
-
-        // Handle health indicator
-        if (e.getEntity() instanceof Player) {
-            HealthIndicator.INSTANCE.updateHealth((Player) e.getEntity());
-        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoinEvent(PlayerJoinEvent e) {
-        HealthIndicator.INSTANCE.updateHealth(e.getPlayer());
         ToggleManager.INSTANCE.isToggled(e.getPlayer().getUniqueId());
     }
 

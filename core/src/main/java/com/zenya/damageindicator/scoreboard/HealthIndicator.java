@@ -44,11 +44,6 @@ public class HealthIndicator {
         this.obj = board.getObjective(OBJECTIVE_NAME);
     }
 
-    public void updateHealth(Player player) {
-        if (obj != null)
-            obj.getScore(player.getName()).setScore((int) player.getHealth());
-    }
-
     @SuppressWarnings("deprecation")
     public void reload() {
         if (!StorageFileManager.getConfig().getBool("health-indicators")) {
@@ -73,7 +68,6 @@ public class HealthIndicator {
 
         //Update displayname regardless
         obj.setDisplayName(Lang.get(OBJECTIVE_NAME_KEY));
-        Bukkit.getOnlinePlayers().forEach(this::updateHealth);
     }
 
 }
