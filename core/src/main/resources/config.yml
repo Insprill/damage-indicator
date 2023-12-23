@@ -68,6 +68,9 @@ disabled-worlds:
 # If enabled, damage indicators will only be shown if a player caused it.
 only-show-entity-damage-from-players: true
 
+# if enabled, indicators will not be shown for players/entities that are invisible.
+ignore-invisible-entities: false
+
 # Toggles the below entity type whitelist/blacklist.
 entity-type-list-enabled: true
 # If true, the following list will act as a whitelist instead of a blacklist.

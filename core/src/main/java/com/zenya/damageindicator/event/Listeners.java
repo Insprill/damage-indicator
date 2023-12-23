@@ -19,7 +19,6 @@
 
 package com.zenya.damageindicator.event;
 
-import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import com.zenya.damageindicator.storage.ToggleManager;
 import org.bukkit.Bukkit;
@@ -43,12 +42,13 @@ public class Listeners implements Listener {
             return;
         if (!(e.getEntity() instanceof LivingEntity))
             return;
-        if (StorageFileManager.getConfig().listContains("disabled-worlds", e.getEntity().getWorld().getName()))
+        LivingEntity entity = (LivingEntity) e.getEntity();
+        if (StorageFileManager.getConfig().listContains("disabled-worlds", entity.getWorld().getName()))
             return;
         if (!StorageFileManager.getConfig().getBool("damage-indicators"))
             return;
 
-        if (!(e.getEntity() instanceof Player) && StorageFileManager.getConfig().getBool("only-show-entity-damage-from-players")) {
+        if (!(entity instanceof Player) && StorageFileManager.getConfig().getBool("only-show-entity-damage-from-players")) {
             if (!(e instanceof EntityDamageByEntityEvent))
                 return;
             EntityDamageByEntityEvent ev = (EntityDamageByEntityEvent) e;
@@ -60,12 +60,14 @@ public class Listeners implements Listener {
             }
         }
 
-        if (!StorageFileManager.getConfig().isAllowed("entity-type-list", e.getEntity().getType().name()))
+        if (entity.isInvisible() && StorageFileManager.getConfig().getBool("ignore-invisible-entities"))
             return;
-        if (StorageFileManager.getConfig().listContains("ignored-entities", e.getEntity().getName()))
+        if (!StorageFileManager.getConfig().isAllowed("entity-type-list", entity.getType().name()))
+            return;
+        if (StorageFileManager.getConfig().listContains("ignored-entities", entity.getName()))
             return;
 
-        Bukkit.getServer().getPluginManager().callEvent(new HologramSpawnEvent((LivingEntity) e.getEntity(), -e.getFinalDamage()));
+        Bukkit.getServer().getPluginManager().callEvent(new HologramSpawnEvent(entity, -e.getFinalDamage()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
