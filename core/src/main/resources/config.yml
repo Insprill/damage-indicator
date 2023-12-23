@@ -71,6 +71,9 @@ only-show-entity-damage-from-players: true
 # if enabled, indicators will not be shown for players/entities that are invisible.
 ignore-invisible-entities: false
 
+# if enabled, indicators will not be shown for players that are sneaking.
+ignore-sneaking-players: false
+
 # Toggles the below entity type whitelist/blacklist.
 entity-type-list-enabled: true
 # If true, the following list will act as a whitelist instead of a blacklist.

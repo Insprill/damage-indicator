@@ -62,6 +62,8 @@ public class Listeners implements Listener {
 
         if (entity.isInvisible() && StorageFileManager.getConfig().getBool("ignore-invisible-entities"))
             return;
+        if (entity instanceof Player && ((Player) entity).isSneaking() && StorageFileManager.getConfig().getBool("ignore-sneaking-players"))
+            return;
         if (!StorageFileManager.getConfig().isAllowed("entity-type-list", entity.getType().name()))
             return;
         if (StorageFileManager.getConfig().listContains("ignored-entities", entity.getName()))
