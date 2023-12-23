@@ -36,9 +36,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class Listeners implements Listener {
 
+    private static final float DAMAGE_THRESHOLD = 0.01f;
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityDamageEvent(EntityDamageEvent e) {
-        if (e.getFinalDamage() < 0.01)
+        if (e.getFinalDamage() < DAMAGE_THRESHOLD)
             return;
         if (!(e.getEntity() instanceof LivingEntity))
             return;
@@ -76,7 +78,7 @@ public class Listeners implements Listener {
     public void onEntityRegainHealthEvent(EntityRegainHealthEvent e) {
         if (!(e.getEntity() instanceof LivingEntity))
             return;
-        if (e.getAmount() < 1) // Minecraft doesn't register heals of less than half a heart
+        if (e.getAmount() < DAMAGE_THRESHOLD) // Minecraft doesn't register heals of less than half a heart
             return;
         if (StorageFileManager.getConfig().listContains("disabled-worlds", e.getEntity().getWorld().getName()))
             return;
