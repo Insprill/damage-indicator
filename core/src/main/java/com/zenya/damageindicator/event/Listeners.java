@@ -19,9 +19,11 @@
 
 package com.zenya.damageindicator.event;
 
+import com.zenya.damageindicator.file.YAMLFile;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import com.zenya.damageindicator.storage.ToggleManager;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -44,11 +46,13 @@ public class Listeners implements Listener {
             return;
         if (!(e.getEntity() instanceof LivingEntity))
             return;
-        LivingEntity entity = (LivingEntity) e.getEntity();
-        if (StorageFileManager.getConfig().listContains("disabled-worlds", entity.getWorld().getName()))
+
+        if (!shouldShowHologram(e.getEntity()))
             return;
         if (!StorageFileManager.getConfig().getBool("damage-indicators"))
             return;
+
+        LivingEntity entity = (LivingEntity) e.getEntity();
 
         if (!(entity instanceof Player) && StorageFileManager.getConfig().getBool("only-show-entity-damage-from-players")) {
             if (!(e instanceof EntityDamageByEntityEvent))
@@ -62,31 +66,17 @@ public class Listeners implements Listener {
             }
         }
 
-        if (entity.isInvisible() && StorageFileManager.getConfig().getBool("ignore-invisible-entities"))
-            return;
-        if (entity instanceof Player && ((Player) entity).isSneaking() && StorageFileManager.getConfig().getBool("ignore-sneaking-players"))
-            return;
-        if (!StorageFileManager.getConfig().isAllowed("entity-type-list", entity.getType().name()))
-            return;
-        if (StorageFileManager.getConfig().listContains("ignored-entities", entity.getName()))
-            return;
-
         Bukkit.getServer().getPluginManager().callEvent(new HologramSpawnEvent(entity, -e.getFinalDamage()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityRegainHealthEvent(EntityRegainHealthEvent e) {
-        if (!(e.getEntity() instanceof LivingEntity))
-            return;
         if (e.getAmount() < DAMAGE_THRESHOLD) // Minecraft doesn't register heals of less than half a heart
             return;
-        if (StorageFileManager.getConfig().listContains("disabled-worlds", e.getEntity().getWorld().getName()))
+        if (!(e.getEntity() instanceof LivingEntity))
             return;
-        if (!StorageFileManager.getConfig().getBool("heal-indicators"))
-            return;
-        if (!StorageFileManager.getConfig().isAllowed("entity-type-list", e.getEntity().getType().name()))
-            return;
-        if (StorageFileManager.getConfig().listContains("ignored-entities", e.getEntity().getName()))
+
+        if (!shouldShowHologram(e.getEntity()))
             return;
 
         Bukkit.getServer().getPluginManager().callEvent(new HologramSpawnEvent((LivingEntity) e.getEntity(), e.getAmount()));
@@ -100,6 +90,21 @@ public class Listeners implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoinEvent(PlayerQuitEvent e) {
         ToggleManager.INSTANCE.uncacheToggle(e.getPlayer().getUniqueId());
+    }
+
+    private boolean shouldShowHologram(Entity entity) {
+        YAMLFile config = StorageFileManager.getConfig();
+        if (entity instanceof LivingEntity && ((LivingEntity)entity).isInvisible() && config.getBool("ignore-invisible-entities"))
+            return false;
+        if (entity instanceof Player && ((Player) entity).isSneaking() && config.getBool("ignore-sneaking-players"))
+            return false;
+        if (config.listContains("disabled-worlds", entity.getWorld().getName()))
+            return false;
+        if (!config.isAllowed("entity-type-list", entity.getType().name()))
+            return false;
+        if (config.listContains("ignored-entities", entity.getName()))
+            return false;
+        return true;
     }
 
 }
