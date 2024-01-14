@@ -50,6 +50,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
             as.setGravity(false);
             as.setCustomName(text);
             as.setCustomNameVisible(true);
+            as.setPersistent(false);
         }
 
         @Override

@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## 1.10.2 - 2024-01-14
+
+### Fixed
+- Support for 1.20.4 using fallback mappings.
+- Fallback mappings leaving ghost indicators if the server stops before they're removed.
+
+
 ## 1.10.1 - 2023-12-28
 
 ### Fixed
