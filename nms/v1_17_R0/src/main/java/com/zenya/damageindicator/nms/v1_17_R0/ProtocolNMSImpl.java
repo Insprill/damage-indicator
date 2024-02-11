@@ -2,7 +2,6 @@ package com.zenya.damageindicator.nms.v1_17_R0;
 
 import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;
-import com.zenya.damageindicator.storage.StorageFileManager;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
@@ -36,14 +35,15 @@ public class ProtocolNMSImpl implements ProtocolNMS {
             this.entity = entity;
 
             Location loc = entity.getLocation();
-            this.armorStand = new EntityArmorStand(((CraftWorld) loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ());
+            WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
+            this.armorStand = new EntityArmorStand(world, loc.getX(), loc.getY(), loc.getZ());
             this.armorStand.setInvisible(true);
             this.armorStand.setMarker(true);
             this.armorStand.setSmall(true);
             this.armorStand.setNoGravity(true);
             this.armorStand.setCustomName(new ChatComponentText(text));
             this.armorStand.setCustomNameVisible(true);
-            this.tracker = ((WorldServer) armorStand.t).getChunkProvider().a.G.get(entity.getEntityId());
+            this.tracker = world.getChunkProvider().a.G.get(entity.getEntityId());
         }
 
         @Override
@@ -82,6 +82,10 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendPacketToTracked(Object packet) {
+            if (tracker == null) {
+                sendPacketToWorld(packet);
+                return;
+            }
             for (ServerPlayerConnection conn : tracker.f) {
                 sendPacketIfToggled(conn.d().getUniqueID(), conn, packet);
             }

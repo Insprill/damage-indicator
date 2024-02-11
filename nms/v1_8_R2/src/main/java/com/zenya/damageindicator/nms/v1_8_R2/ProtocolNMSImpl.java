@@ -2,8 +2,8 @@ package com.zenya.damageindicator.nms.v1_8_R2;
 
 import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;
-import com.zenya.damageindicator.storage.StorageFileManager;
 import net.minecraft.server.v1_8_R2.EntityArmorStand;
+import net.minecraft.server.v1_8_R2.EntityHuman;
 import net.minecraft.server.v1_8_R2.EntityPlayer;
 import net.minecraft.server.v1_8_R2.EntityTrackerEntry;
 import net.minecraft.server.v1_8_R2.Packet;
@@ -31,18 +31,20 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         private final EntityArmorStand armorStand;
         private final LivingEntity entity;
         private final EntityTrackerEntry tracker;
+        private final WorldServer world;
 
         public HologramImpl(LivingEntity entity, String text) {
             this.entity = entity;
 
             Location loc = entity.getLocation();
-            this.armorStand = new EntityArmorStand(((CraftWorld) loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ());
+            this.world = ((CraftWorld) loc.getWorld()).getHandle();
+            this.armorStand = new EntityArmorStand(world, loc.getX(), loc.getY(), loc.getZ());
             this.armorStand.setInvisible(true);
             this.armorStand.setSmall(true); // #setMarker
             this.armorStand.setGravity(false);
             this.armorStand.setCustomName(text);
             this.armorStand.setCustomNameVisible(true);
-            this.tracker = ((WorldServer) armorStand.world).tracker.trackedEntities.get(entity.getEntityId());
+            this.tracker = world.tracker.trackedEntities.get(entity.getEntityId());
         }
 
         @Override
@@ -80,8 +82,8 @@ public class ProtocolNMSImpl implements ProtocolNMS {
 
         @Override
         public void sendPacketToTracked(Object packet) {
-            for (EntityPlayer conn : tracker.trackedPlayers) {
-                sendPacketIfToggled(conn.getUniqueID(), conn.playerConnection, packet);
+            for (EntityHuman conn : tracker != null ? tracker.trackedPlayers : world.players) {
+                sendPacketIfToggled(conn.getUniqueID(), ((EntityPlayer) conn).playerConnection, packet);
             }
         }
 
