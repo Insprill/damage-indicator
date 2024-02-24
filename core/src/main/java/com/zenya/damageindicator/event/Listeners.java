@@ -22,6 +22,7 @@ package com.zenya.damageindicator.event;
 import com.zenya.damageindicator.file.YAMLFile;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import com.zenya.damageindicator.storage.ToggleManager;
+import net.insprill.spigotutils.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -35,6 +36,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffectType;
 
 public class Listeners implements Listener {
 
@@ -94,7 +96,7 @@ public class Listeners implements Listener {
 
     private boolean shouldShowHologram(Entity entity) {
         YAMLFile config = StorageFileManager.getConfig();
-        if (entity instanceof LivingEntity && ((LivingEntity)entity).isInvisible() && config.getBool("ignore-invisible-entities"))
+        if (entity instanceof LivingEntity && isInvisible((LivingEntity) entity) && config.getBool("ignore-invisible-entities"))
             return false;
         if (entity instanceof Player && ((Player) entity).isSneaking() && config.getBool("ignore-sneaking-players"))
             return false;
@@ -105,6 +107,14 @@ public class Listeners implements Listener {
         if (config.listContains("ignored-entities", entity.getName()))
             return false;
         return true;
+    }
+
+    boolean isInvisible(LivingEntity entity) {
+        if (MinecraftVersion.isAtLeast(MinecraftVersion.v1_16_3)) {
+            return entity.isInvisible();
+        } else {
+            return entity.hasPotionEffect(PotionEffectType.INVISIBILITY);
+        }
     }
 
 }
