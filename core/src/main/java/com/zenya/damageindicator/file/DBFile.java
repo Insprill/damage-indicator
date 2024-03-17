@@ -80,8 +80,7 @@ public class DBFile extends StorageFile {
     private static Object sendQueryStatement(String sql, String query, Object... parameters) {
         Object result = null;
 
-        try {
-            Connection conn = connect();
+        try (Connection conn = connect()) {
             if (conn == null) return null;
             if ((parameters == null || parameters.length == 0) && query == null) {
                 //Simple statement
@@ -102,7 +101,6 @@ public class DBFile extends StorageFile {
                     if (rs.next()) result = rs.getObject(query);
                 }
             }
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
