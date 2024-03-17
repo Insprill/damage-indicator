@@ -1,7 +1,7 @@
 /*
  *     Damage Indicator
  *     Copyright (C) 2021  Zenya
- *     Copyright (C) 2021-2022  Pierce Thompson
+ *     Copyright (C) 2021-2024  Pierce Thompson
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -82,6 +82,9 @@ public class DamageIndicator extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (StorageFileManager.getDatabase() != null) {
+            StorageFileManager.getDatabase().shutdown();
+        }
         HandlerList.unregisterAll(INSTANCE);
     }
 

@@ -1,7 +1,7 @@
 /*
  *     Damage Indicator
  *     Copyright (C) 2021  Zenya
- *     Copyright (C) 2021-2022  Pierce Thompson
+ *     Copyright (C) 2021-2024  Pierce Thompson
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 package com.zenya.damageindicator.file;
 
+import com.google.common.base.Preconditions;
 import com.zenya.damageindicator.DamageIndicator;
 import org.intellij.lang.annotations.Language;
 
@@ -30,10 +31,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class DBFile extends StorageFile {
 
     private static boolean loaded = false;
+
+    private final Thread mainThread;
+    private final ExecutorService dbThread;
 
     public DBFile(String fileName) {
         this(DamageIndicator.INSTANCE.getDataFolder().getPath(), fileName);
@@ -51,8 +58,10 @@ public class DBFile extends StorageFile {
         } catch (ClassNotFoundException e) {
             DamageIndicator.INSTANCE.getLogger().severe("Failed to initialize database! Toggles will not persist through server restarts.");
         }
+        mainThread = Thread.currentThread();
+        dbThread = Executors.newSingleThreadExecutor();
         if (loaded && !file.exists()) {
-            this.createTables();
+            runOnDbThread(this::createTables);
         }
     }
 
@@ -69,16 +78,19 @@ public class DBFile extends StorageFile {
         return conn;
     }
 
-    private static void sendStatement(String sql) {
+    private void sendStatement(String sql) {
         sendPreparedStatement(sql);
     }
 
-    private static void sendPreparedStatement(String sql, Object... parameters) {
+    private void sendPreparedStatement(String sql, Object... parameters) {
         sendQueryStatement(sql, null, parameters);
     }
 
-    private static Object sendQueryStatement(String sql, String query, Object... parameters) {
+    private Object sendQueryStatement(String sql, String query, Object... parameters) {
         Object result = null;
+
+        Preconditions.checkState(Thread.currentThread() != mainThread, "Database operations must be run on the database thread!");
+        Preconditions.checkState(!dbThread.isShutdown() && !dbThread.isTerminated(), "Database thread is not running! Database operations cannot be performed after shutdown is called.");
 
         try (Connection conn = connect()) {
             if (conn == null) return null;
@@ -105,6 +117,23 @@ public class DBFile extends StorageFile {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public void shutdown() {
+        if (dbThread.isShutdown() || dbThread.isTerminated()) return;
+        dbThread.shutdown();
+        try {
+            if (!dbThread.awaitTermination(10, TimeUnit.SECONDS)) {
+                dbThread.shutdownNow();
+            }
+        } catch (InterruptedException ie) {
+            dbThread.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void runOnDbThread(Runnable runnable) {
+        dbThread.submit(runnable);
     }
 
     public void createTables() {

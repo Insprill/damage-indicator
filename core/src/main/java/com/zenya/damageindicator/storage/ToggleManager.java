@@ -1,7 +1,7 @@
 /*
  *     Damage Indicator
  *     Copyright (C) 2021  Zenya
- *     Copyright (C) 2021-2022  Pierce Thompson
+ *     Copyright (C) 2021-2024  Pierce Thompson
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,9 +19,6 @@
 
 package com.zenya.damageindicator.storage;
 
-import com.zenya.damageindicator.DamageIndicator;
-import org.bukkit.Bukkit;
-
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -34,7 +31,7 @@ public class ToggleManager {
 
     public Boolean isToggled(UUID uuid) {
         if (!toggleMap.containsKey(uuid)) {
-            Bukkit.getScheduler().runTaskAsynchronously(DamageIndicator.INSTANCE, () -> {
+            StorageFileManager.getDatabase().runOnDbThread(() -> {
                 boolean status = StorageFileManager.getDatabase().getToggleStatus(uuid);
                 cacheToggle(uuid, status);
             });
@@ -44,9 +41,7 @@ public class ToggleManager {
 
     public void registerToggle(UUID uuid, boolean status) {
         cacheToggle(uuid, status);
-        Bukkit.getScheduler().runTaskAsynchronously(DamageIndicator.INSTANCE, () -> {
-            StorageFileManager.getDatabase().setToggleStatus(uuid, status);
-        });
+        StorageFileManager.getDatabase().runOnDbThread(() -> StorageFileManager.getDatabase().setToggleStatus(uuid, status));
     }
 
     public void cacheToggle(UUID uuid, boolean enabled) {

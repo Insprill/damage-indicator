@@ -1,7 +1,7 @@
 /*
  *     Damage Indicator
  *     Copyright (C) 2021  Zenya
- *     Copyright (C) 2021-2022  Pierce Thompson
+ *     Copyright (C) 2021-2024  Pierce Thompson
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -53,6 +53,9 @@ public class StorageFileManager {
 
     public void reloadFiles() {
         INSTANCE.fileMap.clear();
+        if (getDatabase() != null) {
+            getDatabase().shutdown();
+        }
         registerFile("config.yml", new YAMLFile(DamageIndicator.INSTANCE.getDataFolder().getPath(), "config.yml", CONFIG_FILE_VERSION, CONFIG_RESET_FILE, CONFIG_IGNORED_NODES, CONFIG_REPLACE_NODES));
         registerFile("database.db", new DBFile(DamageIndicator.INSTANCE.getDataFolder().getPath(), "database.db", DATABASE_FILE_VERSION, DATABASE_RESET_FILE));
     }
