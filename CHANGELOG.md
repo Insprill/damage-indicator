@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- The 'heal-indicators' setting now working.
 - The possibility of the toggle database being accessed simultaneously by multiple threads.
 - An error every time the database was accessed after an exception was thrown during an operation.
 

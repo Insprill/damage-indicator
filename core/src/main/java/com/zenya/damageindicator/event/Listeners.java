@@ -49,9 +49,9 @@ public class Listeners implements Listener {
         if (!(e.getEntity() instanceof LivingEntity))
             return;
 
-        if (!shouldShowHologram(e.getEntity()))
-            return;
         if (!StorageFileManager.getConfig().getBool("damage-indicators"))
+            return;
+        if (!shouldShowHologram(e.getEntity()))
             return;
 
         LivingEntity entity = (LivingEntity) e.getEntity();
@@ -78,6 +78,8 @@ public class Listeners implements Listener {
         if (!(e.getEntity() instanceof LivingEntity))
             return;
 
+        if (!StorageFileManager.getConfig().getBool("heal-indicators"))
+            return;
         if (!shouldShowHologram(e.getEntity()))
             return;
 
