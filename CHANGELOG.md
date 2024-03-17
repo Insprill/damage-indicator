@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- An option to randomly offset holograms relative to the entity they came from (`random-hologram-offset`).
+
 ### Fixed
 
-- The 'heal-indicators' setting now working.
+- The 'heal-indicators' setting not working.
 - The possibility of the toggle database being accessed simultaneously by multiple threads.
 - An error every time the database was accessed after an exception was thrown during an operation.
 

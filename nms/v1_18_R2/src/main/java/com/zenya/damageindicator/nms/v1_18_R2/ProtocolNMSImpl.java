@@ -21,8 +21,8 @@ import org.bukkit.entity.Player;
 public class ProtocolNMSImpl implements ProtocolNMS {
 
     @Override
-    public Hologram getHologram(LivingEntity ent, String text) {
-        return new HologramImpl(ent, text);
+    public Hologram getHologram(LivingEntity ent, Location loc, String text) {
+        return new HologramImpl(ent, loc, text);
     }
 
     public static class HologramImpl implements Hologram {
@@ -31,10 +31,9 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         private final LivingEntity entity;
         private final ChunkMap.TrackedEntity tracker;
 
-        public HologramImpl(LivingEntity entity, String text) {
+        public HologramImpl(LivingEntity entity, Location loc, String text) {
             this.entity = entity;
 
-            Location loc = entity.getLocation();
             ServerLevel world = ((CraftWorld) loc.getWorld()).getHandle();
             this.armorStand = new ArmorStand(world, loc.getX(), loc.getY(), loc.getZ());
             this.armorStand.setInvisible(true);
@@ -47,10 +46,10 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         }
 
         @Override
-        public Hologram spawn(double offset, double speed, long duration) {
+        public Hologram spawn(double offsetX, double offsetY, double offsetZ, double speed, long duration) {
             sendCreatePacket();
             sendMetaPacket();
-            new HologramRunnable(this, entity, offset, speed, duration).start();
+            new HologramRunnable(this, entity, offsetX, offsetY, offsetZ, speed, duration).start();
             return this;
         }
 

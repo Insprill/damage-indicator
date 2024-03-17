@@ -30,7 +30,7 @@ import java.util.UUID;
 
 public interface Hologram {
 
-    Hologram spawn(double offset, double speed, long duration);
+    Hologram spawn(double offsetX, double offsetY, double offsetZ, double speed, long duration);
 
     void sendCreatePacket();
 
@@ -56,6 +56,8 @@ public interface Hologram {
         private final Hologram hologram;
         private final Entity entity;
         private final Location loc;
+        private final double offsetX;
+        private final double offsetZ;
         private final double startY;
         private final boolean relative;
         private final double speed;
@@ -64,21 +66,23 @@ public interface Hologram {
         private int tick;
         private double dy;
 
-        public HologramRunnable(Hologram hologram, Entity entity, double offset, double speed, double duration) {
+        public HologramRunnable(Hologram hologram, Entity entity, double offsetX, double offsetY, double offsetZ, double speed, double duration) {
             this.hologram = hologram;
             this.entity = entity;
-            this.loc = entity.getLocation();
-            this.startY = loc.getY();
+            this.offsetX = offsetX;
+            this.offsetZ = offsetZ;
+            this.loc = entity.getLocation().add(offsetX, offsetY, offsetZ);
+            this.startY = loc.getY() - offsetY;
             this.relative = StorageFileManager.getConfig().getBool("relative-holograms");
             this.speed = speed;
             this.duration = duration;
-            this.dy = offset;
+            this.dy = offsetY;
         }
 
         @Override
         public void run() {
             if (relative) {
-                entity.getLocation(loc);
+                entity.getLocation(loc).add(offsetX, 0, offsetZ);
             }
             loc.setY(startY + dy);
             hologram.sendTeleportPacket(loc);

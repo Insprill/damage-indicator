@@ -41,14 +41,23 @@ public class HologramSpawnEvent extends Event {
     }
 
     public void fireEvent() {
-        double offset = StorageFileManager.getConfig().getDouble("hologram-offset");
+        double offsetY = StorageFileManager.getConfig().getDouble("hologram-offset") + ent.getEyeHeight();
         double speed = StorageFileManager.getConfig().getDouble("hologram-speed");
         int duration = StorageFileManager.getConfig().getInt("hologram-duration");
 
         String format = StorageFileManager.getConfig().getNearestValue(amount > 0 ? "heal-format" : "damage-format", Math.abs(amount), RoundingMode.DOWN);
         String hologramText = new DisplayBuilder().withText(format).withValue(Math.abs(amount)).build();
 
-        DamageIndicator.PROTOCOL_NMS.getHologram(ent, hologramText).spawn(offset + ent.getEyeHeight(), speed, duration);
+        double offsetX = 0;
+        double offsetZ = 0;
+        if (StorageFileManager.getConfig().getBool("random-hologram-offset")) {
+            offsetX = (Math.random() - 0.5) * 2;
+            offsetZ = (Math.random() - 0.5) * 2;
+        }
+
+        DamageIndicator.PROTOCOL_NMS
+                .getHologram(ent, ent.getLocation().add(offsetX, 0, offsetZ), hologramText)
+                .spawn(offsetX, offsetY, offsetZ, speed, duration);
     }
 
     //Default custom event methods

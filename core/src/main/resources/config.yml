@@ -19,6 +19,8 @@ hologram-speed: 0.15
 hologram-duration: 20
 # Whether the position of holograms should stay relative to the entity they came from.
 relative-holograms: true
+# Whether holograms should be randomly offset on the X and Z axis from the player up to 0.5 blocks in any direction.
+random-hologram-offset: false
 
 # Whether all damage indicators should be bold
 bold-indicators: true
