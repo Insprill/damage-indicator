@@ -25,12 +25,14 @@ import com.zenya.damageindicator.nms.CompatibilityHandler;
 import com.zenya.damageindicator.nms.ProtocolNMS;
 import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
+import com.zenya.damageindicator.storage.ToggleManager;
 import com.zenya.damageindicator.util.MessagesMigrator;
 import net.insprill.spigotutils.MinecraftVersion;
 import net.insprill.xenlib.XenLib;
 import net.insprill.xenlib.commands.Command;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -78,6 +80,11 @@ public class DamageIndicator extends JavaPlugin {
         Bukkit.getScheduler().runTaskLater(this, () -> new Command("damageindicator", ReloadArg.class.getPackage().getName()), 10L);
 
         HealthIndicator.INSTANCE.reload();
+
+        // Cache toggle states for online players. Helps during debugging.
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            ToggleManager.INSTANCE.isToggled(player.getUniqueId());
+        }
     }
 
     @Override
