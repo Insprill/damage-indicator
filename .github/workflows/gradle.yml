@@ -13,7 +13,7 @@ jobs:
         uses: gradle/wrapper-validation-action@v2
 
       - name: Download BuildTools Assistant
-        run: wget -O BuildTools-Assistant-Linux.zip https://github.com/Insprill/buildtools-assistant/releases/download/v1.1.1/BuildTools-Assistant-Linux.zip
+        run: wget -O BuildTools-Assistant-Linux.zip https://github.com/Insprill/buildtools-assistant/releases/download/v1.1.2/BuildTools-Assistant-Linux.zip
 
       - name: Extract BuildTools Assistant
         run: unzip BuildTools-Assistant-Linux.zip
@@ -21,29 +21,15 @@ jobs:
       - name: Update BuildTools Assistant Permissions
         run: chmod +x buildtools-assistant
 
-      # 1.17 doesn't work with BTA for whatever reason
       # paperweight is used for 1.17.1+
       - name: Run BuildTools Assistant (1.8 - 1.16.5)
-        run: ./buildtools-assistant -w 2 -b 4096 1.8 1.8.3 1.8.8 1.9.2 1.9.4 1.10.2 1.11.2 1.12.2 1.13 1.13.2 1.14.4 1.15.2 1.16.1 1.16.3 1.16.5
+        run: ./buildtools-assistant -w 2 -b 4096 1.8 1.8.3 1.8.8 1.9.2 1.9.4 1.10.2 1.11.2 1.12.2 1.13 1.13.2 1.14.4 1.15.2 1.16.1 1.16.3 1.16.5 1.17
 
-      - name: Download BuildTools
-        run: wget -O BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
-
-      # Java 16 for 1.17 BuildTools
-      - name: Set up JDK 16
+      # Java 21 for the build
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: 16
-          distribution: 'temurin'
-
-      - name: Run BuildTools 1.17
-        run: java -jar BuildTools.jar --rev 1.17
-
-      # Java 17 for the build
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
+          java-version: 21
           distribution: 'temurin'
 
       - name: Setup Gradle
