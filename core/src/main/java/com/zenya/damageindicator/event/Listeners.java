@@ -59,16 +59,26 @@ public class Listeners implements Listener {
         if (!(entity instanceof Player) && StorageFileManager.getConfig().getBool("only-show-entity-damage-from-players")) {
             if (!(e instanceof EntityDamageByEntityEvent))
                 return;
-            EntityDamageByEntityEvent ev = (EntityDamageByEntityEvent) e;
-            if (ev.getDamager() instanceof Projectile) {
-                if (!(((Projectile) ev.getDamager()).getShooter() instanceof Player))
+            Entity damager = ((EntityDamageByEntityEvent) e).getDamager();
+            if (damager instanceof Projectile) {
+                if (!(((Projectile) damager).getShooter() instanceof Player))
                     return;
             } else if (!(((EntityDamageByEntityEvent) e).getDamager() instanceof Player)) {
                 return;
             }
         }
 
-        Bukkit.getServer().getPluginManager().callEvent(new HologramSpawnEvent(entity, -e.getFinalDamage()));
+        boolean isCrit = false;
+        if (e instanceof EntityDamageByEntityEvent) {
+            Entity damager = ((EntityDamageByEntityEvent) e).getDamager();
+            isCrit = !damager.isOnGround()
+                    && damager.getFallDistance() > 0.0F
+                    && damager instanceof LivingEntity
+                    && !((LivingEntity)damager).hasPotionEffect(PotionEffectType.BLINDNESS)
+                    && damager.getVehicle() == null;
+        }
+
+        Bukkit.getServer().getPluginManager().callEvent(new HologramSpawnEvent(entity, -e.getFinalDamage(), isCrit));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -83,7 +93,7 @@ public class Listeners implements Listener {
         if (!shouldShowHologram(e.getEntity()))
             return;
 
-        Bukkit.getServer().getPluginManager().callEvent(new HologramSpawnEvent((LivingEntity) e.getEntity(), e.getAmount()));
+        Bukkit.getServer().getPluginManager().callEvent(new HologramSpawnEvent((LivingEntity) e.getEntity(), e.getAmount(), false));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

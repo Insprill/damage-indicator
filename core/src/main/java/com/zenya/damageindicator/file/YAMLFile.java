@@ -113,6 +113,10 @@ public class YAMLFile extends StorageFile {
         }
     }
 
+    public boolean contains(String node) {
+        return config.contains(node);
+    }
+
     public String getString(String node) {
         return config.getString(node);
     }

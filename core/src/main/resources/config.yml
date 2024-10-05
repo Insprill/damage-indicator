@@ -47,6 +47,12 @@ damage-format:
   12: "%f55fdd%-%value%"
   100: "%rainbow%-%value%" # <-- The %rainbow% placeholder can be used to randomize indicator colors (fancy display for insta-kill tools like /kill)
 
+# Format used when players deal a critical hit.
+# This works exactly the same as the `damage-format` option above.
+# Uncomment to enable.
+# crit-damage-format:
+#   0: "%rainbow%-%value%"
+
 # Whether damage heal indicators should be shown.
 heal-indicators: true
 

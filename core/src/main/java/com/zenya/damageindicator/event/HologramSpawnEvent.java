@@ -33,10 +33,12 @@ public class HologramSpawnEvent extends Event {
 
     private final LivingEntity ent;
     private final double amount;
+    private final boolean isCrit;
 
-    public HologramSpawnEvent(LivingEntity ent, double amount) {
+    public HologramSpawnEvent(LivingEntity ent, double amount, boolean isCrit) {
         this.ent = ent;
         this.amount = amount;
+        this.isCrit = isCrit;
         fireEvent();
     }
 
@@ -45,7 +47,12 @@ public class HologramSpawnEvent extends Event {
         double speed = StorageFileManager.getConfig().getDouble("hologram-speed");
         int duration = StorageFileManager.getConfig().getInt("hologram-duration");
 
-        String format = StorageFileManager.getConfig().getNearestValue(amount > 0 ? "heal-format" : "damage-format", Math.abs(amount), RoundingMode.DOWN);
+        String node = amount > 0
+                ? "heal-format"
+                : isCrit && StorageFileManager.getConfig().contains("crit-damage-format")
+                ? "crit-damage-format"
+                : "damage-format";
+        String format = StorageFileManager.getConfig().getNearestValue(node, Math.abs(amount), RoundingMode.DOWN);
         String hologramText = new DisplayBuilder().withText(format).withValue(Math.abs(amount)).build();
 
         double offsetX = 0;
