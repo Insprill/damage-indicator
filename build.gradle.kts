@@ -2,7 +2,7 @@ import java.io.ByteArrayOutputStream
 
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "8.3.3"
+    id("com.gradleup.shadow") version "8.3.4"
     id("com.rikonardo.papermake") version "1.0.6"
 }
 
