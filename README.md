@@ -14,4 +14,4 @@ DamageIndicator is an extensive and feature-rich healthbar manager for Minecraft
 
 ## More info
 [Download](https://www.spigotmc.org/resources/%E2%98%A0%EF%B8%8Fdamageindicator%E2%98%A0%EF%B8%8F-customisable-damage-indicator-multicolor-support-100-lagless.92423/)<br>
-[Support](https://discord.gg/SH7VyYtuC2) (Discord)
+[Support](https://discord.gg/vjQ3F2XDTc) (Discord)
