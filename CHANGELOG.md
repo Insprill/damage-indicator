@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.19.0 - 2025-07-01
+
+### Added
+
+- Support for 1.21.6 and 1.21.7.
+
+### Fixed
+
+- The heart character in the default health locale being corrupted and causing a syntax error.
+    - Existing lang files with the broken character will automatically be fixed.
+    - If locale changes weren't being applied, this was why.
+
+
 ## 1.18.0 - 2025-04-13
 
 ### Added
