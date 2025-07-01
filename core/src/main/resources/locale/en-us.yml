@@ -11,4 +11,4 @@ commands:
   toggle:
     enable: "&aDamageIndicator displays have been enabled"
     disable: "&cDamageIndicator displays have been disabled"
-health: " &c❤"
+health: " &c\u2764"
