@@ -30,11 +30,19 @@ import com.zenya.damageindicator.util.MessagesMigrator;
 import net.insprill.spigotutils.MinecraftVersion;
 import net.insprill.xenlib.XenLib;
 import net.insprill.xenlib.commands.Command;
+import net.insprill.xenlib.files.YamlFile;
+import net.insprill.xenlib.files.YamlFolder;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 public class DamageIndicator extends JavaPlugin {
 
@@ -53,6 +61,34 @@ public class DamageIndicator extends JavaPlugin {
 
         // Migrate messages.yml to the default locale file.
         MessagesMigrator.migrate(this);
+
+        // Fix syntax error in lang files caused by the '❤' character in the health line.
+        boolean fixedAnyLangFiles = false;
+        for (YamlFile langFile : YamlFolder.LOCALE.getDataFiles()) {
+            Path path = langFile.getFile().toPath();
+            try {
+                boolean hasSyntaxError = false;
+                List<String> contents = Files.readAllLines(path, StandardCharsets.UTF_8);
+                for (int i = 0; i < contents.size(); i++) {
+                    String content = contents.get(i);
+                    if (content.contains("â¤")) {
+                        contents.set(i, content.replace("â¤", "\\u2764"));
+                        hasSyntaxError = true;
+                        fixedAnyLangFiles = true;
+                    }
+                }
+                if (hasSyntaxError) {
+                    Files.write(path, contents, StandardCharsets.UTF_8);
+                    getLogger().info("Fixed syntax error in " + langFile.getName() + ".yml");
+                }
+            } catch (IOException e) {
+                getLogger().severe("Failed to fix syntax error in " + path + " (" + e.getMessage() + "). Please inspect the file and correct any syntax errors manually");
+            }
+        }
+        if (fixedAnyLangFiles) {
+            getLogger().info("Reloading lang files");
+            YamlFolder.LOCALE.reload();
+        }
 
         //Init all configs and storage files
         StorageFileManager.INSTANCE.reloadFiles();
