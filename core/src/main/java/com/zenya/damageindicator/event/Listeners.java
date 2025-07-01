@@ -42,7 +42,7 @@ public class Listeners implements Listener {
 
     private static final float DAMAGE_THRESHOLD = 0.01f;
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityDamageEvent(EntityDamageEvent e) {
         if (e.getFinalDamage() < DAMAGE_THRESHOLD)
             return;
@@ -81,7 +81,7 @@ public class Listeners implements Listener {
         Bukkit.getServer().getPluginManager().callEvent(new HologramSpawnEvent(entity, -e.getFinalDamage(), isCrit));
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityRegainHealthEvent(EntityRegainHealthEvent e) {
         if (e.getAmount() < DAMAGE_THRESHOLD) // Minecraft doesn't register heals of less than half a heart
             return;
