@@ -1,4 +1,4 @@
-![](https://imgur.com/9lCOZaz.png)
+![Damage Indicator](https://imgur.com/9lCOZaz.png)
 
 <p align="center">
 
@@ -13,7 +13,11 @@ which means no actual armor stand entities will be spawned.
 DamageIndicator is also **completely server-side** so **no additional mods are required** by your players.
 The **high-performance** packet spawning and **flexible configuration** makes DamageIndicator extremely suitable for large PvP or Survival servers.
 
-![](https://imgur.com/5pw7FBU.png)
+
+
+
+<!-- Key Features -->
+![Key Features](https://imgur.com/5pw7FBU.png)
 
 - **Highly configurable**
     - Modify damage indicator offset, speed and duration
@@ -48,7 +52,11 @@ The **high-performance** packet spawning and **flexible configuration** makes Da
     - Hugely boosts performance as no armor stand entities are actually spawned
     - No floating armor stands will remain in the world if your server crashes
 
-![](https://imgur.com/T8HeNXQ.png)
+
+
+
+<!-- Plugin Showcase -->
+![Plugin Showcase](https://imgur.com/T8HeNXQ.png)
 
 <p align="center">
 
@@ -57,7 +65,11 @@ The **high-performance** packet spawning and **flexible configuration** makes Da
 
 </p>
 
-![](https://imgur.com/hqxxKx8.png)
+
+
+
+<!-- Commands & Permissions -->
+![Commands & Permissions](https://imgur.com/hqxxKx8.png)
 
 > **/damageindicator help**  
 > [damageindicator.command.help]  
@@ -71,15 +83,25 @@ The **high-performance** packet spawning and **flexible configuration** makes Da
 > [damageindicator.command.reload]  
 > _Reload the plugin’s `config.yml` and `messages.yml` files_
 
-[![Statistics](https://bstats.org/signatures/bukkit/Damage%20Indicator.svg)](https://bstats.org/plugin/bukkit/Damage%20Indicator/15403)
 
-![](https://imgur.com/1x5d7La.png)
+
+
+<!-- Statistics -->
+![Statistics](https://imgur.com/8ep0wfL.png)
+
+[![bStats Statistics](https://bstats.org/signatures/bukkit/Damage%20Indicator.svg)](https://bstats.org/plugin/bukkit/Damage%20Indicator/15403)
+
+
+
+
+<!-- Contributors -->
+![Contributors](https://imgur.com/1x5d7La.png)
 
 <p align="center">
 
-![](https://imgur.com/er5gpPL.png)
-![](https://imgur.com/zXv4Smv.png)
-![](https://imgur.com/bttUgkK.png)
+![Zenya4](https://imgur.com/er5gpPL.png)
+![Skaian](https://imgur.com/zXv4Smv.png)
+![Greylatte](https://imgur.com/bttUgkK.png)
 
 </p>
 
