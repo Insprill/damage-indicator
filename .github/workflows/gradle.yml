@@ -9,6 +9,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          # https://github.com/gradle/actions/blob/main/docs/setup-gradle.md#using-the-cache-read-only
+          cache-read-only: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/develop' && github.ref_type != 'tag' }}
+
       - name: Download BuildTools Assistant
         run: wget -O BuildTools-Assistant-Linux.zip https://github.com/Insprill/buildtools-assistant/releases/download/v1.1.2/BuildTools-Assistant-Linux.zip
 
@@ -28,9 +34,6 @@ jobs:
         with:
           java-version: 21
           distribution: 'temurin'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
 
       - name: Build
         run: ./gradlew build
