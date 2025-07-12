@@ -15,18 +15,33 @@ jobs:
           # https://github.com/gradle/actions/blob/main/docs/setup-gradle.md#using-the-cache-read-only
           cache-read-only: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/develop' && github.ref_type != 'tag' }}
 
-      - name: Download BuildTools Assistant
-        run: wget -O BuildTools-Assistant-Linux.zip https://github.com/Insprill/buildtools-assistant/releases/download/v1.1.2/BuildTools-Assistant-Linux.zip
-
-      - name: Extract BuildTools Assistant
-        run: unzip BuildTools-Assistant-Linux.zip
-
-      - name: Update BuildTools Assistant Permissions
-        run: chmod +x buildtools-assistant
+      - name: Cache Maven Dependencies
+        id: cache-maven
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven
 
       # paperweight is used for 1.17.1+
       - name: Run BuildTools Assistant (1.8 - 1.16.5)
-        run: ./buildtools-assistant -w 3 -b 4096 1.8 1.8.3 1.8.8 1.9.2 1.9.4 1.10.2 1.11.2 1.12.2 1.13 1.13.2 1.14.4 1.15.2 1.16.1 1.16.3 1.16.5 1.17
+        run: |
+          versions=(1.8 1.8.3 1.8.8 1.9.2 1.9.4 1.10.2 1.11.2 1.12.2 1.13 1.13.2 1.14.4 1.15.2 1.16.1 1.16.3 1.16.5 1.17)
+
+          for v in "${versions[@]}"; do
+            if [[ ! -f "$HOME/.m2/repository/org/spigotmc/spigot/${v}-R0.1-SNAPSHOT/spigot-${v}-R0.1-SNAPSHOT.jar" ]]; then
+              missing=true
+              break
+            fi
+          done
+
+          if [[ $missing ]]; then
+            wget -O BuildTools-Assistant-Linux.zip https://github.com/Insprill/buildtools-assistant/releases/download/v1.1.2/BuildTools-Assistant-Linux.zip
+            unzip BuildTools-Assistant-Linux.zip
+            chmod +x buildtools-assistant
+            ./buildtools-assistant -w 3 -b 4096 "${versions[@]}"
+          else
+            echo "All Spigot jars present—skipping BuildTools."
+          fi
 
       # Java 21 for the build
       - name: Set up JDK 21
