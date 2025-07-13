@@ -1,10 +1,10 @@
 plugins {
     id("java")
-    id("org.ajoberstar.grgit") version "5.3.0"
-    id("com.gradleup.shadow") version "9.0.0-beta17"
+    id("org.ajoberstar.grgit") version "5.3.2"
+    id("com.gradleup.shadow") version "9.0.0-rc1"
     id("com.rikonardo.papermake") version "1.0.6"
     id("com.modrinth.minotaur") version "2.8.7"
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.17" apply false
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.18" apply false
 }
 
 group = "net.insprill"
