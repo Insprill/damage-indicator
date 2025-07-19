@@ -39,7 +39,7 @@ The **high-performance** packet spawning and **flexible configuration** makes Da
     - Simply drag & drop the plugin to get started
 
 - **Cross-version compatibility**
-    - Supports _all_ Minecraft versions from 1.8–1.21.7
+    - Supports _all_ Minecraft versions from 1.8–1.21.8
     - Incompatible versions will fallback to invisible armor stands instead of breaking the plugin
 
 - **Per-player & per-world toggle support**
