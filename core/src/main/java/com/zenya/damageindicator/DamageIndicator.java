@@ -26,8 +26,11 @@ import com.zenya.damageindicator.nms.ProtocolNMS;
 import com.zenya.damageindicator.scoreboard.HealthIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import com.zenya.damageindicator.storage.ToggleManager;
+import com.zenya.damageindicator.util.BukkitScheduler;
 import com.zenya.damageindicator.util.MessagesMigrator;
+import com.zenya.damageindicator.util.Scheduler;
 import net.insprill.spigotutils.MinecraftVersion;
+import net.insprill.spigotutils.ServerEnvironment;
 import net.insprill.xenlib.XenLib;
 import net.insprill.xenlib.commands.Command;
 import net.insprill.xenlib.files.YamlFile;
@@ -50,6 +53,7 @@ public class DamageIndicator extends JavaPlugin {
 
     public static DamageIndicator INSTANCE;
     public static ProtocolNMS PROTOCOL_NMS;
+    public static Scheduler SCHEDULER;
 
     @Override
     public void onEnable() {
@@ -100,6 +104,17 @@ public class DamageIndicator extends JavaPlugin {
             return;
         }
 
+        //Init scheduler
+        try {
+            SCHEDULER = ServerEnvironment.isPaper()
+                    ? (Scheduler) Class.forName("net.insprill.damageindicator.util.PaperScheduler").getConstructor().newInstance()
+                    : new BukkitScheduler();
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
         //Init NMS
         try {
             PROTOCOL_NMS = (ProtocolNMS) CompatibilityHandler.getProtocolNMS().getConstructors()[0].newInstance();
@@ -113,7 +128,7 @@ public class DamageIndicator extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new Listeners(), this);
 
         //Register commands. Legacy servers try to register permissions again from the plugin.yml and throw errors.
-        Bukkit.getScheduler().runTaskLater(this, () -> new Command("damageindicator", ReloadArg.class.getPackage().getName()), 10L);
+        SCHEDULER.runDelayed(this, () -> new Command("damageindicator", ReloadArg.class.getPackage().getName()), 10L);
 
         HealthIndicator.INSTANCE.reload();
 

@@ -5,6 +5,7 @@ plugins {
 rootProject.name = "damage-indicator"
 
 include("core")
+include("paper")
 include("nms:fallback")
 include("nms:v1_8_R1")
 include("nms:v1_8_R2")

@@ -22,9 +22,9 @@ package com.zenya.damageindicator.nms;
 import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import com.zenya.damageindicator.storage.ToggleManager;
+import com.zenya.damageindicator.util.Scheduler;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 
@@ -51,7 +51,7 @@ public interface Hologram {
 
     void sendPacket(Object connection, Object packet);
 
-    class HologramRunnable extends BukkitRunnable {
+    class HologramRunnable implements Runnable {
 
         private final Hologram hologram;
         private final Entity entity;
@@ -65,6 +65,8 @@ public interface Hologram {
 
         private int tick;
         private double dy;
+
+        private Scheduler.CancelableTask task;
 
         public HologramRunnable(Hologram hologram, Entity entity, double offsetX, double offsetY, double offsetZ, double speed, double duration) {
             this.hologram = hologram;
@@ -91,12 +93,12 @@ public interface Hologram {
             tick++;
             if (tick > duration) {
                 hologram.sendRemovePacket();
-                this.cancel();
+                task.cancel();
             }
         }
 
         public void start() {
-            this.runTaskTimer(DamageIndicator.INSTANCE, 0, 1);
+            task = DamageIndicator.SCHEDULER.runAtFixedRate(DamageIndicator.INSTANCE, this, 0, 1);
         }
 
     }

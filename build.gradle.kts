@@ -23,6 +23,7 @@ repositories {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":paper"))
     implementation(project(":nms:fallback"))
     implementation(project(":nms:v1_8_R1"))
     implementation(project(":nms:v1_8_R2"))

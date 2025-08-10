@@ -4,6 +4,7 @@ version: ${version}
 authors: [Insprill, Zenya4]
 description: A high performance packet-based damage indicator
 api-version: 1.13
+folia-supported: true
 
 commands:
   damageindicator:
