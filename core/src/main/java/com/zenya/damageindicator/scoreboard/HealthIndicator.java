@@ -19,8 +19,10 @@
 
 package com.zenya.damageindicator.scoreboard;
 
+import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
 import net.insprill.spigotutils.MinecraftVersion;
+import net.insprill.spigotutils.ServerEnvironment;
 import net.insprill.xenlib.localization.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -46,6 +48,11 @@ public class HealthIndicator {
 
     @SuppressWarnings("deprecation")
     public void reload() {
+        if (ServerEnvironment.isFolia()) {
+            DamageIndicator.INSTANCE.getLogger().warning("Folia does not support scoreboards yet. Disabling health indicators!");
+            return;
+        }
+
         if (!StorageFileManager.getConfig().getBool("health-indicators")) {
             //Disable health indicators
             if (obj != null) {
