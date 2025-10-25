@@ -5,12 +5,15 @@ import com.zenya.damageindicator.nms.ProtocolNMS;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class ProtocolNMSImpl implements ProtocolNMS {
 
     @Override
-    public Hologram getHologram(LivingEntity ent, Location loc, String text) {
-        return new HologramImpl(ent, loc, text);
+    public Hologram getHologram(LivingEntity ent, Location loc, List<Player> players, String text) {
+        return new HologramImpl(ent, text);
     }
 
     public static class HologramImpl implements Hologram {
@@ -19,7 +22,7 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         private final LivingEntity entity;
         private final String text;
 
-        public HologramImpl(LivingEntity entity, Location loc, String text) {
+        public HologramImpl(LivingEntity entity, String text) {
             this.entity = entity;
             this.text = text;
         }
@@ -61,25 +64,6 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         @Override
         public void sendRemovePacket() {
             armorStand.remove();
-        }
-
-        @Override
-        public void sendPacketToTracked(Object packet) {
-            unsupported();
-        }
-
-        @Override
-        public void sendPacketToWorld(Object packet) {
-            unsupported();
-        }
-
-        @Override
-        public void sendPacket(Object connection, Object packet) {
-            unsupported();
-        }
-
-        private void unsupported() {
-            throw new UnsupportedOperationException("Fallback isn't packet based!");
         }
 
     }

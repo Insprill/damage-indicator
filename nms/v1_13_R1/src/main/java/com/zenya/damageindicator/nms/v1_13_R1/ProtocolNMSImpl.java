@@ -4,15 +4,11 @@ import com.zenya.damageindicator.nms.Hologram;
 import com.zenya.damageindicator.nms.ProtocolNMS;
 import net.minecraft.server.v1_13_R1.ChatComponentText;
 import net.minecraft.server.v1_13_R1.EntityArmorStand;
-import net.minecraft.server.v1_13_R1.EntityHuman;
-import net.minecraft.server.v1_13_R1.EntityPlayer;
-import net.minecraft.server.v1_13_R1.EntityTrackerEntry;
 import net.minecraft.server.v1_13_R1.Packet;
 import net.minecraft.server.v1_13_R1.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_13_R1.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_13_R1.PacketPlayOutEntityTeleport;
 import net.minecraft.server.v1_13_R1.PacketPlayOutSpawnEntityLiving;
-import net.minecraft.server.v1_13_R1.PlayerConnection;
 import net.minecraft.server.v1_13_R1.WorldServer;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
@@ -20,24 +16,26 @@ import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class ProtocolNMSImpl implements ProtocolNMS {
 
     @Override
-    public Hologram getHologram(LivingEntity ent, Location loc, String text) {
-        return new HologramImpl(ent, loc, text);
+    public Hologram getHologram(LivingEntity ent, Location loc, List<Player> players, String text) {
+        return new HologramImpl(ent, loc, players, text);
     }
 
     public static class HologramImpl implements Hologram {
 
         private final EntityArmorStand armorStand;
         private final LivingEntity entity;
-        private final EntityTrackerEntry tracker;
-        private final WorldServer world;
+        private final List<Player> players;
 
-        public HologramImpl(LivingEntity entity, Location loc, String text) {
+        public HologramImpl(LivingEntity entity, Location loc, List<Player> players, String text) {
             this.entity = entity;
+            this.players = players;
 
-            this.world = ((CraftWorld) loc.getWorld()).getHandle();
+            WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
             this.armorStand = new EntityArmorStand(world, loc.getX(), loc.getY(), loc.getZ());
             this.armorStand.setInvisible(true);
             this.armorStand.setMarker(true);
@@ -45,7 +43,6 @@ public class ProtocolNMSImpl implements ProtocolNMS {
             this.armorStand.setNoGravity(true);
             this.armorStand.setCustomName(new ChatComponentText(text));
             this.armorStand.setCustomNameVisible(true);
-            this.tracker = world.tracker.trackedEntities.get(entity.getEntityId());
         }
 
         @Override
@@ -59,46 +56,32 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         @Override
         public void sendCreatePacket() {
             PacketPlayOutSpawnEntityLiving create = new PacketPlayOutSpawnEntityLiving(armorStand);
-            sendPacketToTracked(create);
+            sendPacket(create);
         }
 
         @Override
         public void sendMetaPacket() {
             PacketPlayOutEntityMetadata meta = new PacketPlayOutEntityMetadata(armorStand.getId(), armorStand.getDataWatcher(), true);
-            sendPacketToTracked(meta);
+            sendPacket(meta);
         }
 
         @Override
         public void sendTeleportPacket(Location loc) {
             armorStand.setPosition(loc.getX(), loc.getY(), loc.getZ());
             PacketPlayOutEntityTeleport teleport = new PacketPlayOutEntityTeleport(armorStand);
-            sendPacketToTracked(teleport);
+            sendPacket(teleport);
         }
 
         @Override
         public void sendRemovePacket() {
             PacketPlayOutEntityDestroy remove = new PacketPlayOutEntityDestroy(armorStand.getId());
-            sendPacketToWorld(remove);
+            sendPacket(remove);
         }
 
-        @Override
-        public void sendPacketToTracked(Object packet) {
-            for (EntityHuman conn : tracker != null ? tracker.trackedPlayers : world.players) {
-                if (!(conn instanceof EntityPlayer)) continue;
-                sendPacketIfToggled(conn.getUniqueID(), ((EntityPlayer) conn).playerConnection, packet);
+        public void sendPacket(Packet<?> packet) {
+            for (Player player : players) {
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
             }
-        }
-
-        @Override
-        public void sendPacketToWorld(Object packet) {
-            for (Player player : entity.getWorld().getPlayers()) {
-                sendPacketIfToggled(player.getUniqueId(), ((CraftPlayer) player).getHandle().playerConnection, packet);
-            }
-        }
-
-        @Override
-        public void sendPacket(Object connection, Object packet) {
-            ((PlayerConnection) connection).sendPacket((Packet<?>) packet);
         }
 
     }

@@ -8,9 +8,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityTeleport;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving;
-import net.minecraft.server.level.PlayerChunkMap;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.server.network.ServerPlayerConnection;
 import net.minecraft.world.entity.decoration.EntityArmorStand;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
@@ -18,21 +16,24 @@ import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class ProtocolNMSImpl implements ProtocolNMS {
 
     @Override
-    public Hologram getHologram(LivingEntity ent, Location loc, String text) {
-        return new HologramImpl(ent, loc, text);
+    public Hologram getHologram(LivingEntity ent, Location loc, List<Player> players, String text) {
+        return new HologramImpl(ent, loc, players, text);
     }
 
     public static class HologramImpl implements Hologram {
 
         private final EntityArmorStand armorStand;
         private final LivingEntity entity;
-        private final PlayerChunkMap.EntityTracker tracker;
+        private final List<Player> players;
 
-        public HologramImpl(LivingEntity entity, Location loc, String text) {
+        public HologramImpl(LivingEntity entity, Location loc, List<Player> players, String text) {
             this.entity = entity;
+            this.players = players;
 
             WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
             this.armorStand = new EntityArmorStand(world, loc.getX(), loc.getY(), loc.getZ());
@@ -42,7 +43,6 @@ public class ProtocolNMSImpl implements ProtocolNMS {
             this.armorStand.setNoGravity(true);
             this.armorStand.setCustomName(new ChatComponentText(text));
             this.armorStand.setCustomNameVisible(true);
-            this.tracker = world.getChunkProvider().a.G.get(entity.getEntityId());
         }
 
         @Override
@@ -56,50 +56,33 @@ public class ProtocolNMSImpl implements ProtocolNMS {
         @Override
         public void sendCreatePacket() {
             PacketPlayOutSpawnEntityLiving create = new PacketPlayOutSpawnEntityLiving(armorStand);
-            sendPacketToTracked(create);
+            sendPacket(create);
         }
 
         @Override
         public void sendMetaPacket() {
             PacketPlayOutEntityMetadata meta = new PacketPlayOutEntityMetadata(armorStand.getId(), armorStand.getDataWatcher(), true);
-            sendPacketToTracked(meta);
+            sendPacket(meta);
         }
 
         @Override
         public void sendTeleportPacket(Location loc) {
             armorStand.setPosition(loc.getX(), loc.getY(), loc.getZ());
             PacketPlayOutEntityTeleport teleport = new PacketPlayOutEntityTeleport(armorStand);
-            sendPacketToTracked(teleport);
+            sendPacket(teleport);
         }
 
         @Override
         public void sendRemovePacket() {
             //PacketPlayOutEntityDestroy(int) in 1.17
             PacketPlayOutEntityDestroy remove = new PacketPlayOutEntityDestroy(armorStand.getId());
-            sendPacketToWorld(remove);
+            sendPacket(remove);
         }
 
-        @Override
-        public void sendPacketToTracked(Object packet) {
-            if (tracker == null) {
-                sendPacketToWorld(packet);
-                return;
+        public void sendPacket(Packet<?> packet) {
+            for (Player player : players) {
+                ((CraftPlayer) player).getHandle().b.sendPacket(packet);
             }
-            for (ServerPlayerConnection conn : tracker.f) {
-                sendPacketIfToggled(conn.d().getUniqueID(), conn, packet);
-            }
-        }
-
-        @Override
-        public void sendPacketToWorld(Object packet) {
-            for (Player player : entity.getWorld().getPlayers()) {
-                sendPacketIfToggled(player.getUniqueId(), ((CraftPlayer) player).getHandle().b, packet);
-            }
-        }
-
-        @Override
-        public void sendPacket(Object connection, Object packet) {
-            ((ServerPlayerConnection) connection).sendPacket((Packet<?>) packet);
         }
 
     }

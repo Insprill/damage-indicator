@@ -21,13 +21,20 @@ package com.zenya.damageindicator.event;
 
 import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
+import com.zenya.damageindicator.storage.ToggleManager;
 import com.zenya.damageindicator.util.DisplayBuilder;
+import net.insprill.spigotutils.MinecraftVersion;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HologramSpawnEvent extends Event {
 
@@ -62,9 +69,31 @@ public class HologramSpawnEvent extends Event {
             offsetZ = (Math.random() - 0.5) * 2;
         }
 
+        Location location = ent.getLocation();
+
         DamageIndicator.PROTOCOL_NMS
-                .getHologram(ent, ent.getLocation().add(offsetX, 0, offsetZ), hologramText)
+                .getHologram(ent, location.add(offsetX, 0, offsetZ), filterPlayers(location), hologramText)
                 .spawn(offsetX, offsetY, offsetZ, speed, duration);
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    private List<Player> filterPlayers(Location location) {
+        int serverViewDistSqr = Bukkit.getViewDistance() << 5;
+        List<Player> players = new ArrayList<>();
+        for (Player p : ent.getWorld().getPlayers()) {
+            if (p == ent) continue;
+            if (MinecraftVersion.isAtLeast(MinecraftVersion.v1_18_0)) {
+                // Player.canSee(Player) has been around forever,
+                // but Player.canSee(Entity) was only added in 1.18 and has been "experimental" ever since :|
+                if (!p.canSee(ent)) continue;
+            } else if (ent instanceof Player) {
+                if (!p.canSee((Player) ent)) continue;
+            }
+            if (p.getLocation().distanceSquared(location) > serverViewDistSqr) continue;
+            if (!ToggleManager.INSTANCE.isToggled(p.getUniqueId())) continue;
+            players.add(p);
+        }
+        return players;
     }
 
     //Default custom event methods

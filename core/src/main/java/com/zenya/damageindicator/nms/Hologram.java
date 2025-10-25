@@ -21,12 +21,9 @@ package com.zenya.damageindicator.nms;
 
 import com.zenya.damageindicator.DamageIndicator;
 import com.zenya.damageindicator.storage.StorageFileManager;
-import com.zenya.damageindicator.storage.ToggleManager;
 import com.zenya.damageindicator.util.Scheduler;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
-
-import java.util.UUID;
 
 public interface Hologram {
 
@@ -39,17 +36,6 @@ public interface Hologram {
     void sendTeleportPacket(Location loc);
 
     void sendRemovePacket();
-
-    void sendPacketToTracked(Object packet);
-
-    void sendPacketToWorld(Object packet);
-
-    default void sendPacketIfToggled(UUID uuid, Object connection, Object packet) {
-        if (ToggleManager.INSTANCE.isToggled(uuid))
-            sendPacket(connection, packet);
-    }
-
-    void sendPacket(Object connection, Object packet);
 
     class HologramRunnable implements Runnable {
 

@@ -21,10 +21,13 @@ package com.zenya.damageindicator.nms;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public interface ProtocolNMS {
 
-    Hologram getHologram(LivingEntity ent, Location loc, String text);
+    Hologram getHologram(LivingEntity ent, Location loc, List<Player> players, String text);
 
     class HologramImpl {
     }
