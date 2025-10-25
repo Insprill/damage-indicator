@@ -21,6 +21,7 @@ package com.zenya.damageindicator.nms;
 
 import com.zenya.damageindicator.DamageIndicator;
 import net.insprill.spigotutils.MinecraftVersion;
+import net.insprill.spigotutils.ServerEnvironment;
 
 public class CompatibilityHandler {
 
@@ -34,12 +35,19 @@ public class CompatibilityHandler {
         } catch (Exception exc) {
             DamageIndicator.INSTANCE.getLogger().warning("You are running DamageIndicator on an unsupported version (" + MinecraftVersion.getCurrentVersion().getDisplayName() + ")");
             DamageIndicator.INSTANCE.getLogger().warning("Some features may be disabled or broken, and expect degraded performance.");
-            clazz = Class.forName(String.format(FULLY_QUALIFIED_PATH, "fallback"));
+            clazz = getFallbackClass();
         }
         return (Class<? extends ProtocolNMS>) clazz;
     }
 
     static Class<?> getNMSClass() throws ClassNotFoundException {
+        if (!ServerEnvironment.isPaper() && MinecraftVersion.isAtLeast(MinecraftVersion.v1_21_3)) {
+            DamageIndicator.INSTANCE.getLogger().warning("The high performance implementation is no longer supported on Spigot!");
+            DamageIndicator.INSTANCE.getLogger().warning("Please switch to Paper, or downgrade Damage Indicator.");
+            DamageIndicator.INSTANCE.getLogger().warning("Expect degraded performance in this state.");
+            return getFallbackClass();
+        }
+
         @SuppressWarnings("deprecation") // Need to do it this way on older versions \:
         // 1.17.1 has breaking changes from 1.17, but is the same CraftBukkit version :/
         String version = MinecraftVersion.isOlderThan(MinecraftVersion.v1_20_5)
@@ -50,5 +58,8 @@ public class CompatibilityHandler {
         return Class.forName(String.format(FULLY_QUALIFIED_PATH, version));
     }
 
-}
+    static Class<?> getFallbackClass() throws ClassNotFoundException {
+        return Class.forName(String.format(FULLY_QUALIFIED_PATH, "fallback"));
+    }
 
+}
