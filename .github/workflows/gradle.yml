@@ -28,9 +28,9 @@ jobs:
           key: ${{ runner.os }}-maven
 
       # paperweight is used for 1.17.1+
-      - name: Run BuildTools Assistant (1.8 - 1.16.5)
+      - name: Run BuildTools Assistant (1.8.8 - 1.17)
         run: |
-          versions=(1.8 1.8.3 1.8.8 1.9.2 1.9.4 1.10.2 1.11.2 1.12.2 1.13 1.13.2 1.14.4 1.15.2 1.16.1 1.16.3 1.16.5 1.17)
+          versions=(1.8.8 1.9.4 1.10.2 1.11.2 1.12.2 1.13 1.13.2 1.14.4 1.15.2 1.16.1 1.16.3 1.16.5 1.17)
 
           for v in "${versions[@]}"; do
             if [[ ! -f "$HOME/.m2/repository/org/spigotmc/spigot/${v}-R0.1-SNAPSHOT/spigot-${v}-R0.1-SNAPSHOT.jar" ]]; then
@@ -45,7 +45,7 @@ jobs:
             chmod +x buildtools-assistant
             ./buildtools-assistant -w 3 -b 4096 --verbose "${versions[@]}"
           else
-            echo "All Spigot jars present—skipping BuildTools."
+            echo "All Spigot jars present. Skipping BuildTools."
           fi
 
       # Java 21 for the build
