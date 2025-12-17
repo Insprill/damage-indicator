@@ -43,7 +43,7 @@ jobs:
             wget -O BuildTools-Assistant-Linux.zip https://github.com/Insprill/buildtools-assistant/releases/download/v1.1.2/BuildTools-Assistant-Linux.zip
             unzip BuildTools-Assistant-Linux.zip
             chmod +x buildtools-assistant
-            ./buildtools-assistant -w 3 -b 4096 --verbose "${versions[@]}"
+            ./buildtools-assistant -w 3 -b 4096 "${versions[@]}"
           else
             echo "All Spigot jars present. Skipping BuildTools."
           fi
