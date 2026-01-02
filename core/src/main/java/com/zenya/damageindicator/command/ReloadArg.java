@@ -51,6 +51,9 @@ public class ReloadArg implements ICommandArgument {
     public boolean process(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         StorageFileManager.INSTANCE.reloadFiles();
         HealthIndicator.INSTANCE.reload();
+        if (Lang.getLocaleConfig().isModifiable()) {
+            Lang.getLocaleConfig().reload();
+        }
         Lang.send(sender, "commands.reload");
         return true;
     }
