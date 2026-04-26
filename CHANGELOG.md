@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.23.0] - 2026-04-26
+
+### Added
+
+- Support for 26.1.x.
+
+### Removed
+
+- Support for patch versions older than the latest for 1.8 and 1.9 (e.g., 1.9.2 is no longer supported, but 1.9.4 is).
+
+
 ## [1.22.0] - 2025-12-09
 
 ### Added
@@ -407,7 +418,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 <!-- Diffs -->
-[Unreleased]: https://github.com/Insprill/damage-indicator/compare/v1.22.0...master
+[Unreleased]: https://github.com/Insprill/damage-indicator/compare/v1.23.0...master
+[1.23.0]: https://github.com/Insprill/damage-indicator/compare/v1.22.0...v1.23.0
 [1.22.0]: https://github.com/Insprill/damage-indicator/compare/v1.21.0...v1.22.0
 [1.21.0]: https://github.com/Insprill/damage-indicator/compare/v1.20.0...v1.21.0
 [1.20.0]: https://github.com/Insprill/damage-indicator/compare/v1.19.1...v1.20.0
