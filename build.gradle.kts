@@ -1,7 +1,7 @@
 plugins {
     id("java")
     id("org.ajoberstar.grgit") version "5.3.3"
-    id("com.gradleup.shadow") version "9.4.1"
+    id("com.gradleup.shadow") version "9.6.1"
     id("com.rikonardo.papermake") version "1.0.7"
     id("com.modrinth.minotaur") version "2.9.0"
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.21" apply false
