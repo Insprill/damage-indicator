@@ -49,7 +49,7 @@ dependencies {
     implementation(project(":nms:v1_20_R3", "reobf"))
     implementation(project(":nms:v1_20_Z5_6", "reobf"))
     implementation(project(":nms:v1_21_0-2", "reobf"))
-    implementation(project(":nms:v1_21_3-v26_2"))
+    implementation(project(":nms:v1_21_3-v26_3"))
 }
 
 tasks {
@@ -133,7 +133,8 @@ val minecraftVersions = arrayOf(
     "26.1",
     "26.1.1",
     "26.1.2",
-    "26.2"
+    "26.2",
+    "26.3"
 )
 
 modrinth {
