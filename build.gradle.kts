@@ -134,7 +134,7 @@ val minecraftVersions = arrayOf(
     "26.1.1",
     "26.1.2",
     "26.2",
-    "26.3"
+    "26.3",
 )
 
 modrinth {
